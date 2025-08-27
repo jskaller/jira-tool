@@ -1,5 +1,6 @@
 import asyncio
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from .core.config import get_settings
 from .db.database import init_db, get_sessionmaker
@@ -39,6 +40,9 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(me.router, prefix="/api")
 app.include_router(admin.router, prefix="/api")
 app.include_router(reports.router, prefix="/api")
+
+# Serve static UI (no Node build required)
+app.mount("/", StaticFiles(directory="web", html=True), name="web")
 
 @app.get("/api/health")
 async def health():
