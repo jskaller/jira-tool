@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (UI v0018)</title>
+  <title>Jira Tools (UI v0019 reupload)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -33,7 +33,6 @@
     .code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#f3f4f6; padding:2px 6px; border-radius:6px; }
     canvas { max-width: 100%; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <header>
@@ -51,7 +50,7 @@
     <section id="tab-login" class="card">
       <div class="row" style="justify-content:space-between">
         <h1>Login</h1>
-        <span class="tag">UI v0018</span>
+        <span class="tag">UI v0019</span>
       </div>
       <div class="muted" id="health">Checking backend…</div>
       <div id="loginError" class="error"></div>
@@ -84,32 +83,6 @@
         <button class="btn" onclick="saveSettings()">Save Settings</button>
       </div>
 
-      <h2 class="mt-3">Change My Password</h2>
-      <div id="pwError" class="error"></div>
-      <div id="pwOk" class="ok"></div>
-      <div class="row mt-2">
-        <input id="pw_current" type="password" class="input" placeholder="Current password" />
-        <input id="pw_new" type="password" class="input" placeholder="New password (min 8)" />
-        <input id="pw_new2" type="password" class="input" placeholder="Confirm new password" />
-        <button class="btn" onclick="changeMyPassword()">Change Password</button>
-      </div>
-
-      <h2 class="mt-3">Users (admin)</h2>
-      <div id="usersError" class="error"></div>
-      <div class="row mt-2">
-        <input id="new_user_email" class="input" placeholder="Email" />
-        <input id="new_user_name" class="input" placeholder="Name (optional)" />
-        <input id="new_user_password" type="password" class="input" placeholder="Password (min 8)" />
-        <select id="new_user_role" class="input">
-          <option value="user">user</option>
-          <option value="admin">admin</option>
-        </select>
-        <button class="btn" onclick="createUser()">Create User</button>
-      </div>
-      <div class="mt-2">
-        <table id="usersTable"></table>
-      </div>
-
       <h2 class="mt-3">Ingest Jira</h2>
       <div id="ingestError" class="error"></div>
       <div id="ingestOk" class="ok"></div>
@@ -126,9 +99,12 @@
       </div>
       <div class="row mt-2">
         <button class="btn gray" onclick="discoverProjects()">Discover Projects</button>
+        <button class="btn gray" onclick="whoAmI()">Who am I?</button>
+        <input id="lookup_key" class="input" placeholder="Lookup project by key or id (e.g., MEDA or 10001)" />
+        <button class="btn gray" onclick="lookupProject()">Lookup Project</button>
         <span id="projectsInfo" class="muted"></span>
       </div>
-      <div class="muted mt-2">Use Base URL / Email from Settings and paste a Token above. You can enter project <b>keys</b> (MEDA) or numeric <b>IDs</b> (10001). Use <span class="code">Dry-run JQL</span> to test.</div>
+      <div class="muted mt-2">Tip: if JQL fails for a key, try the numeric project ID. Use Who am I / Lookup Project to verify token access & update the token's "last accessed" timestamp in Atlassian.</div>
     </section>
 
     <section id="tab-reports" class="hidden">
@@ -174,28 +150,6 @@
       const t = sessionStorage.getItem('token')
       return t ? { 'X-Session': t } : {}
     }
-    async function ping() {
-      try {
-        const r = await fetch('/api/health');
-        document.getElementById('health').textContent = r.ok ? 'Backend OK' : 'Backend not responding ('+r.status+')'
-        document.getElementById('health').className = r.ok ? 'ok' : 'error'
-      } catch (e) {
-        document.getElementById('health').textContent = 'Backend not responding'
-        document.getElementById('health').className = 'error'
-      }
-    }
-    ping()
-
-    const tabs = document.querySelectorAll('.tab')
-    tabs.forEach(t => t.addEventListener('click', ()=> activateTab(t.dataset.tab)))
-    function activateTab(name){
-      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab===name))
-      document.querySelectorAll('section[id^="tab-"]').forEach(s => s.classList.add('hidden'))
-      document.getElementById('tab-' + name).classList.remove('hidden')
-      if(name==='admin'){ loadSettings(); loadUsers(); }
-      if(name==='reports'){ refreshReports() }
-    }
-
     async function me(){
       try{
         const res = await fetch('/api/auth/me', { credentials:'include', headers: authHeaders() })
@@ -237,8 +191,25 @@
         btn.removeAttribute('disabled')
       }
     }
-    document.getElementById('loginBtn').addEventListener('click', login)
-    document.getElementById('password').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ login() } })
+
+    const tabs = document.querySelectorAll('.tab')
+    tabs.forEach(t => t.addEventListener('click', ()=> activateTab(t.dataset.tab)))
+    function activateTab(name){
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab===name))
+      document.querySelectorAll('section[id^="tab-"]').forEach(s => s.classList.add('hidden'))
+      document.getElementById('tab-' + name).classList.remove('hidden')
+      if(name==='admin'){ loadSettings(); loadUsers(); }
+      if(name==='reports'){ refreshReports() }
+    }
+
+    async function ping(){
+      const el = document.getElementById('health')
+      try{
+        const r = await fetch('/api/health'); el.textContent = r.ok ? 'Backend OK' : 'Backend not responding ('+r.status+')'
+        el.className = r.ok ? 'ok' : 'error'
+      }catch(e){ el.textContent = 'Backend not responding'; el.className = 'error' }
+    }
+    ping()
 
     async function loadSettings(){
       const err = document.getElementById('adminError'); err.textContent = ''
@@ -247,7 +218,7 @@
       const s = await res.json()
       for(const k of ['jira_base_url','jira_email','default_window_days','timezone','business_hours_start','business_hours_end','business_days']){
         const el = document.getElementById(k)
-        if(el) el.value = s[k] ?? el.value
+        if(el && s[k] !== undefined && s[k] !== null) el.value = s[k]
       }
       const tokenField = document.getElementById('jira_api_token')
       tokenField.placeholder = (s.has_token ? 'Token stored (leave blank to keep)' : 'Jira API Token')
@@ -351,33 +322,42 @@
       }
     }
 
-    // Jira ingest
-    async function runIngest(){
-      const ok = document.getElementById('ingestOk'); const err = document.getElementById('ingestError')
-      ok.textContent=''; err.textContent=''
+    // Jira helpers
+    async function whoAmI(){
       const base = document.getElementById('jira_base_url').value
       const email = document.getElementById('jira_email').value
       const token = document.getElementById('jira_api_token').value
-      const projects = (document.getElementById('ing_projects').value || '').split(',').map(s=>s.trim()).filter(Boolean)
-      const labels = (document.getElementById('ing_labels').value || '').split(',').map(s=>s.trim()).filter(Boolean)
-      const jql = document.getElementById('ing_jql').value || ''
-      const updated_window_days = parseInt(document.getElementById('ing_window').value || document.getElementById('default_window_days').value || '180')
-      const max_issues = parseInt(document.getElementById('ing_max').value || '25000')
-      if(!base || !email || (!token)) { err.textContent='Base URL, Email, and a Token are required (enter token above).'; return }
-      const res = await fetch('/api/jira/ingest', {
-        method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({
-          jira_base_url: base, jira_email: email, jira_api_token: token,
-          projects, labels, jql, updated_window_days, max_issues
-        })
-      })
-      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch {}
-      if(res.ok){
-        ok.textContent = 'Ingest complete: ' + JSON.stringify(b)
-      } else {
-        err.textContent = b.detail || ('Error ('+res.status+') '+t)
-      }
+      const info = document.getElementById('projectsInfo')
+      info.textContent = 'Checking identity…'
+      try{
+        const url = new URL('/api/jira/whoami', window.location.origin)
+        url.searchParams.set('base_url', base)
+        url.searchParams.set('email', email)
+        url.searchParams.set('token', token)
+        const res = await fetch(url, { headers: authHeaders() })
+        const t = await res.text(); let b={}; try{ b=JSON.parse(t) }catch{}
+        info.textContent = res.ok ? ('Identity: ' + (b.displayName || b.accountId)) : (b.detail || ('Error ('+res.status+') '+t))
+      }catch(e){ info.textContent = 'Failed: ' + e }
     }
-
+    async function lookupProject(){
+      const base = document.getElementById('jira_base_url').value
+      const email = document.getElementById('jira_email').value
+      const token = document.getElementById('jira_api_token').value
+      const idOrKey = document.getElementById('lookup_key').value.trim()
+      const info = document.getElementById('projectsInfo')
+      if(!idOrKey){ info.textContent = 'Enter a project key or ID.'; return }
+      info.textContent = 'Looking up project…'
+      try{
+        const url = new URL('/api/jira/project', window.location.origin)
+        url.searchParams.set('base_url', base)
+        url.searchParams.set('email', email)
+        url.searchParams.set('token', token)
+        url.searchParams.set('id_or_key', idOrKey)
+        const res = await fetch(url, { headers: authHeaders() })
+        const t = await res.text(); let b={}; try{ b=JSON.parse(t) }catch{}
+        info.textContent = res.ok ? ('Project OK: ' + (b.key || b.id) + ' — ' + (b.name || '')) : (b.detail || ('Error ('+res.status+') '+t))
+      }catch(e){ info.textContent = 'Failed: ' + e }
+    }
     async function discoverProjects(){
       const base = document.getElementById('jira_base_url').value
       const email = document.getElementById('jira_email').value
@@ -399,6 +379,7 @@
       }
     }
 
+    // Ingest & Reports
     async function dryRunJQL(){
       const base = document.getElementById('jira_base_url').value
       const email = document.getElementById('jira_email').value
@@ -427,77 +408,25 @@
         alert('JQL error: ' + (b.detail || ('(' + res.status + ') ' + t)))
       }
     }
-
-    // Reports (sample)
-    async function refreshReports(){
-      const res = await fetch('/api/reports', { credentials:'include', headers: authHeaders() })
-      const listEl = document.getElementById('reportsList')
-      if(!res.ok){ listEl.innerHTML = '<div class="error">Not authorized or error ('+res.status+')</div>'; return }
-      const rows = await res.json()
-      if(rows.length===0){
-        listEl.innerHTML = '<div class="muted">No reports yet.</div>'
-        return
-      }
-      listEl.innerHTML = rows.map(r => `
-        <div class="row" style="justify-content:space-between; border-top:1px solid #e5e7eb; padding:8px 0;">
-          <div><strong>${r.title}</strong><div class="muted">${new Date(r.created_at).toLocaleString()} • ${r.time_mode}</div></div>
-          <div class="row">
-            <button class="btn gray" onclick="openReport(${r.id})">Open</button>
-            <button class="btn gray" onclick="deleteReport(${r.id})">Delete</button>
-          </div>
-        </div>`
-      ).join('')
-    }
-    async function createReport(){
-      await fetch('/api/reports', { method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, credentials:'include', body: JSON.stringify({ title:'Sample Report' }) })
-      refreshReports()
-    }
-    async function deleteReport(id){
-      await fetch('/api/reports/'+id, { method:'DELETE', credentials:'include', headers: authHeaders() })
-      refreshReports()
-      document.getElementById('reportView').classList.add('hidden')
-    }
-    let currentReportId = null
-    let chartInstance = null
-    async function openReport(id){
-      currentReportId = id
-      const res = await fetch('/api/reports/'+id, { credentials:'include', headers: authHeaders() })
-      const data = await res.json()
-      document.getElementById('reportTitle').textContent = data.report.title
-      document.getElementById('reportMeta').textContent = new Date(data.report.created_at).toLocaleString()
-
-      const issues = data.issues
-      const buckets = data.buckets
-      const allBuckets = Array.from(new Set(Object.values(buckets).flatMap(b => Object.keys(b))))
-      const labels = issues.map(i => i.issue_key)
-      const datasets = allBuckets.map((b, idx) => ({ label: b, data: issues.map(i => (buckets[i.issue_key]||{})[b] || 0), stack: 'a' }))
-
-      const ctx = document.getElementById('chart').getContext('2d')
-      if(chartInstance){ chartInstance.destroy() }
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets },
-        options: {
-          responsive: true,
-          plugins: { tooltip: { enabled: true }, legend: { position: 'bottom' } },
-          scales: { x: { stacked: true }, y: { stacked: true, title:{ display:true, text:'Seconds' } } }
-        }
+    async function runIngest(){
+      const ok = document.getElementById('ingestOk'); const err = document.getElementById('ingestError')
+      ok.textContent=''; err.textContent=''
+      const base = document.getElementById('jira_base_url').value
+      const email = document.getElementById('jira_email').value
+      const token = document.getElementById('jira_api_token').value
+      const projects = (document.getElementById('ing_projects').value || '').split(',').map(s=>s.trim()).filter(Boolean)
+      const labels = (document.getElementById('ing_labels').value || '').split(',').map(s=>s.trim()).filter(Boolean)
+      const jql = document.getElementById('ing_jql').value || ''
+      const updated_window_days = parseInt(document.getElementById('ing_window').value || document.getElementById('default_window_days').value || '180')
+      const max_issues = parseInt(document.getElementById('ing_max').value || '25000')
+      const res = await fetch('/api/jira/ingest', {
+        method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({
+          jira_base_url: base or None, jira_email: email or None, jira_api_token: token or None,
+          projects, labels, jql, updated_window_days, max_issues
+        })
       })
-
-      const table = document.getElementById('issuesTable')
-      table.innerHTML = '<thead><tr><th>Key</th><th>Type</th><th>Summary</th><th>Epic</th><th>Parent</th><th>Status</th><th>Assignee</th></tr></thead>'
-      table.innerHTML += '<tbody>' + issues.map(i => `<tr><td>${i.issue_key}</td><td>${i.type}</td><td>${i.summary}</td><td>${i.epic_key || ''}</td><td>${i.parent_key || ''}</td><td>${i.current_status}</td><td>${i.assignee || ''}</td></tr>`).join('') + '</tbody>'
-      document.getElementById('reportView').classList.remove('hidden')
-      activateTab('reports')
-    }
-    function downloadCSV(type){
-      if(!currentReportId) return
-      const t = sessionStorage.getItem('token')
-      if(t){
-        window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type + '&x_session=' + encodeURIComponent(t)
-      } else {
-        window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type
-      }
+      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch {}
+      if(res.ok){ ok.textContent = 'Ingest complete: ' + JSON.stringify(b) } else { err.textContent = b.detail || ('Error ('+res.status+') '+t) }
     }
   </script>
 </body>
