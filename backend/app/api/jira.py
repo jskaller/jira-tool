@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from ..api.deps import current_admin
 from ..db.database import get_sessionmaker
 from ..db.jira_models import BaseJira, JiraIssue, JiraTransition
@@ -38,7 +38,10 @@ def _build_jql(req: IngestRequest) -> str:
             p = (p or "").strip()
             if not p:
                 continue
-            if KEY_REGEX.match(p):
+            # If it's all digits, treat as project ID
+            if p.isdigit():
+                parts.append(p)
+            elif KEY_REGEX.match(p):
                 parts.append(p)  # treat as KEY
             else:
                 parts.append(_quote(p))  # treat as NAME
@@ -124,6 +127,55 @@ def _extract_transitions(issue: Dict[str, Any]):
                 })
     out.sort(key=lambda x: x["when"])
     return out
+
+@router.get("/projects")
+async def list_projects(
+    base_url: str = Query(..., alias="base_url"),
+    email: str = Query(..., alias="email"),
+    token: str = Query(..., alias="token"),
+    _=Depends(current_admin)
+):
+    base = base_url.rstrip("/")
+    url = f"{base}/rest/api/3/project/search"
+    headers = {"Accept": "application/json"}
+    auth = (email, token)
+    async with httpx.AsyncClient(timeout=30) as client:
+        r = await client.get(url, headers=headers, auth=auth, params={"maxResults": 1000})
+        if r.status_code == 401:
+            raise HTTPException(status_code=401, detail="Jira authentication failed (401). Check email/token.")
+        if r.status_code >= 400:
+            raise HTTPException(status_code=r.status_code, detail=f"Jira error: {r.text[:500]}")
+        data = r.json() or {}
+        values = data.get("values") or data.get("projects") or data.get("items") or []
+        out = []
+        for p in values:
+            out.append({
+                "id": p.get("id"),
+                "key": p.get("key"),
+                "name": p.get("name"),
+                "projectTypeKey": p.get("projectTypeKey") or p.get("style"),
+                "archived": p.get("archived", False),
+                "simplified": p.get("simplified", None)
+            })
+        return {"ok": True, "count": len(out), "projects": out}
+
+@router.get("/jql-check")
+async def jql_check(
+    base_url: str = Query(..., alias="base_url"),
+    email: str = Query(..., alias="email"),
+    token: str = Query(..., alias="token"),
+    jql: str = Query(..., alias="jql"),
+    _=Depends(current_admin)
+):
+    base = base_url.rstrip("/")
+    url = f"{base}/rest/api/3/search"
+    headers = {"Accept": "application/json"}
+    auth = (email, token)
+    async with httpx.AsyncClient(timeout=30) as client:
+        r = await client.get(url, headers=headers, auth=auth, params={"jql": jql, "maxResults": 0})
+        if r.status_code >= 400:
+            raise HTTPException(status_code=r.status_code, detail=f"Jira error (status {r.status_code}) for JQL: {jql} :: {r.text[:500]}")
+        return {"ok": True, "jql": jql}
 
 @router.post("/ingest")
 async def ingest(req: IngestRequest, _=Depends(current_admin)):
