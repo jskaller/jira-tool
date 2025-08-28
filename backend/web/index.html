@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (UI v0009)</title>
+  <title>Jira Tools (UI v0010)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -50,7 +50,7 @@
     <section id="tab-login" class="card">
       <div class="row" style="justify-content:space-between">
         <h1>Login</h1>
-        <span class="tag">UI v0009 • 2025-08-28T15:13:13Z</span>
+        <span class="tag">UI v0010 • 2025-08-28T15:35:01Z</span>
       </div>
       <div class="muted" id="health">Checking backend…</div>
       <div id="loginError" class="error"></div>
@@ -59,11 +59,13 @@
         <input id="password" type="password" class="input" placeholder="Password" value="admin123" />
         <button id="loginBtn" type="button" class="btn" onclick="login()">Sign in</button>
       </div>
-      <p class="muted mt-2">Default admin is bootstrapped on first backend start; change credentials in <code>.env</code>.</p>
     </section>
 
     <section id="tab-admin" class="card hidden">
-      <h1>Admin Settings</h1>
+      <h1>Admin</h1>
+      <div class="muted">Change app settings, your password, and manage users.</div>
+
+      <h2 class="mt-3">Settings</h2>
       <div id="adminError" class="error"></div>
       <div class="row mt-2">
         <input id="jira_base_url" class="input" placeholder="Jira Base URL (e.g., https://yourdomain.atlassian.net)" />
@@ -78,8 +80,33 @@
         <input id="business_days" class="input" placeholder="Business Days CSV" />
       </div>
       <div class="mt-2">
-        <button class="btn" onclick="saveSettings()">Save</button>
-        <span class="muted">Token field is optional; keep blank to leave unchanged.</span>
+        <button class="btn" onclick="saveSettings()">Save Settings</button>
+      </div>
+
+      <h2 class="mt-3">Change My Password</h2>
+      <div id="pwError" class="error"></div>
+      <div id="pwOk" class="ok"></div>
+      <div class="row mt-2">
+        <input id="pw_current" type="password" class="input" placeholder="Current password" />
+        <input id="pw_new" type="password" class="input" placeholder="New password (min 8)" />
+        <input id="pw_new2" type="password" class="input" placeholder="Confirm new password" />
+        <button class="btn" onclick="changeMyPassword()">Change Password</button>
+      </div>
+
+      <h2 class="mt-3">Users (admin)</h2>
+      <div id="usersError" class="error"></div>
+      <div class="row mt-2">
+        <input id="new_user_email" class="input" placeholder="Email" />
+        <input id="new_user_name" class="input" placeholder="Name (optional)" />
+        <input id="new_user_password" type="password" class="input" placeholder="Password (min 8)" />
+        <select id="new_user_role" class="input">
+          <option value="user">user</option>
+          <option value="admin">admin</option>
+        </select>
+        <button class="btn" onclick="createUser()">Create User</button>
+      </div>
+      <div class="mt-2">
+        <table id="usersTable"></table>
       </div>
     </section>
 
@@ -122,17 +149,6 @@
   </main>
 
   <script>
-    console.log("UI v0009 script loaded");
-    const tabs = document.querySelectorAll('.tab')
-    tabs.forEach(t => t.addEventListener('click', ()=> activateTab(t.dataset.tab)))
-    function activateTab(name){
-      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab===name))
-      document.querySelectorAll('section[id^="tab-"]').forEach(s => s.classList.add('hidden'))
-      document.getElementById('tab-' + name).classList.remove('hidden')
-      if(name==='admin'){ loadSettings() }
-      if(name==='reports'){ refreshReports() }
-    }
-
     function authHeaders() {
       const t = sessionStorage.getItem('token')
       return t ? { 'X-Session': t } : {}
@@ -149,6 +165,16 @@
       }
     }
     ping()
+
+    const tabs = document.querySelectorAll('.tab')
+    tabs.forEach(t => t.addEventListener('click', ()=> activateTab(t.dataset.tab)))
+    function activateTab(name){
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab===name))
+      document.querySelectorAll('section[id^="tab-"]').forEach(s => s.classList.add('hidden'))
+      document.getElementById('tab-' + name).classList.remove('hidden')
+      if(name==='admin'){ loadSettings(); loadUsers(); }
+      if(name==='reports'){ refreshReports() }
+    }
 
     async function me(){
       try{
@@ -171,35 +197,28 @@
       const btn = document.getElementById('loginBtn')
       err.textContent = ''
       btn.setAttribute('disabled', 'true')
-      console.log("Login clicked", {email})
       try {
         const res = await fetch('/api/auth/login', {
           method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
           body: JSON.stringify({ email, password })
         })
         const text = await res.text()
-        let body = {}; try { body = JSON.parse(text) } catch {}
+        let body = {}; try { body = JSON.parse(text) } catch { }
         if(res.ok){
           if(body.token) sessionStorage.setItem('token', body.token)
           await me()
-          activateTab('reports')
+          activateTab('admin')
         } else {
           err.textContent = (body && body.detail) ? body.detail : ('Login failed (' + res.status + ') ' + text)
         }
       } catch (e) {
-        console.error('Login error:', e)
         err.textContent = 'Network/JS error: ' + (e && e.message ? e.message : e)
       } finally {
         btn.removeAttribute('disabled')
       }
     }
-    // Also bind using addEventListener for robustness
-    document.addEventListener('DOMContentLoaded', ()=> {
-      const btn = document.getElementById('loginBtn')
-      if(btn) btn.addEventListener('click', login)
-      const pw = document.getElementById('password')
-      if(pw) pw.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ login() } })
-    })
+    document.getElementById('loginBtn').addEventListener('click', login)
+    document.getElementById('password').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ login() } })
 
     async function loadSettings(){
       const err = document.getElementById('adminError'); err.textContent = ''
@@ -239,6 +258,53 @@
       }
     }
 
+    async function changeMyPassword(){
+      const cur = document.getElementById('pw_current').value
+      const nw = document.getElementById('pw_new').value
+      const nw2 = document.getElementById('pw_new2').value
+      const e = document.getElementById('pwError'); const ok = document.getElementById('pwOk')
+      e.textContent=''; ok.textContent=''
+      if(nw !== nw2) { e.textContent = 'New passwords do not match'; return }
+      const res = await fetch('/api/users/me/password', {
+        method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, credentials:'include',
+        body: JSON.stringify({ current_password: cur, new_password: nw })
+      })
+      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch {}
+      if(res.ok) { ok.textContent='Password changed'; document.getElementById('pw_current').value=''; document.getElementById('pw_new').value=''; document.getElementById('pw_new2').value=''; }
+      else { e.textContent = (b.detail || ('Error ('+res.status+') '+t)) }
+    }
+
+    async function loadUsers(){
+      const tbl = document.getElementById('usersTable')
+      const err = document.getElementById('usersError'); err.textContent=''
+      const res = await fetch('/api/users/admin', { headers: authHeaders() })
+      if(!res.ok) { if(res.status===403) { tbl.innerHTML='<div class="muted">Admin only</div>'; return }; err.textContent='Error loading users ('+res.status+')'; return }
+      const rows = await res.json()
+      tbl.innerHTML = '<thead><tr><th>ID</th><th>Email</th><th>Name</th><th>Role</th></tr></thead>' +
+        '<tbody>' + rows.map(u => `<tr><td>${u.id}</td><td>${u.email}</td><td>${u.name||''}</td><td>${u.role}</td></tr>`).join('') + '</tbody>'
+    }
+
+    async function createUser(){
+      const email = document.getElementById('new_user_email').value
+      const name = document.getElementById('new_user_name').value
+      const password = document.getElementById('new_user_password').value
+      const role = document.getElementById('new_user_role').value
+      const err = document.getElementById('usersError'); err.textContent=''
+      const res = await fetch('/api/users/admin', {
+        method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({ email, name, password, role })
+      })
+      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch { }
+      if(res.ok) {
+        document.getElementById('new_user_email').value=''
+        document.getElementById('new_user_name').value=''
+        document.getElementById('new_user_password').value=''
+        document.getElementById('new_user_role').value='user'
+        loadUsers()
+      } else {
+        err.textContent = b.detail || ('Error ('+res.status+') '+t)
+      }
+    }
+
     async function refreshReports(){
       const res = await fetch('/api/reports', { credentials:'include', headers: authHeaders() })
       const listEl = document.getElementById('reportsList')
@@ -257,11 +323,6 @@
           </div>
         </div>`
       ).join('')
-    }
-
-    async function createReport(){
-      await fetch('/api/reports', { method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, credentials:'include', body: JSON.stringify({ title:'Sample Report' }) })
-      refreshReports()
     }
 
     async function deleteReport(id){
