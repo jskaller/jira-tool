@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from ..api.deps import current_admin
@@ -133,33 +133,47 @@ def _resolve_credentials(req: IngestRequest):
         raise HTTPException(status_code=400, detail="jira_base_url, jira_email, and jira_api_token are required (either in request or saved settings).")
     return base_url, email, token
 
+def _resolve_from_params(base_url: Optional[str], email: Optional[str], token: Optional[str]):
+    s = get_settings()
+    base = (base_url or s.jira_base_url or "").rstrip("/")
+    em = email or s.jira_email
+    tk = token or s.jira_api_token
+    if not (base and em and tk):
+        raise HTTPException(status_code=400, detail="Missing Jira credentials. Provide base_url, email, token or save them in Admin → Settings.")
+    return base, em, tk
+
 @router.get("/whoami")
-async def whoami(base_url: str, email: str, token: str, _=Depends(current_admin)):
-    url = f"{base_url.rstrip('/')}/rest/api/3/myself"
+async def whoami(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
+    base, em, tk = _resolve_from_params(base_url, email, token)
+    url = f"{base}/rest/api/3/myself"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
-        r = await client.get(url, headers=headers, auth=(email, token))
+        r = await client.get(url, headers=headers, auth=(em, tk))
         if r.status_code >= 400:
             raise HTTPException(status_code=r.status_code, detail=f"Jira error: {r.text[:500]}")
         data = r.json()
         return {"ok": True, "accountId": data.get("accountId"), "displayName": data.get("displayName"), "raw": data}
 
 @router.get("/project")
-async def get_project(base_url: str, email: str, token: str, id_or_key: str, _=Depends(current_admin)):
-    url = f"{base_url.rstrip('/')}/rest/api/3/project/{id_or_key}"
+async def get_project(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, id_or_key: str = "", _=Depends(current_admin)):
+    base, em, tk = _resolve_from_params(base_url, email, token)
+    if not id_or_key:
+        raise HTTPException(status_code=400, detail="id_or_key is required")
+    url = f"{base}/rest/api/3/project/{id_or_key}"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
-        r = await client.get(url, headers=headers, auth=(email, token))
+        r = await client.get(url, headers=headers, auth=(em, tk))
         if r.status_code >= 400:
             raise HTTPException(status_code=r.status_code, detail=f"Jira error: {r.text[:500]}")
         return r.json()
 
 @router.get("/projects")
-async def list_projects(base_url: str, email: str, token: str, _=Depends(current_admin)):
-    url = f"{base_url.rstrip('/')}/rest/api/3/project/search"
+async def list_projects(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
+    base, em, tk = _resolve_from_params(base_url, email, token)
+    url = f"{base}/rest/api/3/project/search"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
-        r = await client.get(url, headers=headers, auth=(email, token), params={"maxResults": 1000})
+        r = await client.get(url, headers=headers, auth=(em, tk), params={"maxResults": 1000})
         if r.status_code == 401:
             raise HTTPException(status_code=401, detail="Jira authentication failed (401). Check email/token.")
         if r.status_code >= 400:
@@ -179,11 +193,14 @@ async def list_projects(base_url: str, email: str, token: str, _=Depends(current
         return {"ok": True, "count": len(out), "projects": out}
 
 @router.get("/jql-check")
-async def jql_check(base_url: str, email: str, token: str, jql: str, _=Depends(current_admin)):
-    url = f"{base_url.rstrip('/')}/rest/api/3/search"
+async def jql_check(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, jql: str = "", _=Depends(current_admin)):
+    base, em, tk = _resolve_from_params(base_url, email, token)
+    if not jql:
+        raise HTTPException(status_code=400, detail="jql is required")
+    url = f"{base}/rest/api/3/search"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
-        r = await client.get(url, headers=headers, auth=(email, token), params={"jql": jql, "maxResults": 0})
+        r = await client.get(url, headers=headers, auth=(em, tk), params={"jql": jql, "maxResults": 0})
         if r.status_code >= 400:
             raise HTTPException(status_code=r.status_code, detail=f"Jira error (status {r.status_code}) for JQL: {jql} :: {r.text[:500]}")
         return {"ok": True, "jql": jql}
