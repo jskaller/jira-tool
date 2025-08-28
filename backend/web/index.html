@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (UI v0017)</title>
+  <title>Jira Tools (UI v0018)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -51,7 +51,7 @@
     <section id="tab-login" class="card">
       <div class="row" style="justify-content:space-between">
         <h1>Login</h1>
-        <span class="tag">UI v0017</span>
+        <span class="tag">UI v0018</span>
       </div>
       <div class="muted" id="health">Checking backend…</div>
       <div id="loginError" class="error"></div>
@@ -114,7 +114,7 @@
       <div id="ingestError" class="error"></div>
       <div id="ingestOk" class="ok"></div>
       <div class="row mt-2">
-        <input id="ing_projects" class="input" placeholder='Project Keys CSV (e.g., MEDA,ABC)' />
+        <input id="ing_projects" class="input" placeholder='Project Keys/IDs CSV (e.g., MEDA,10001)' />
         <input id="ing_labels" class="input" placeholder='Labels CSV (optional)' />
         <input id="ing_jql" class="input" placeholder='Extra JQL (optional)' style="min-width:420px" />
       </div>
@@ -122,12 +122,13 @@
         <input id="ing_window" class="input" type="number" placeholder='Updated window days (default 180)' />
         <input id="ing_max" class="input" type="number" placeholder='Max issues (default 25000)' />
         <button class="btn green" onclick="runIngest()">Run Ingest</button>
+        <button class="btn gray" onclick="dryRunJQL()">Dry-run JQL</button>
       </div>
       <div class="row mt-2">
         <button class="btn gray" onclick="discoverProjects()">Discover Projects</button>
         <span id="projectsInfo" class="muted"></span>
       </div>
-      <div class="muted mt-2">Uses Base URL / Email from Settings and the Token entered above. Tip: put epic/advanced filters in Extra JQL (e.g., <span class="code">"\\\"Epic Link\\\" = MEDA-1"</span>).</div>
+      <div class="muted mt-2">Use Base URL / Email from Settings and paste a Token above. You can enter project <b>keys</b> (MEDA) or numeric <b>IDs</b> (10001). Use <span class="code">Dry-run JQL</span> to test.</div>
     </section>
 
     <section id="tab-reports" class="hidden">
@@ -197,7 +198,7 @@
 
     async function me(){
       try{
-        const res = await fetch('/api/me', { credentials:'include', headers: authHeaders() })
+        const res = await fetch('/api/auth/me', { credentials:'include', headers: authHeaders() })
         if(!res.ok) throw 0;
         const u = await res.json()
         document.getElementById('userArea').textContent = u.email + ' ('+u.role+')'
@@ -395,6 +396,35 @@
         info.textContent = rows.length ? ('Visible projects: ' + rows) : 'No projects visible with these credentials.'
       }catch(e){
         info.textContent = 'Failed: ' + (e && e.message ? e.message : e)
+      }
+    }
+
+    async function dryRunJQL(){
+      const base = document.getElementById('jira_base_url').value
+      const email = document.getElementById('jira_email').value
+      const token = document.getElementById('jira_api_token').value
+      const projects = (document.getElementById('ing_projects').value || '').split(',').map(s=>s.trim()).filter(Boolean)
+      const labels = (document.getElementById('ing_labels').value || '').split(',').map(s=>s.trim()).filter(Boolean)
+      const extra = (document.getElementById('ing_jql').value || '').trim()
+      let clauses = []
+      if(projects.length){ clauses.push('project in (' + projects.join(', ') + ')') }
+      if(labels.length){ clauses.push('labels in (' + labels.map(l=> (l.includes(' ') ? `"${l}"` : l)).join(', ') + ')') }
+      const days = parseInt(document.getElementById('ing_window').value || document.getElementById('default_window_days').value || '180')
+      if(days>0){ clauses.push('updated >= -' + days + 'd') }
+      if(extra){ clauses.push('(' + extra + ')') }
+      let jql = clauses.join(' and ')
+      if(!jql.toLowerCase().includes('order by')) jql = (jql + ' order by updated desc').trim()
+      const url = new URL('/api/jira/jql-check', window.location.origin)
+      url.searchParams.set('base_url', base)
+      url.searchParams.set('email', email)
+      url.searchParams.set('token', token)
+      url.searchParams.set('jql', jql)
+      const res = await fetch(url, { headers: authHeaders() })
+      const t = await res.text(); let b={}; try{ b=JSON.parse(t) }catch{}
+      if(res.ok){
+        alert('JQL OK: ' + jql)
+      } else {
+        alert('JQL error: ' + (b.detail || ('(' + res.status + ') ' + t)))
       }
     }
 
