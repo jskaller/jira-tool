@@ -8,6 +8,7 @@ from sqlalchemy import delete
 import httpx
 import json
 from datetime import datetime
+import re
 
 router = APIRouter(prefix="/jira", tags=["jira"])
 
@@ -21,14 +22,31 @@ class IngestRequest(BaseModel):
     updated_window_days: int = 180
     max_issues: int = 25000
 
+KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')  # heuristic for Jira project keys
+
+def _quote(s: str) -> str:
+    s = s.replace('"', '\\"')
+    return f'"{s}"'
+
 def _build_jql(req: IngestRequest) -> str:
     clauses = []
     if req.projects:
-        safe = ",".join([f'"{p}"' for p in req.projects])
-        clauses.append(f"project in ({safe})")
+        parts = []
+        for p in req.projects:
+            p = (p or '').strip()
+            if not p:
+                continue
+            if KEY_REGEX.match(p):
+                parts.append(p)  # looks like a KEY, keep unquoted
+            else:
+                parts.append(_quote(p))  # likely a NAME, quote it
+        if parts:
+            clauses.append(f"project in ({', '.join(parts)})")
     if req.labels:
-        safe = ",".join([f'"{l}"' for l in req.labels])
-        clauses.append(f"labels in ({safe})")
+        # labels generally safe unquoted, but quote if contains space
+        parts = [(_quote(l) if ' ' in (l or '') else (l or '')) for l in req.labels if (l or '').strip()]
+        if parts:
+            clauses.append(f"labels in ({', '.join(parts)})")
     if req.updated_window_days and req.updated_window_days > 0:
         clauses.append(f"updated >= -{req.updated_window_days}d")
     if req.jql.strip():
@@ -39,7 +57,6 @@ def _build_jql(req: IngestRequest) -> str:
     return jql or "order by updated desc"
 
 async def _ensure_tables():
-    # Use AsyncSession.run_sync so this works regardless of async/sync engine
     Session = get_sessionmaker()
     async with Session() as session:
         def _create(sync_session):
@@ -95,7 +112,7 @@ def _extract_transitions(issue: Dict[str, Any]):
                     "from_status": it.get("fromString") or "",
                     "to_status": it.get("toString") or "",
                 })
-    out.sort(key=lambda x: x["when"])
+    out.sort(key=lambda x: x["when'])
     return out
 
 @router.post("/ingest")
@@ -127,10 +144,9 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
                 "expand": "changelog"
             }
             r = await client.get(url, headers=headers, params=params, auth=auth)
-            if r.status_code == 401:
-                raise HTTPException(status_code=401, detail="Jira authentication failed (401). Check email/token.")
             if r.status_code >= 400:
-                raise HTTPException(status_code=r.status_code, detail=f"Jira error: {r.text[:500]}")
+                # include JQL in error to make debugging easy
+                raise HTTPException(status_code=r.status_code, detail=f"Jira error (status {r.status_code}) for JQL: {jql} :: {r.text[:500]}")
             data = r.json()
             issues = data.get("issues", [])
             total = data.get("total", total)
@@ -141,11 +157,11 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
                 for issue in issues:
                     fields = _parse_issue_fields(issue)
                     raw_json = json.dumps(issue)
-                    await session.execute(delete(JiraIssue).where(JiraIssue.issue_id == fields["issue_id"]))
+                    await session.execute(delete(JiraIssue).where(JiraIssue.issue_id == fields["issue_id"])) 
                     session.add(JiraIssue(**fields, raw_json=raw_json))
                     issues_saved += 1
 
-                    await session.execute(delete(JiraTransition).where(JiraTransition.issue_id == fields["issue_id"]))
+                    await session.execute(delete(JiraTransition).where(JiraTransition.issue_id == fields["issue_id"])) 
                     for t in _extract_transitions(issue):
                         session.add(JiraTransition(
                             issue_id=fields["issue_id"],
