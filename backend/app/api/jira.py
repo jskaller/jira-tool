@@ -39,11 +39,13 @@ def _build_jql(req: IngestRequest) -> str:
     return jql or "order by updated desc"
 
 async def _ensure_tables():
+    # Use AsyncSession.run_sync so this works regardless of async/sync engine
     Session = get_sessionmaker()
     async with Session() as session:
-        engine = session.get_bind()  # AsyncEngine
-        async with engine.begin() as conn:
-            await conn.run_sync(BaseJira.metadata.create_all)
+        def _create(sync_session):
+            bind = sync_session.get_bind()
+            BaseJira.metadata.create_all(bind=bind)
+        await session.run_sync(_create)
 
 def _parse_issue_fields(issue: Dict[str, Any]) -> Dict[str, Any]:
     f = issue.get("fields") or {}
