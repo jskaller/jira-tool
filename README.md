@@ -1,22 +1,22 @@
-# Zip 0005 patch: add greenlet dependency
+# Zip 0006 patch: pin bcrypt to 4.0.1
 
-Fixes:
-- `ValueError: the greenlet library is required to use this function. No module named 'greenlet'` during app startup.
+Fixes the runtime warning:
+`(trapped) error reading bcrypt version ... AttributeError: module 'bcrypt' has no attribute '__about__'`
 
 What changed:
-- Added `greenlet==3.0.3` to `backend/requirements.txt`.
+- Added `bcrypt==4.0.1` to `backend/requirements.txt` (passlib 1.7.4 works fine with this version).
 
 Apply:
 ```bash
-unzip ~/Downloads/jira-reporting-0005.zip
+unzip ~/Downloads/jira-reporting-0006.zip
 git add backend/requirements.txt README.md
-git commit -m "0005: Add greenlet dependency for SQLAlchemy asyncio"
+git commit -m "0006: Pin bcrypt==4.0.1 to silence passlib warning"
 ```
 
-Then reinstall deps and run:
+Reinstall deps and run:
 ```bash
 cd backend
 source .venv/bin/activate 2>/dev/null || true
-pip install -r requirements.txt
+pip install --upgrade --force-reinstall -r requirements.txt
 ./run.sh
 ```
