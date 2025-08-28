@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (Node-free UI)</title>
+  <title>Jira Tools (UI v0009)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -29,6 +29,7 @@
     .mb-2 { margin-bottom:8px; }
     .error { color:#b91c1c; font-size: 13px; white-space: pre-wrap; }
     .ok { color:#065f46; font-size: 13px; }
+    .tag { font-size: 11px; background:#eef2ff; color:#1e3a8a; padding:2px 6px; border-radius: 999px; }
     canvas { max-width: 100%; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -47,13 +48,16 @@
     </div>
 
     <section id="tab-login" class="card">
-      <h1>Login</h1>
+      <div class="row" style="justify-content:space-between">
+        <h1>Login</h1>
+        <span class="tag">UI v0009 • 2025-08-28T15:13:13Z</span>
+      </div>
       <div class="muted" id="health">Checking backend…</div>
       <div id="loginError" class="error"></div>
       <div class="row mt-2">
         <input id="email" class="input" placeholder="Email" value="admin@example.com" />
         <input id="password" type="password" class="input" placeholder="Password" value="admin123" />
-        <button id="loginBtn" class="btn">Sign in</button>
+        <button id="loginBtn" type="button" class="btn" onclick="login()">Sign in</button>
       </div>
       <p class="muted mt-2">Default admin is bootstrapped on first backend start; change credentials in <code>.env</code>.</p>
     </section>
@@ -118,6 +122,7 @@
   </main>
 
   <script>
+    console.log("UI v0009 script loaded");
     const tabs = document.querySelectorAll('.tab')
     tabs.forEach(t => t.addEventListener('click', ()=> activateTab(t.dataset.tab)))
     function activateTab(name){
@@ -136,7 +141,7 @@
     async function ping() {
       try {
         const r = await fetch('/api/health');
-        document.getElementById('health').textContent = r.ok ? 'Backend OK' : 'Backend not responding'
+        document.getElementById('health').textContent = r.ok ? 'Backend OK' : 'Backend not responding ('+r.status+')'
         document.getElementById('health').className = r.ok ? 'ok' : 'error'
       } catch (e) {
         document.getElementById('health').textContent = 'Backend not responding'
@@ -166,14 +171,14 @@
       const btn = document.getElementById('loginBtn')
       err.textContent = ''
       btn.setAttribute('disabled', 'true')
+      console.log("Login clicked", {email})
       try {
         const res = await fetch('/api/auth/login', {
           method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
           body: JSON.stringify({ email, password })
         })
         const text = await res.text()
-        let body = {}
-        try { body = JSON.parse(text) } catch { /* keep body as {} */ }
+        let body = {}; try { body = JSON.parse(text) } catch {}
         if(res.ok){
           if(body.token) sessionStorage.setItem('token', body.token)
           await me()
@@ -188,10 +193,12 @@
         btn.removeAttribute('disabled')
       }
     }
-    // bind click and Enter
-    document.getElementById('loginBtn').addEventListener('click', login)
-    document.getElementById('password').addEventListener('keydown', (e)=>{
-      if(e.key==='Enter'){ login() }
+    // Also bind using addEventListener for robustness
+    document.addEventListener('DOMContentLoaded', ()=> {
+      const btn = document.getElementById('loginBtn')
+      if(btn) btn.addEventListener('click', login)
+      const pw = document.getElementById('password')
+      if(pw) pw.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ login() } })
     })
 
     async function loadSettings(){
@@ -241,14 +248,14 @@
         listEl.innerHTML = '<div class="muted">No reports yet.</div>'
         return
       }
-      listEl.innerHTML = rows.map(r => \`
+      listEl.innerHTML = rows.map(r => `
         <div class="row" style="justify-content:space-between; border-top:1px solid #e5e7eb; padding:8px 0;">
-          <div><strong>\${r.title}</strong><div class="muted">\${new Date(r.created_at).toLocaleString()} • \${r.time_mode}</div></div>
+          <div><strong>${r.title}</strong><div class="muted">${new Date(r.created_at).toLocaleString()} • ${r.time_mode}</div></div>
           <div class="row">
-            <button class="btn gray" onclick="openReport(\${r.id})">Open</button>
-            <button class="btn gray" onclick="deleteReport(\${r.id})">Delete</button>
+            <button class="btn gray" onclick="openReport(${r.id})">Open</button>
+            <button class="btn gray" onclick="deleteReport(${r.id})">Delete</button>
           </div>
-        </div>\`
+        </div>`
       ).join('')
     }
 
@@ -277,11 +284,7 @@
       const buckets = data.buckets
       const allBuckets = Array.from(new Set(Object.values(buckets).flatMap(b => Object.keys(b))))
       const labels = issues.map(i => i.issue_key)
-      const datasets = allBuckets.map((b, idx) => ({
-        label: b,
-        data: issues.map(i => (buckets[i.issue_key]||{})[b] || 0),
-        stack: 'a'
-      }))
+      const datasets = allBuckets.map((b, idx) => ({ label: b, data: issues.map(i => (buckets[i.issue_key]||{})[b] || 0), stack: 'a' }))
 
       const ctx = document.getElementById('chart').getContext('2d')
       if(chartInstance){ chartInstance.destroy() }
@@ -297,7 +300,7 @@
 
       const table = document.getElementById('issuesTable')
       table.innerHTML = '<thead><tr><th>Key</th><th>Type</th><th>Summary</th><th>Epic</th><th>Parent</th><th>Status</th><th>Assignee</th></tr></thead>'
-      table.innerHTML += '<tbody>' + issues.map(i => \`<tr><td>\${i.issue_key}</td><td>\${i.type}</td><td>\${i.summary}</td><td>\${i.epic_key || ''}</td><td>\${i.parent_key || ''}</td><td>\${i.current_status}</td><td>\${i.assignee || ''}</td></tr>\`).join('') + '</tbody>'
+      table.innerHTML += '<tbody>' + issues.map(i => `<tr><td>${i.issue_key}</td><td>${i.type}</td><td>${i.summary}</td><td>${i.epic_key || ''}</td><td>${i.parent_key || ''}</td><td>${i.current_status}</td><td>${i.assignee || ''}</td></tr>`).join('') + '</tbody>'
       document.getElementById('reportView').classList.remove('hidden')
       activateTab('reports')
     }
