@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from ..api.deps import current_admin
 from ..db.database import get_sessionmaker
 from ..db.jira_models import BaseJira, JiraIssue, JiraTransition
 from ..core.config import get_settings
-from sqlalchemy import delete
+from sqlalchemy import delete, text
 import httpx
 import json
 from datetime import datetime
@@ -26,8 +26,8 @@ class IngestRequest(BaseModel):
 KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')
 
 def _quote(s: str) -> str:
-    s = s.replace('"', '\\"')
-    return f'"{s}"'
+    s = s.replace('\"', '\\\"')
+    return f'\"{s}\"'
 
 def _build_jql(req: IngestRequest) -> str:
     clauses = []
@@ -70,6 +70,71 @@ async def _ensure_tables():
             BaseJira.metadata.create_all(bind=bind)
         await session.run_sync(_create)
 
+# --- Saved settings loader (from SQLite) --------------------------------------
+async def _load_saved_jira_settings_from_db() -> Optional[Tuple[Optional[str], Optional[str], Optional[str]]]:
+    """
+    Tries to locate a table that contains jira_base_url, jira_email, jira_api_token
+    and returns the latest row's values. This is resilient to table name changes.
+    """
+    Session = get_sessionmaker()
+    async with Session() as session:
+        def _sync_read(sync_session):
+            bind = sync_session.get_bind()
+            with bind.connect() as conn:
+                tables = [r[0] for r in conn.execute(text("SELECT name FROM sqlite_master WHERE type='table'")).fetchall()]
+                need = {"jira_base_url", "jira_email", "jira_api_token"}
+                for t in tables:
+                    # PRAGMA table_info returns: cid, name, type, notnull, dflt_value, pk
+                    cols = {row[1] for row in conn.execute(text(f"PRAGMA table_info({t})")).fetchall()}
+                    if need.issubset(cols):
+                        row = conn.execute(text(f"SELECT jira_base_url, jira_email, jira_api_token FROM {t} ORDER BY rowid DESC LIMIT 1")).fetchone()
+                        if row:
+                            return (row[0], row[1], row[2])
+            return (None, None, None)
+        return await session.run_sync(_sync_read)
+
+def _merge_creds(p_base: Optional[str], p_email: Optional[str], p_token: Optional[str]) -> Tuple[str, str, str]:
+    # Start with env defaults
+    s = get_settings()
+    base = (p_base or s.jira_base_url or "").rstrip("/")
+    email = p_email or s.jira_email
+    token = p_token or s.jira_api_token
+
+    # If anything missing, try DB
+    if not (base and email and token):
+        # Synchronously load from DB (via async helper)
+        # NOTE: caller must be async and await the result below (see wrappers)
+        raise RuntimeError("DB_MERGE_REQUIRED")
+
+    return base, email, token
+
+async def _resolve_from_params(base_url: Optional[str], email: Optional[str], token: Optional[str]) -> Tuple[str, str, str]:
+    try:
+        return _merge_creds(base_url, email, token)
+    except RuntimeError:
+        db_base, db_email, db_token = await _load_saved_jira_settings_from_db() or (None, None, None)
+        s = get_settings()
+        base = (base_url or db_base or s.jira_base_url or "").rstrip("/")
+        em = email or db_email or s.jira_email
+        tk = token or db_token or s.jira_api_token
+        if not (base and em and tk):
+            raise HTTPException(status_code=400, detail="Missing Jira credentials. Provide base_url, email, token or save them in Admin → Settings.")
+        return base, em, tk
+
+async def _resolve_from_request(req: IngestRequest) -> Tuple[str, str, str]:
+    try:
+        return _merge_creds(req.jira_base_url, req.jira_email, req.jira_api_token)
+    except RuntimeError:
+        db_base, db_email, db_token = await _load_saved_jira_settings_from_db() or (None, None, None)
+        s = get_settings()
+        base = ((req.jira_base_url or db_base or s.jira_base_url or "")).rstrip("/")
+        em = req.jira_email or db_email or s.jira_email
+        tk = req.jira_api_token or db_token or s.jira_api_token
+        if not (base and em and tk):
+            raise HTTPException(status_code=400, detail="Missing Jira credentials. Provide jira_base_url, jira_email, jira_api_token in the request or save them in Admin → Settings.")
+        return base, em, tk
+
+# --- Parsers ------------------------------------------------------------------
 def _parse_issue_fields(issue: Dict[str, Any]) -> Dict[str, Any]:
     f = issue.get("fields") or {}
     key = issue.get("key", "")
@@ -124,27 +189,10 @@ def _extract_transitions(issue: Dict[str, Any]):
 async def _client():
     return httpx.AsyncClient(timeout=30)
 
-def _resolve_credentials(req: IngestRequest):
-    settings = get_settings()
-    base_url = (req.jira_base_url or settings.jira_base_url or "").rstrip("/")
-    email = req.jira_email or settings.jira_email
-    token = req.jira_api_token or settings.jira_api_token
-    if not (base_url and email and token):
-        raise HTTPException(status_code=400, detail="jira_base_url, jira_email, and jira_api_token are required (either in request or saved settings).")
-    return base_url, email, token
-
-def _resolve_from_params(base_url: Optional[str], email: Optional[str], token: Optional[str]):
-    s = get_settings()
-    base = (base_url or s.jira_base_url or "").rstrip("/")
-    em = email or s.jira_email
-    tk = token or s.jira_api_token
-    if not (base and em and tk):
-        raise HTTPException(status_code=400, detail="Missing Jira credentials. Provide base_url, email, token or save them in Admin → Settings.")
-    return base, em, tk
-
+# --- Endpoints ----------------------------------------------------------------
 @router.get("/whoami")
 async def whoami(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
-    base, em, tk = _resolve_from_params(base_url, email, token)
+    base, em, tk = await _resolve_from_params(base_url, email, token)
     url = f"{base}/rest/api/3/myself"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
@@ -155,10 +203,8 @@ async def whoami(base_url: Optional[str] = None, email: Optional[str] = None, to
         return {"ok": True, "accountId": data.get("accountId"), "displayName": data.get("displayName"), "raw": data}
 
 @router.get("/project")
-async def get_project(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, id_or_key: str = "", _=Depends(current_admin)):
-    base, em, tk = _resolve_from_params(base_url, email, token)
-    if not id_or_key:
-        raise HTTPException(status_code=400, detail="id_or_key is required")
+async def get_project(id_or_key: str, base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
+    base, em, tk = await _resolve_from_params(base_url, email, token)
     url = f"{base}/rest/api/3/project/{id_or_key}"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
@@ -169,7 +215,7 @@ async def get_project(base_url: Optional[str] = None, email: Optional[str] = Non
 
 @router.get("/projects")
 async def list_projects(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
-    base, em, tk = _resolve_from_params(base_url, email, token)
+    base, em, tk = await _resolve_from_params(base_url, email, token)
     url = f"{base}/rest/api/3/project/search"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
@@ -193,10 +239,8 @@ async def list_projects(base_url: Optional[str] = None, email: Optional[str] = N
         return {"ok": True, "count": len(out), "projects": out}
 
 @router.get("/jql-check")
-async def jql_check(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, jql: str = "", _=Depends(current_admin)):
-    base, em, tk = _resolve_from_params(base_url, email, token)
-    if not jql:
-        raise HTTPException(status_code=400, detail="jql is required")
+async def jql_check(jql: str, base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
+    base, em, tk = await _resolve_from_params(base_url, email, token)
     url = f"{base}/rest/api/3/search"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
@@ -207,7 +251,7 @@ async def jql_check(base_url: Optional[str] = None, email: Optional[str] = None,
 
 @router.post("/ingest")
 async def ingest(req: IngestRequest, _=Depends(current_admin)):
-    base, email, token = _resolve_credentials(req)
+    base, email, token = await _resolve_from_request(req)
     await _ensure_tables()
 
     jql = _build_jql(req)
