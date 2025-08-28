@@ -29,7 +29,6 @@
     .error { color:#b91c1c; font-size: 13px; }
     canvas { max-width: 100%; }
   </style>
-  <!-- Charts: CDN (no npm) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -126,9 +125,14 @@
       if(name==='reports'){ refreshReports() }
     }
 
+    function authHeaders() {
+      const t = sessionStorage.getItem('token')
+      return t ? { 'X-Session': t } : {}
+    }
+
     async function me(){
       try{
-        const res = await fetch('/api/me', { credentials:'include' })
+        const res = await fetch('/api/me', { credentials:'include', headers: authHeaders() })
         if(!res.ok) throw 0;
         const u = await res.json()
         document.getElementById('userArea').textContent = u.email + ' ('+u.role+')'
@@ -149,19 +153,20 @@
         method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
         body: JSON.stringify({ email, password })
       })
+      const body = await res.json().catch(()=>({}))
       if(res.ok){
+        if(body.token) sessionStorage.setItem('token', body.token)
         err.textContent = ''
-        me()
+        await me()
         activateTab('reports')
       } else {
-        const body = await res.json().catch(()=>({detail:'Login failed'}))
         err.textContent = body.detail || 'Login failed'
       }
     }
 
     async function loadSettings(){
       const err = document.getElementById('adminError'); err.textContent = ''
-      const res = await fetch('/api/admin/settings', { credentials:'include' })
+      const res = await fetch('/api/admin/settings', { credentials:'include', headers: authHeaders() })
       if(!res.ok){ err.textContent = 'Not authorized or error'; return }
       const s = await res.json()
       for(const k of ['jira_base_url','jira_email','default_window_days','timezone','business_hours_start','business_hours_end','business_days']){
@@ -184,7 +189,7 @@
         business_days: document.getElementById('business_days').value || 'Mon,Tue,Wed,Thu,Fri'
       }
       const res = await fetch('/api/admin/settings', {
-        method:'PUT', headers:{'Content-Type':'application/json'}, credentials:'include',
+        method:'PUT', headers:{'Content-Type':'application/json', ...authHeaders()}, credentials:'include',
         body: JSON.stringify(payload)
       })
       if(res.ok){
@@ -197,7 +202,7 @@
     }
 
     async function refreshReports(){
-      const res = await fetch('/api/reports', { credentials:'include' })
+      const res = await fetch('/api/reports', { credentials:'include', headers: authHeaders() })
       const listEl = document.getElementById('reportsList')
       if(!res.ok){ listEl.innerHTML = '<div class="error">Not authorized or error.</div>'; return }
       const rows = await res.json()
@@ -217,12 +222,12 @@
     }
 
     async function createReport(){
-      await fetch('/api/reports', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body: JSON.stringify({ title:'Sample Report' }) })
+      await fetch('/api/reports', { method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, credentials:'include', body: JSON.stringify({ title:'Sample Report' }) })
       refreshReports()
     }
 
     async function deleteReport(id){
-      await fetch('/api/reports/'+id, { method:'DELETE', credentials:'include' })
+      await fetch('/api/reports/'+id, { method:'DELETE', credentials:'include', headers: authHeaders() })
       refreshReports()
       document.getElementById('reportView').classList.add('hidden')
     }
@@ -232,12 +237,11 @@
 
     async function openReport(id){
       currentReportId = id
-      const res = await fetch('/api/reports/'+id, { credentials:'include' })
+      const res = await fetch('/api/reports/'+id, { credentials:'include', headers: authHeaders() })
       const data = await res.json()
       document.getElementById('reportTitle').textContent = data.report.title
       document.getElementById('reportMeta').textContent = new Date(data.report.created_at).toLocaleString()
 
-      // Chart data
       const issues = data.issues
       const buckets = data.buckets
       const allBuckets = Array.from(new Set(Object.values(buckets).flatMap(b => Object.keys(b))))
@@ -260,7 +264,6 @@
         }
       })
 
-      // Table
       const table = document.getElementById('issuesTable')
       table.innerHTML = '<thead><tr><th>Key</th><th>Type</th><th>Summary</th><th>Epic</th><th>Parent</th><th>Status</th><th>Assignee</th></tr></thead>'
       table.innerHTML += '<tbody>' + issues.map(i => \`<tr><td>\${i.issue_key}</td><td>\${i.type}</td><td>\${i.summary}</td><td>\${i.epic_key || ''}</td><td>\${i.parent_key || ''}</td><td>\${i.current_status}</td><td>\${i.assignee || ''}</td></tr>\`).join('') + '</tbody>'
@@ -270,7 +273,13 @@
 
     function downloadCSV(type){
       if(!currentReportId) return
-      window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type
+      const t = sessionStorage.getItem('token')
+      if(t){
+        // Use query param as a fallback to pass token for downloads
+        window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type + '&x_session=' + encodeURIComponent(t)
+      } else {
+        window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type
+      }
     }
   </script>
 </body>
