@@ -11,6 +11,7 @@
     .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding:16px; }
     .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
     .btn { background:#2563eb; color:#fff; border:none; border-radius:10px; padding:8px 12px; cursor:pointer; }
+    .btn[disabled] { opacity:.6; cursor:not-allowed; }
     .btn.gray { background:#e5e7eb; color:#111827; }
     .btn.green { background:#16a34a; }
     .input, select { border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px; min-width: 220px; }
@@ -26,7 +27,8 @@
     .mt-3 { margin-top:12px; }
     .mt-2 { margin-top:8px; }
     .mb-2 { margin-bottom:8px; }
-    .error { color:#b91c1c; font-size: 13px; }
+    .error { color:#b91c1c; font-size: 13px; white-space: pre-wrap; }
+    .ok { color:#065f46; font-size: 13px; }
     canvas { max-width: 100%; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -46,11 +48,12 @@
 
     <section id="tab-login" class="card">
       <h1>Login</h1>
+      <div class="muted" id="health">Checking backend…</div>
       <div id="loginError" class="error"></div>
       <div class="row mt-2">
         <input id="email" class="input" placeholder="Email" value="admin@example.com" />
         <input id="password" type="password" class="input" placeholder="Password" value="admin123" />
-        <button class="btn" onclick="login()">Sign in</button>
+        <button id="loginBtn" class="btn">Sign in</button>
       </div>
       <p class="muted mt-2">Default admin is bootstrapped on first backend start; change credentials in <code>.env</code>.</p>
     </section>
@@ -130,6 +133,18 @@
       return t ? { 'X-Session': t } : {}
     }
 
+    async function ping() {
+      try {
+        const r = await fetch('/api/health');
+        document.getElementById('health').textContent = r.ok ? 'Backend OK' : 'Backend not responding'
+        document.getElementById('health').className = r.ok ? 'ok' : 'error'
+      } catch (e) {
+        document.getElementById('health').textContent = 'Backend not responding'
+        document.getElementById('health').className = 'error'
+      }
+    }
+    ping()
+
     async function me(){
       try{
         const res = await fetch('/api/me', { credentials:'include', headers: authHeaders() })
@@ -148,26 +163,41 @@
       const email = document.getElementById('email').value
       const password = document.getElementById('password').value
       const err = document.getElementById('loginError')
+      const btn = document.getElementById('loginBtn')
       err.textContent = ''
-      const res = await fetch('/api/auth/login', {
-        method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
-        body: JSON.stringify({ email, password })
-      })
-      const body = await res.json().catch(()=>({}))
-      if(res.ok){
-        if(body.token) sessionStorage.setItem('token', body.token)
-        err.textContent = ''
-        await me()
-        activateTab('reports')
-      } else {
-        err.textContent = body.detail || 'Login failed'
+      btn.setAttribute('disabled', 'true')
+      try {
+        const res = await fetch('/api/auth/login', {
+          method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+          body: JSON.stringify({ email, password })
+        })
+        const text = await res.text()
+        let body = {}
+        try { body = JSON.parse(text) } catch { /* keep body as {} */ }
+        if(res.ok){
+          if(body.token) sessionStorage.setItem('token', body.token)
+          await me()
+          activateTab('reports')
+        } else {
+          err.textContent = (body && body.detail) ? body.detail : ('Login failed (' + res.status + ') ' + text)
+        }
+      } catch (e) {
+        console.error('Login error:', e)
+        err.textContent = 'Network/JS error: ' + (e && e.message ? e.message : e)
+      } finally {
+        btn.removeAttribute('disabled')
       }
     }
+    // bind click and Enter
+    document.getElementById('loginBtn').addEventListener('click', login)
+    document.getElementById('password').addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){ login() }
+    })
 
     async function loadSettings(){
       const err = document.getElementById('adminError'); err.textContent = ''
       const res = await fetch('/api/admin/settings', { credentials:'include', headers: authHeaders() })
-      if(!res.ok){ err.textContent = 'Not authorized or error'; return }
+      if(!res.ok){ err.textContent = 'Not authorized or error ('+res.status+')'; return }
       const s = await res.json()
       for(const k of ['jira_base_url','jira_email','default_window_days','timezone','business_hours_start','business_hours_end','business_days']){
         const el = document.getElementById(k)
@@ -197,14 +227,15 @@
         document.getElementById('jira_api_token').value = ''
         loadSettings()
       } else {
-        alert('Failed saving settings')
+        const t = await res.text()
+        alert('Failed saving settings ('+res.status+'): ' + t)
       }
     }
 
     async function refreshReports(){
       const res = await fetch('/api/reports', { credentials:'include', headers: authHeaders() })
       const listEl = document.getElementById('reportsList')
-      if(!res.ok){ listEl.innerHTML = '<div class="error">Not authorized or error.</div>'; return }
+      if(!res.ok){ listEl.innerHTML = '<div class="error">Not authorized or error ('+res.status+')</div>'; return }
       const rows = await res.json()
       if(rows.length===0){
         listEl.innerHTML = '<div class="muted">No reports yet.</div>'
@@ -275,7 +306,6 @@
       if(!currentReportId) return
       const t = sessionStorage.getItem('token')
       if(t){
-        // Use query param as a fallback to pass token for downloads
         window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type + '&x_session=' + encodeURIComponent(t)
       } else {
         window.location.href = '/api/reports/' + currentReportId + '/csv?type=' + type
