@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
+from typing import List, Dict, Any
 from ..api.deps import current_admin
-from ..db.database import get_sessionmaker, engine
+from ..db.database import get_sessionmaker
 from ..db.jira_models import BaseJira, JiraIssue, JiraTransition
-from sqlalchemy import select, delete
+from sqlalchemy import delete
 import httpx
+import json
 from datetime import datetime
 
 router = APIRouter(prefix="/jira", tags=["jira"])
@@ -38,8 +39,11 @@ def _build_jql(req: IngestRequest) -> str:
     return jql or "order by updated desc"
 
 async def _ensure_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(BaseJira.metadata.create_all)
+    Session = get_sessionmaker()
+    async with Session() as session:
+        engine = session.get_bind()  # AsyncEngine
+        async with engine.begin() as conn:
+            await conn.run_sync(BaseJira.metadata.create_all)
 
 def _parse_issue_fields(issue: Dict[str, Any]) -> Dict[str, Any]:
     f = issue.get("fields") or {}
@@ -139,7 +143,6 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
                     session.add(JiraIssue(**fields, raw_json=raw_json))
                     issues_saved += 1
 
-                    # transitions
                     await session.execute(delete(JiraTransition).where(JiraTransition.issue_id == fields["issue_id"]))
                     for t in _extract_transitions(issue):
                         session.add(JiraTransition(
