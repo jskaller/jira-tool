@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from .api import auth, admin, reports, health, users
+from .api import auth, admin, reports, health, users, jira
 from .db.database import init_db
 from .core.config import get_settings
 
@@ -13,12 +13,11 @@ settings = get_settings()
 async def on_startup():
     await init_db()
 
-# API routers
 app.include_router(auth.router, prefix="/api")
 app.include_router(admin.router, prefix="/api")
 app.include_router(reports.router, prefix="/api")
 app.include_router(health.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+app.include_router(jira.router, prefix="/api")
 
-# Static UI
 app.mount("/", StaticFiles(directory="web", html=True), name="web")

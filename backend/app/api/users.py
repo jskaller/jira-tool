@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from ..db.database import get_sessionmaker
 from ..db.models import User
@@ -10,7 +10,6 @@ from typing import Optional, List
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-# ------ Schemas (inline to keep patch minimal) ------
 class ChangePasswordIn(BaseModel):
     current_password: str = Field(min_length=1)
     new_password: str = Field(min_length=8)
@@ -29,12 +28,16 @@ class AdminCreateUserIn(BaseModel):
     name: Optional[str] = None
     role: str = "user"
 
-# ------ Endpoints ------
+class AdminUpdateUserIn(BaseModel):
+    email: Optional[EmailStr] = None
+    name: Optional[str] = None
+    role: Optional[str] = None
+    password: Optional[str] = Field(default=None, min_length=8)
+
 @router.post("/me/password")
 async def change_my_password(payload: ChangePasswordIn, me=Depends(current_user)):
     Session = get_sessionmaker()
     async with Session() as session:
-        # fetch fresh
         res = await session.execute(select(User).where(User.id == me.id))
         user = res.scalar_one()
         if not verify_password(payload.current_password, user.password_hash):
@@ -64,3 +67,55 @@ async def create_user(payload: AdminCreateUserIn, _: User = Depends(current_admi
             raise HTTPException(status_code=400, detail="Email already exists")
         await session.refresh(u)
         return u
+
+@router.patch("/admin/{user_id}", response_model=UserItem)
+async def update_user(user_id: int, payload: AdminUpdateUserIn, admin=Depends(current_admin)):
+    Session = get_sessionmaker()
+    async with Session() as session:
+        res = await session.execute(select(User).where(User.id == user_id))
+        u = res.scalar_one_or_none()
+        if not u:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        if payload.role and u.role == "admin" and payload.role != "admin":
+            res2 = await session.execute(select(func.count()).select_from(User).where(User.role=="admin"))
+            admin_count = res2.scalar_one() or 0
+            if admin_count <= 1:
+                raise HTTPException(status_code=400, detail="Cannot demote the last admin")
+
+        if payload.email is not None:
+            u.email = str(payload.email).lower()
+        if payload.name is not None:
+            u.name = payload.name
+        if payload.role is not None:
+            u.role = payload.role
+        if payload.password:
+            u.password_hash = hash_password(payload.password)
+
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            raise HTTPException(status_code=400, detail="Email already exists")
+
+        await session.refresh(u)
+        return u
+
+@router.delete("/admin/{user_id}")
+async def delete_user(user_id: int, admin=Depends(current_admin)):
+    if admin.id == user_id:
+        raise HTTPException(status_code=400, detail="Cannot delete yourself")
+    Session = get_sessionmaker()
+    async with Session() as session:
+        res = await session.execute(select(User).where(User.id == user_id))
+        u = res.scalar_one_or_none()
+        if not u:
+            return {"ok": True}
+        if u.role == "admin":
+            res2 = await session.execute(select(func.count()).select_from(User).where(User.role=="admin"))
+            admin_count = res2.scalar_one() or 0
+            if admin_count <= 1:
+                raise HTTPException(status_code=400, detail="Cannot delete the last admin")
+        await session.delete(u)
+        await session.commit()
+        return {"ok": True}
