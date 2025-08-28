@@ -22,33 +22,42 @@ class IngestRequest(BaseModel):
     updated_window_days: int = 180
     max_issues: int = 25000
 
-KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')  # heuristic for Jira project keys
+# Heuristic for a Jira project key (all caps + digits/underscores, starting with a letter)
+KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')
 
 def _quote(s: str) -> str:
-    s = s.replace('"', '\\"')
+    s = s.replace('"', '\"')
     return f'"{s}"'
 
 def _build_jql(req: IngestRequest) -> str:
     clauses = []
+    # Projects
     if req.projects:
         parts = []
         for p in req.projects:
-            p = (p or '').strip()
+            p = (p or "").strip()
             if not p:
                 continue
             if KEY_REGEX.match(p):
-                parts.append(p)  # looks like a KEY, keep unquoted
+                parts.append(p)  # treat as KEY
             else:
-                parts.append(_quote(p))  # likely a NAME, quote it
+                parts.append(_quote(p))  # treat as NAME
         if parts:
             clauses.append(f"project in ({', '.join(parts)})")
+    # Labels
     if req.labels:
-        # labels generally safe unquoted, but quote if contains space
-        parts = [(_quote(l) if ' ' in (l or '') else (l or '')) for l in req.labels if (l or '').strip()]
+        parts = []
+        for l in req.labels:
+            l = (l or "").strip()
+            if not l:
+                continue
+            parts.append(_quote(l) if " " in l else l)
         if parts:
             clauses.append(f"labels in ({', '.join(parts)})")
+    # Updated window
     if req.updated_window_days and req.updated_window_days > 0:
         clauses.append(f"updated >= -{req.updated_window_days}d")
+    # Extra JQL
     if req.jql.strip():
         clauses.append(f"({req.jql.strip()})")
     jql = " and ".join(clauses) if clauses else ""
@@ -57,6 +66,7 @@ def _build_jql(req: IngestRequest) -> str:
     return jql or "order by updated desc"
 
 async def _ensure_tables():
+    # Create the jira_issues / jira_transitions tables using the current bind
     Session = get_sessionmaker()
     async with Session() as session:
         def _create(sync_session):
@@ -112,7 +122,7 @@ def _extract_transitions(issue: Dict[str, Any]):
                     "from_status": it.get("fromString") or "",
                     "to_status": it.get("toString") or "",
                 })
-    out.sort(key=lambda x: x["when'])
+    out.sort(key=lambda x: x["when"])
     return out
 
 @router.post("/ingest")
@@ -145,7 +155,6 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
             }
             r = await client.get(url, headers=headers, params=params, auth=auth)
             if r.status_code >= 400:
-                # include JQL in error to make debugging easy
                 raise HTTPException(status_code=r.status_code, detail=f"Jira error (status {r.status_code}) for JQL: {jql} :: {r.text[:500]}")
             data = r.json()
             issues = data.get("issues", [])
@@ -157,11 +166,11 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
                 for issue in issues:
                     fields = _parse_issue_fields(issue)
                     raw_json = json.dumps(issue)
-                    await session.execute(delete(JiraIssue).where(JiraIssue.issue_id == fields["issue_id"])) 
+                    await session.execute(delete(JiraIssue).where(JiraIssue.issue_id == fields["issue_id"]))
                     session.add(JiraIssue(**fields, raw_json=raw_json))
                     issues_saved += 1
 
-                    await session.execute(delete(JiraTransition).where(JiraTransition.issue_id == fields["issue_id"])) 
+                    await session.execute(delete(JiraTransition).where(JiraTransition.issue_id == fields["issue_id"]))
                     for t in _extract_transitions(issue):
                         session.add(JiraTransition(
                             issue_id=fields["issue_id"],
