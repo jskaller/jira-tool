@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (UI v0019 reupload)</title>
+  <title>Jira Tools (UI v0020)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -50,7 +50,7 @@
     <section id="tab-login" class="card">
       <div class="row" style="justify-content:space-between">
         <h1>Login</h1>
-        <span class="tag">UI v0019</span>
+        <span class="tag">UI v0020</span>
       </div>
       <div class="muted" id="health">Checking backend…</div>
       <div id="loginError" class="error"></div>
@@ -198,7 +198,7 @@
       tabs.forEach(t => t.classList.toggle('active', t.dataset.tab===name))
       document.querySelectorAll('section[id^="tab-"]').forEach(s => s.classList.add('hidden'))
       document.getElementById('tab-' + name).classList.remove('hidden')
-      if(name==='admin'){ loadSettings(); loadUsers(); }
+      if(name==='admin'){ loadSettings(); /*loadUsers();*/ }
       if(name==='reports'){ refreshReports() }
     }
 
@@ -246,79 +246,6 @@
       } else {
         const t = await res.text()
         alert('Failed saving settings ('+res.status+'): ' + t)
-      }
-    }
-
-    // Users admin
-    async function loadUsers(){
-      const tbl = document.getElementById('usersTable')
-      const err = document.getElementById('usersError'); err.textContent=''
-      const res = await fetch('/api/users/admin', { headers: authHeaders() })
-      if(!res.ok) { if(res.status===403) { tbl.innerHTML='<div class="muted">Admin only</div>'; return }; err.textContent='Error loading users ('+res.status+')'; return }
-      const rows = await res.json()
-      tbl.innerHTML = '<thead><tr><th>ID</th><th>Email</th><th>Name</th><th>Role</th><th>Actions</th></tr></thead>' +
-        '<tbody>' + rows.map(u => rowUser(u)).join('') + '</tbody>'
-    }
-    function rowUser(u){
-      return `<tr id="user_${u.id}">
-        <td>${u.id}</td>
-        <td><input class="input" id="u_email_${u.id}" value="${u.email}" style="min-width:220px"/></td>
-        <td><input class="input" id="u_name_${u.id}" value="${u.name||''}" /></td>
-        <td>
-          <select class="input" id="u_role_${u.id}"><option value="user"${u.role==='user'?' selected':''}>user</option><option value="admin"${u.role==='admin'?' selected':''}>admin</option></select>
-        </td>
-        <td class="row">
-          <input class="input" id="u_pass_${u.id}" type="password" placeholder="Set new password (optional)" />
-          <button class="btn" onclick="saveUser(${u.id})">Save</button>
-          <button class="btn gray" onclick="deleteUser(${u.id})">Delete</button>
-        </td>
-      </tr>`
-    }
-    async function createUser(){
-      const email = document.getElementById('new_user_email').value
-      const name = document.getElementById('new_user_name').value
-      const password = document.getElementById('new_user_password').value
-      const role = document.getElementById('new_user_role').value
-      const err = document.getElementById('usersError'); err.textContent=''
-      const res = await fetch('/api/users/admin', {
-        method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({ email, name, password, role })
-      })
-      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch { }
-      if(res.ok) {
-        document.getElementById('new_user_email').value=''
-        document.getElementById('new_user_name').value=''
-        document.getElementById('new_user_password').value=''
-        document.getElementById('new_user_role').value='user'
-        loadUsers()
-      } else {
-        err.textContent = b.detail || ('Error ('+res.status+') '+t)
-      }
-    }
-    async function saveUser(id){
-      const email = document.getElementById('u_email_'+id).value
-      const name = document.getElementById('u_name_'+id).value
-      const role = document.getElementById('u_role_'+id).value
-      const password = document.getElementById('u_pass_'+id).value || null
-      const err = document.getElementById('usersError'); err.textContent=''
-      const res = await fetch('/api/users/admin/'+id, {
-        method:'PATCH', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({ email, name, role, password })
-      })
-      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch { }
-      if(res.ok) {
-        loadUsers()
-      } else {
-        err.textContent = b.detail || ('Error ('+res.status+') '+t)
-      }
-    }
-    async function deleteUser(id){
-      if(!confirm('Delete user '+id+'?')) return
-      const err = document.getElementById('usersError'); err.textContent=''
-      const res = await fetch('/api/users/admin/'+id, { method:'DELETE', headers: authHeaders() })
-      const t = await res.text(); let b={}; try { b=JSON.parse(t) } catch { }
-      if(res.ok) {
-        loadUsers()
-      } else {
-        err.textContent = b.detail || ('Error ('+res.status+') '+t)
       }
     }
 
@@ -421,7 +348,7 @@
       const max_issues = parseInt(document.getElementById('ing_max').value || '25000')
       const res = await fetch('/api/jira/ingest', {
         method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({
-          jira_base_url: base or None, jira_email: email or None, jira_api_token: token or None,
+          jira_base_url: base || null, jira_email: email || null, jira_api_token: token || null,
           projects, labels, jql, updated_window_days, max_issues
         })
       })
