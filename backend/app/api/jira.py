@@ -1,6 +1,7 @@
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from ..api.deps import current_admin
 from ..db.database import get_sessionmaker
 from ..db.jira_models import BaseJira, JiraIssue, JiraTransition
@@ -22,45 +23,38 @@ class IngestRequest(BaseModel):
     updated_window_days: int = 180
     max_issues: int = 25000
 
-# Heuristic for a Jira project key (all caps + digits/underscores, starting with a letter)
 KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')
 
 def _quote(s: str) -> str:
-    s = s.replace('"', '\"')
+    s = s.replace('"', '\\"')
     return f'"{s}"'
 
 def _build_jql(req: IngestRequest) -> str:
     clauses = []
-    # Projects
     if req.projects:
         parts = []
         for p in req.projects:
             p = (p or "").strip()
             if not p:
                 continue
-            # If it's all digits, treat as project ID
             if p.isdigit():
-                parts.append(p)
+                parts.append(p)       # numeric project ID
             elif KEY_REGEX.match(p):
-                parts.append(p)  # treat as KEY
+                parts.append(p)       # project KEY
             else:
-                parts.append(_quote(p))  # treat as NAME
+                parts.append(_quote(p))  # project NAME
         if parts:
             clauses.append(f"project in ({', '.join(parts)})")
-    # Labels
     if req.labels:
         parts = []
         for l in req.labels:
             l = (l or "").strip()
-            if not l:
-                continue
+            if not l: continue
             parts.append(_quote(l) if " " in l else l)
         if parts:
             clauses.append(f"labels in ({', '.join(parts)})")
-    # Updated window
     if req.updated_window_days and req.updated_window_days > 0:
         clauses.append(f"updated >= -{req.updated_window_days}d")
-    # Extra JQL
     if req.jql.strip():
         clauses.append(f"({req.jql.strip()})")
     jql = " and ".join(clauses) if clauses else ""
@@ -69,7 +63,6 @@ def _build_jql(req: IngestRequest) -> str:
     return jql or "order by updated desc"
 
 async def _ensure_tables():
-    # Create the jira_issues / jira_transitions tables using the current bind
     Session = get_sessionmaker()
     async with Session() as session:
         def _create(sync_session):
@@ -129,12 +122,7 @@ def _extract_transitions(issue: Dict[str, Any]):
     return out
 
 @router.get("/projects")
-async def list_projects(
-    base_url: str = Query(..., alias="base_url"),
-    email: str = Query(..., alias="email"),
-    token: str = Query(..., alias="token"),
-    _=Depends(current_admin)
-):
+async def list_projects(base_url: str, email: str, token: str, _=Depends(current_admin)):
     base = base_url.rstrip("/")
     url = f"{base}/rest/api/3/project/search"
     headers = {"Accept": "application/json"}
@@ -160,13 +148,7 @@ async def list_projects(
         return {"ok": True, "count": len(out), "projects": out}
 
 @router.get("/jql-check")
-async def jql_check(
-    base_url: str = Query(..., alias="base_url"),
-    email: str = Query(..., alias="email"),
-    token: str = Query(..., alias="token"),
-    jql: str = Query(..., alias="jql"),
-    _=Depends(current_admin)
-):
+async def jql_check(base_url: str, email: str, token: str, jql: str, _=Depends(current_admin)):
     base = base_url.rstrip("/")
     url = f"{base}/rest/api/3/search"
     headers = {"Accept": "application/json"}
@@ -199,12 +181,7 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
     Session = get_sessionmaker()
     async with httpx.AsyncClient(timeout=30) as client:
         while True:
-            params = {
-                "jql": jql,
-                "startAt": start_at,
-                "maxResults": max_results,
-                "expand": "changelog"
-            }
+            params = {"jql": jql, "startAt": start_at, "maxResults": max_results, "expand": "changelog"}
             r = await client.get(url, headers=headers, params=params, auth=auth)
             if r.status_code >= 400:
                 raise HTTPException(status_code=r.status_code, detail=f"Jira error (status {r.status_code}) for JQL: {jql} :: {r.text[:500]}")
@@ -242,11 +219,4 @@ async def ingest(req: IngestRequest, _=Depends(current_admin)):
             if total is not None and start_at >= total:
                 break
 
-    return {
-        "ok": True,
-        "jql": jql,
-        "fetched": fetched,
-        "issues_saved": issues_saved,
-        "transitions_saved": transitions_saved,
-        "total_reported_by_jira": total
-    }
+    return {"ok": True, "jql": jql, "fetched": fetched, "issues_saved": issues_saved, "transitions_saved": transitions_saved, "total_reported_by_jira": total}
