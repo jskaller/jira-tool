@@ -1,13 +1,15 @@
 from pydantic_settings import BaseSettings
-from pydantic import Field
+from pydantic import Field, field_validator
 from functools import lru_cache
-from typing import List
-import os
+from typing import List, Any
 
 class Settings(BaseSettings):
-    app_secret: str = Field(alias="APP_SECRET")
+    app_secret: str = Field(alias="APP_SECRET", default="change-me-please-32bytes")
     sqlite_path: str = Field(default="app.db", alias="SQLITE_PATH")
+
+    # Allow a single string or comma/semicolon separated list in .env (e.g. FRONTEND_ORIGINS=http://localhost:5173,https://acme.com)
     frontend_origins: List[str] = Field(default=["http://localhost:5173"], alias="FRONTEND_ORIGINS")
+
     bootstrap_admin_email: str = Field(default="admin@example.com", alias="BOOTSTRAP_ADMIN_EMAIL")
     bootstrap_admin_password: str = Field(default="admin123", alias="BOOTSTRAP_ADMIN_PASSWORD")
 
@@ -21,6 +23,20 @@ class Settings(BaseSettings):
     business_hours_end: str = Field(default="17:00", alias="BUSINESS_HOURS_END")
     business_days: str = Field(default="Mon,Tue,Wed,Thu,Fri", alias="BUSINESS_DAYS")
     timezone: str = Field(default="America/New_York", alias="TIMEZONE")
+
+    @field_validator("frontend_origins", mode="before")
+    @classmethod
+    def _parse_frontend_origins(cls, v: Any):
+        # Accept JSON-style list OR simple comma/semicolon separated string
+        if isinstance(v, str):
+            # If it looks like a JSON list, let pydantic handle it later
+            s = v.strip()
+            if s.startswith("[") and s.endswith("]"):
+                return v
+            # Otherwise, split by comma/semicolon
+            parts = [p.strip() for p in s.replace(";", ",").split(",") if p.strip()]
+            return parts or ["http://localhost:5173"]
+        return v
 
     class Config:
         env_file = ".env"
