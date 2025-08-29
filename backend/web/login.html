@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jira Tools — Sign in</title>
+  <style>
+    :root{--b:#2563eb;--bg:#f6f7fb;--card:#fff;--border:#e5e7eb;}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial}
+    .wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.06);padding:24px;max-width:360px;width:100%}
+    h1{margin:0 0 12px 0;font-size:20px}
+    label{display:block;margin-top:12px;font-size:14px;color:#374151}
+    input{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;margin-top:6px}
+    .row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:14px}
+    button{background:var(--b);color:#fff;border:none;border-radius:10px;padding:10px 12px;cursor:pointer;width:100%}
+    .muted{color:#6b7280;font-size:12px;margin-top:10px}
+    .err{color:#b91c1c;font-size:13px;margin-top:8px;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Sign in</h1>
+      <label>Email</label>
+      <input id="email" placeholder="admin@example.com" autocomplete="username" />
+      <label>Password</label>
+      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+      <div class="row">
+        <button id="btn" onclick="login()">Sign in</button>
+      </div>
+      <div class="err" id="err"></div>
+      <div class="muted">Default bootstrap: admin@example.com / admin123</div>
+    </div>
+  </div>
+<script>
+async function login(){
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  document.getElementById('err').textContent='';
+  try{
+    const res = await fetch('/api/auth/login',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email,password})
+    });
+    const text = await res.text();
+    let data = {}; try{ data = JSON.parse(text) }catch{}
+    if(!res.ok){
+      document.getElementById('err').textContent = (data.detail || text || ('HTTP '+res.status));
+      return;
+    }
+    // Try to find a token in common shapes
+    let token = data.token || (data.data && data.data.token) || data.session || data.access_token || data.key || '';
+    if(!token && typeof data === 'string'){ token = data; }
+    if(!token){
+      // Fallback: try calling a protected endpoint and see if cookie-based auth is used
+      const ping = await fetch('/api/admin/settings');
+      if(ping.ok){
+        sessionStorage.setItem('token',''); // empty but mark as signed-in for cookie mode
+        window.location.href='/admin.html';
+        return;
+      }else{
+        document.getElementById('err').textContent = 'Login succeeded but no session token returned. Check backend login response.';
+        return;
+      }
+    }
+    sessionStorage.setItem('token', token);
+    window.location.href='/admin.html';
+  }catch(e){
+    document.getElementById('err').textContent = 'Error: '+e.message;
+  }
+}
+</script>
+</body>
+</html>
