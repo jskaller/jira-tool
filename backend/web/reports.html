@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Reports · Jira Reporting</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script>
+    async function jget(url){ const r=await fetch(url); if(!r.ok) throw new Error(r.status); return r.json(); }
+    async function jpost(url, body){ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})}); const j=await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.detail||r.status); return j; }
+
+    async function listRuns() {
+      const tbody = document.getElementById('runs');
+      tbody.innerHTML = '<tr><td colspan="6" class="hint">Loading…</td></tr>';
+      try {
+        const arr = await jget('/api/reports');
+        tbody.innerHTML = '';
+        for (const r of arr) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = \`
+            <td>\${r.id}</td>
+            <td>\${r.started_at || ''}</td>
+            <td>\${r.completed_at || ''}</td>
+            <td>\${r.status}</td>
+            <td><code>\${r.projects}</code></td>
+            <td>
+              <a href="/api/reports/\${r.id}/download/issues">issues.csv</a> ·
+              <a href="/api/reports/\${r.id}/download/transitions">transitions.csv</a> ·
+              <a href="/api/reports/\${r.id}/download/rollups">rollups.csv</a>
+            </td>
+          \`;
+          tbody.appendChild(tr);
+        }
+        if (arr.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="hint">No runs yet.</td></tr>';
+        }
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="6" class="hint">Failed to load runs: ' + e + '</td></tr>';
+      }
+    }
+
+    async function runReport() {
+      const projects = document.getElementById('projects').value || 'MEDA';
+      const keys = projects.split(',').map(s=>s.trim()).filter(Boolean);
+      const body = {
+        report: 'status_summary',
+        project_keys: keys,
+        aggregation: document.getElementById('agg').value,
+        business_hours: document.getElementById('bh').value === 'true',
+        window_days: parseInt(document.getElementById('window_days').value || '180', 10),
+        max_issues: parseInt(document.getElementById('max_issues').value || '25', 10)
+      };
+      const p = document.getElementById('run_status');
+      p.textContent = 'Running…';
+      try {
+        const j = await jpost('/api/reports/run', body);
+        p.textContent = 'Run ' + j.run_id + ' complete';
+        listRuns();
+      } catch (e) {
+        p.textContent = 'Error: ' + e;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('run').addEventListener('click', runReport);
+      listRuns();
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Reports</h1>
+    <nav>
+      <a href="/admin.html">Admin</a>
+      <a class="active" href="/reports.html">Reports</a>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <h3>Run Report</h3>
+      <div class="row">
+        <div style="flex:1 1 220px">
+          <label>Project keys (comma‑sep)</label>
+          <input id="projects" placeholder="MEDA">
+        </div>
+        <div style="flex:1 1 120px">
+          <label>Max issues</label>
+          <input id="max_issues" type="number" value="25" min="1" max="1000">
+        </div>
+        <div style="flex:1 1 180px">
+          <label>Window days</label>
+          <input id="window_days" type="number" value="180" min="1" max="3650">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Aggregation</label>
+          <select id="agg">
+            <option value="both" selected>Both</option>
+            <option value="status">Status</option>
+            <option value="category">Category</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div>
+          <label>Business hours</label>
+          <select id="bh">
+            <option value="true" selected>Yes</option>
+            <option value="false">No (24/7)</option>
+          </select>
+        </div>
+        <div style="align-self:flex-end">
+          <button id="run">Run</button>
+        </div>
+      </div>
+      <p id="run_status" class="hint"></p>
+    </div>
+
+    <div class="card">
+      <h3>Report Runs</h3>
+      <table>
+        <thead><tr><th>ID</th><th>Started</th><th>Completed</th><th>Status</th><th>Projects</th><th>Downloads</th></tr></thead>
+        <tbody id="runs"></tbody>
+      </table>
+    </div>
+  </main>
+  <footer>© Jira Reporting</footer>
+</body>
+</html>
