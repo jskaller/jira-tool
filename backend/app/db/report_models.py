@@ -1,58 +1,30 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional
+from sqlalchemy import Column, Integer, Text, DateTime, ForeignKey, func, text
+from sqlalchemy.orm import relationship
 
-from sqlalchemy import Integer, String, Text
-from sqlalchemy import text as sa_text
-from sqlalchemy.orm import Mapped, mapped_column
-
-# Import the project's shared Base (via shim for safety)
-from .base import Base  # type: ignore
-
+from app.db.base import Base  # type: ignore
 
 class Report(Base):  # type: ignore[misc]
     __tablename__ = "reports"
-    # Allow live-reload / multiple imports without metadata conflicts
+    # Avoid "Table 'reports' is already defined" if imported twice by dev server
     __table_args__ = {"extend_existing": True}
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    # Keep both client- and server-side defaults so inserts never fail.
-    created_at: Mapped[datetime] = mapped_column(
-        nullable=False,
-        default=datetime.utcnow,
-        server_default=sa_text("(datetime('now'))"),
-    )
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
 
-    # Make owner_id optional on the ORM side to avoid IntegrityError when
-    # older DBs don't have a default yet. API can (and often does) pass it.
-    owner_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    # Keep this present because API may pass owner_id; default to 1 if not supplied.
+    owner_id = Column(Integer, nullable=False, default=1, server_default=text("1"))
 
-    # Columns that were missing on older DBs — give them safe defaults
-    name: Mapped[str] = mapped_column(
-        String(255), nullable=False, default="", server_default=sa_text("''")
-    )
-    params_json: Mapped[str] = mapped_column(
-        Text, nullable=False, default="{}", server_default=sa_text("'{}'")
-    )
-    filters_json: Mapped[str] = mapped_column(
-        Text, nullable=False, default="{}", server_default=sa_text("'{}'")
-    )
-    window_days: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=90, server_default=sa_text("90")
-    )
-    business_mode: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="wall", server_default=sa_text("'wall'")
-    )
-    aggregate_by: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="both", server_default=sa_text("'both'")
-    )
-    time_mode: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="updated", server_default=sa_text("'updated'")
-    )
-    csv_path: Mapped[str] = mapped_column(
-        String(512), nullable=False, default="", server_default=sa_text("''")
-    )
+    # Keep old columns for backward compat, give robust defaults to survive NOT NULL constraints.
+    name = Column(Text, nullable=False, default="", server_default=text("''"))
+    params_json = Column(Text, nullable=False, default="{}", server_default=text("'{}'"))
 
-    def __repr__(self) -> str:  # pragma: no cover
-        return f"<Report id={self.id} name={self.name!r} owner_id={self.owner_id}>"
+    # Newer fields seen in your logs; default them both on client and server side.
+    filters_json = Column(Text, nullable=False, default="{}", server_default=text("'{}'"))
+    time_mode = Column(Text, nullable=False, default="updated", server_default=text("'updated'"))
+
+    window_days = Column(Integer, nullable=False, default=180, server_default=text("180"))
+    business_mode = Column(Text, nullable=False, default="both", server_default=text("'both'"))
+    aggregate_by = Column(Text, nullable=False, default="both", server_default=text("'both'"))
+    csv_path = Column(Text, nullable=False, default="", server_default=text("''"))
