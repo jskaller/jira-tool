@@ -1,48 +1,57 @@
-
+# -*- coding: utf-8 -*-
+"""
+Drop-in replacement for Report ORM model.
+Adds/ensures the following columns exist on the model:
+- owner_id (INT, NOT NULL)
+- name (TEXT, NOT NULL, default "")
+- params_json (TEXT, NOT NULL, default "{}")
+- filters_json (TEXT, NOT NULL, default "{}")
+- window_days (INT, NOT NULL, default 180)
+- time_mode (TEXT, NOT NULL, default "updated")
+- business_mode (TEXT, NOT NULL, default "both")
+- aggregate_by (TEXT, NOT NULL, default "both")
+- csv_path (TEXT, NOT NULL, default "")
+"""
 from __future__ import annotations
+
 from datetime import datetime
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from typing import Optional
 
-BaseReport = declarative_base()
+from sqlalchemy import Column, Integer, String, DateTime, Text
 
-class Report(BaseReport):
+# Try to reuse project's Base if present; otherwise fall back to local declarative_base.
+Base = None
+try:
+    # common locations for project's shared Base
+    from .base import Base  # type: ignore
+except Exception:
+    try:
+        from .session import Base  # type: ignore
+    except Exception:
+        try:
+            from .models import Base  # type: ignore
+        except Exception:
+            from sqlalchemy.orm import declarative_base
+            Base = declarative_base()  # type: ignore
+
+
+class Report(Base):  # type: ignore[name-defined]
     __tablename__ = "reports"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    owner_id = Column(Integer, nullable=False)
-    # Metadata
-    name = Column(String(255), default="Report", nullable=False)
-    params_json = Column(Text, default="{}", nullable=False)
-    filters_json = Column(Text, default="{}", nullable=False)  # <-- ensure NOT NULL
-    window_days = Column(Integer, default=180, nullable=False)
-    business_mode = Column(String(20), default="both", nullable=False)   # business|wall|both
-    aggregate_by = Column(String(20), default="name", nullable=False)     # name|both (category later)
-    csv_path = Column(Text, default="", nullable=False)
 
-class ReportRow(BaseReport):
-    __tablename__ = "report_rows"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    report_id = Column(Integer, nullable=False)
-    issue_id = Column(String(64))
-    issue_key = Column(String(64))
-    project_key = Column(String(64))
-    issue_type = Column(String(64))
-    summary = Column(Text)
-    status = Column(String(128))
-    assignee = Column(String(128))
-    parent_key = Column(String(64))
-    epic_key = Column(String(64))
-    created = Column(DateTime, nullable=True)
-    updated = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
-class ReportStatusStat(BaseReport):
-    __tablename__ = "report_status_stats"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    report_id = Column(Integer, nullable=False)
-    issue_key = Column(String(64), nullable=False)
-    bucket = Column(String(20), default="name", nullable=False) # name|category
-    status = Column(String(128), nullable=False)
-    entered_count = Column(Integer, default=0, nullable=False)
-    wall_seconds = Column(Integer, default=0, nullable=False)
-    business_seconds = Column(Integer, default=0, nullable=False)
+    # Required columns (match DB)
+    owner_id = Column(Integer, nullable=False)                                 # user id owning the report
+    name = Column(String(255), nullable=False, default="", server_default="")
+    params_json = Column(Text, nullable=False, default="{}", server_default="{}")
+    filters_json = Column(Text, nullable=False, default="{}", server_default="{}")
+    window_days = Column(Integer, nullable=False, default=180, server_default="180")
+    time_mode = Column(String(32), nullable=False, default="updated", server_default="updated")  # created|updated
+    business_mode = Column(String(32), nullable=False, default="both", server_default="both")    # wall|work|both
+    aggregate_by = Column(String(32), nullable=False, default="both", server_default="both")     # created|updated|both
+    csv_path = Column(String(512), nullable=False, default="", server_default="")
+
+    # Optional: string repr for debugging
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<Report id={self.id} name={self.name!r} owner_id={self.owner_id}>"
