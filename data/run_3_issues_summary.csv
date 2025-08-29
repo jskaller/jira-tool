@@ -1,0 +1,751 @@
+run_id,issue_key,project_key,issue_type,summary,status_current,created,updated,epic_key,parent_key,labels,total_time_open_bh_hours,total_time_open_24x7_hours,total_status_entries,entries_Code Review,entries_Content In Progress,entries_DEV_QA,entries_Done,entries_FInal Implementation,entries_Final Dev,entries_INTEGRATION QA,entries_In Progress,entries_In Review,entries_Initial Dev,entries_Merged,entries_Peer Review,entries_QA,entries_Ready for release,entries_Removed,entries_To Do,entries_Waiting for approval
+3,MEDA-3005,MEDA,Task,Orthopedics changes,Done,2022-10-07T09:49:29.847-0400,2025-05-21T10:25:30.645-0400,,,,5984.71,25104.71,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-3001,MEDA,Task,Review Cancer dropdown on storybook Storybook 1.8.13,Done,2022-09-28T14:33:11.802-0400,2025-05-21T10:25:36.405-0400,,,,6098.25,25586.25,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-3000,MEDA,Task,Update storybook to 1.8.13,Done,2022-09-28T12:39:02.034-0400,2025-05-21T10:25:37.994-0400,,,,6099.8,25587.8,4,0,0,0,2,0,0,0,1,0,0,1,0,0,0,0,0,0
+3,MEDA-2999,MEDA,Task,Update donate page ,Done,2022-09-21T14:13:51.434-0400,2025-05-21T10:25:21.025-0400,,,,6138.57,25754.57,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2997,MEDA,Task,Configuration Caching/aggregation on cancer site,Done,2022-09-20T14:35:46.553-0400,2025-05-21T10:25:17.850-0400,,,,6146.1,25778.1,6,0,0,1,2,0,0,0,2,0,0,0,1,0,0,0,0,0
+3,MEDA-2995,MEDA,Task,[mobile] Home Page - Keep space between Types of Cancer We Treat and Cancer Clinical Trails,Done,2022-09-20T11:42:09.701-0400,2025-05-21T10:25:16.700-0400,,,,6147.38,25779.38,3,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0
+3,MEDA-2994,MEDA,Task,Modify Hero component to send a new tag to analytics,Done,2022-09-19T13:41:19.677-0400,2025-05-21T10:25:33.006-0400,,,,6155.1,25803.1,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2991,MEDA,Task,Remove console logging of analytics,Done,2022-09-16T10:57:04.189-0400,2025-05-21T10:25:16.716-0400,,,,6165.24,25877.25,3,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0
+3,MEDA-2990,MEDA,Task,Find a Doctor and Investigator profile for all providers,Done,2022-09-16T10:18:23.642-0400,2025-05-21T10:25:15.328-0400,,,,6166.54,25878.54,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2989,MEDA,Task,"Add url from field_profile_url to Team Card ""Full Profile"" link",Done,2022-09-15T18:55:47.649-0400,2025-05-21T10:25:11.969-0400,,,,6167.85,25893.92,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2988,MEDA,Task,Limit analytics value lengths,Done,2022-09-15T17:55:08.418-0400,2025-05-21T10:25:12.980-0400,,,,6167.85,25894.92,9,0,0,0,2,0,0,1,2,0,0,0,2,1,0,0,0,1
+3,MEDA-2987,MEDA,Task,Events - Adjustments ,Done,2022-09-15T17:51:04.282-0400,2025-05-21T10:25:13.254-0400,,,,6167.4,25879.4,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2986,MEDA,Task,Hero image resolution looks too big on Landing Page,Done,2022-09-15T15:58:22.973-0400,2025-05-21T10:25:12.566-0400,,,,6168.87,25896.88,5,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,1,0
+3,MEDA-2984,MEDA,Task,Review overridden _card-content.twig,Done,2022-09-15T13:53:02.940-0400,2025-05-21T10:25:18.613-0400,,,1.8.11(Storybook),6169.97,25897.97,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2983,MEDA,Task,Review overridden _menu.twig,Done,2022-09-15T13:52:51.132-0400,2025-05-21T10:25:20.876-0400,,,1.8.11(Storybook),6170.53,25898.53,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2982,MEDA,Task,Remove attach_library from block--inline-block--tabs.html.twig,Done,2022-09-15T13:52:36.032-0400,2025-05-21T10:25:21.857-0400,,,1.8.11(Storybook),6169.6,25897.6,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2981,MEDA,Task,Implement map updates,Done,2022-09-15T13:52:20.214-0400,2025-05-21T10:25:19.985-0400,,,1.8.11(Storybook),6164.47,25876.47,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2979,MEDA,Task,Remove cancer_theme/top-bar library-extend,Done,2022-09-15T13:50:30.070-0400,2025-05-21T10:25:23.154-0400,,,1.8.11(Storybook),6170.36,25898.36,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2977,MEDA,Task,Update Storybook to 1.8.11,Done,2022-09-15T11:16:03.292-0400,2025-05-21T10:25:22.720-0400,,,1.8.8(Storybook),6170.83,25898.83,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2976,MEDA,Task,Analytics for research page index list,Done,2022-09-15T10:31:18.029-0400,2025-05-21T10:25:17.890-0400,,,,6174.3,25902.3,4,0,0,0,2,0,0,0,1,0,0,0,0,1,0,0,0,0
+3,MEDA-2975,MEDA,Task,Events - Mobile optimization,Done,2022-09-14T17:19:29.147-0400,2025-05-21T10:24:56.264-0400,,,,6175.85,25919.51,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2974,MEDA,Task,style Frequently Searched Specialties block on the /doctors page,Done,2022-09-14T15:42:59.878-0400,2025-05-21T10:25:15.680-0400,,,,6177.09,25921.1,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2970,MEDA,Task,Fixing in find a doctor,Done,2022-09-14T11:42:32.230-0400,2025-05-21T10:25:24.612-0400,,,,6177.27,25921.27,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2968,MEDA,Task,Category items in the Types of Cancer We Treat,Done,2022-09-14T11:32:02.203-0400,2025-05-21T10:25:19.302-0400,,,,6175.44,25903.44,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2966,MEDA,Task,Non-physicians showing in the type-ahead list,Done,2022-09-14T08:40:12.296-0400,2025-05-21T10:25:03.412-0400,,,,6183.25,25927.25,4,0,0,0,2,0,0,0,1,0,0,1,0,0,0,0,0,0
+3,MEDA-2965,MEDA,Task,Research Page - Hero,Done,2022-09-13T14:57:52.833-0400,2025-05-21T10:26:03.686-0400,,,,6183.85,25943.09,5,0,0,0,2,0,0,0,0,0,0,1,2,0,0,0,0,0
+3,MEDA-2964,MEDA,Task,Change the labels in Find a doctor,Done,2022-09-13T09:38:39.415-0400,2025-05-21T10:25:27.058-0400,,,,6189.89,25949.89,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2962,MEDA,Task,Find a Doctor > Published Research - Fix loading issues,Done,2022-09-12T13:32:58.512-0400,2025-05-21T10:26:02.894-0400,,,,6193.72,25969.72,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2961,MEDA,Task,Moving Frequently Searched Specialties out of react,Done,2022-09-12T13:08:27.195-0400,2025-05-21T10:26:04.184-0400,,,,6191.85,25966.68,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2960,MEDA,Task,Adding published research to /researchers,Done,2022-09-12T13:07:47.483-0400,2025-05-21T10:26:06.354-0400,,,,6192.93,25968.93,7,0,0,0,3,0,0,0,1,0,0,1,2,0,0,0,0,0
+3,MEDA-2959,MEDA,Task,Create one more field to make a team break,Done,2022-09-12T10:00:20.883-0400,2025-05-21T10:24:46.188-0400,,,,6189.42,25949.42,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2958,MEDA,Task,Preview qa-storybook Map/Location on Local environment,Done,2022-09-12T09:58:32.180-0400,2025-05-21T10:24:31.071-0400,,,,6198.87,25974.87,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2957,MEDA,Task,Update the dropdown component with storybook changes,Done,2022-09-09T15:22:19.516-0400,2025-05-21T10:26:04.290-0400,,,,6195.51,25971.52,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2956,MEDA,Task,We need to preprocess the breadcrumbs - Clinical Trails,Done,2022-09-09T10:58:18.680-0400,2025-05-21T10:25:56.413-0400,,,,5992.84,25128.84,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2955,MEDA,Task,We need to preprocess the breadcrumbs -  Find a doctor,Done,2022-09-09T10:57:15.570-0400,2025-05-21T10:25:55.703-0400,,,,6181.04,25925.04,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2954,MEDA,Task,Find a doctor - Detail page - delete location,Done,2022-09-09T10:18:55.605-0400,2025-05-21T10:25:55.333-0400,,,,6201.11,26041.11,4,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0
+3,MEDA-2953,MEDA,Task,Preprocess the breadcrumbs in Find a doctor,Done,2022-09-09T10:00:52.241-0400,2025-05-21T10:25:54.624-0400,,,,6199.21,25975.21,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2952,MEDA,Task,Back button in detail of a clinical trail ,Done,2022-09-09T09:57:36.604-0400,2025-05-21T10:25:57.479-0400,,,,6200.33,26040.33,4,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0
+3,MEDA-2951,MEDA,Task,Create Location Card Component,Done,2022-09-08T17:11:14.675-0400,2025-05-21T10:25:56.937-0400,,,,6207.85,26063.65,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2950,MEDA,Task,Microservice - Specify backend config settings for Search API,Done,2022-09-08T10:26:10.006-0400,2025-05-21T10:24:03.752-0400,,,,6214.41,26070.41,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2949,MEDA,Task,Remove the version string to the footer when in prod.,Done,2022-09-07T18:09:24.664-0400,2025-05-21T10:25:27.740-0400,,,,6215.85,26086.69,4,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0
+3,MEDA-2948,MEDA,Task,Changes about / team,Done,2022-09-07T16:23:51.017-0400,2025-05-21T10:25:46.657-0400,,,,6215.85,26087.21,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2946,MEDA,Task,Update Storybook to 1.8.10,Done,2022-09-07T12:08:56.899-0400,2025-05-21T10:25:34.486-0400,,,1.8.8(Storybook),6220.69,26092.69,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2945,MEDA,Task,Team Orchestration & Jira Configuration,Done,2022-09-06T18:07:20.808-0400,2025-05-21T10:25:50.533-0400,,,,6223.85,26110.72,5,0,0,0,2,0,0,0,1,0,0,0,0,0,1,1,0,0
+3,MEDA-2944,MEDA,Task,"""Find an Investigator"" search button doesn't work",Done,2022-09-06T16:29:57.931-0400,2025-05-21T10:25:28.698-0400,,,,6223.06,26095.06,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2943,MEDA,Task,change event date to have repeating dates,Done,2022-09-06T15:59:12.065-0400,2025-05-21T10:25:51.752-0400,,,,6224.86,26112.86,6,0,0,0,2,0,0,0,2,0,0,0,2,0,0,0,0,0
+3,MEDA-2942,MEDA,Task,Prevent analytics for some heros,Done,2022-09-06T12:24:50.213-0400,2025-05-21T10:25:23.549-0400,,,,6142.3,25758.3,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2941,MEDA,Task,styling of unordered lists,Done,2022-09-05T15:25:44.608-0400,2025-05-21T10:25:48.345-0400,,,,6231.32,26119.32,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2940,MEDA,Task,"Removal of unnecessary ""Publications"" section on Find a Doctor ",Done,2022-09-05T11:37:01.545-0400,2025-05-21T10:25:14.283-0400,,,,6237.23,26141.23,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2914,MEDA,Task,Update Storybook to 1.8.9,Done,2022-09-01T13:23:05.140-0400,2025-05-21T10:23:34.836-0400,,,1.8.8(Storybook),6251.44,26235.44,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2913,MEDA,Task,Remove hero block caching,Done,2022-09-01T10:24:58.655-0400,2025-05-21T10:24:44.766-0400,,,,6254.43,26238.43,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2911,MEDA,Task,Update - Locations component ,Done,2022-08-31T15:41:43.891-0400,2025-05-21T10:24:28.774-0400,,,,6255.45,26239.45,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2907,MEDA,Task,Add Link option to flyout menu title,Done,2022-08-30T18:41:26.640-0400,2025-05-21T10:24:22.280-0400,,,1.8.8(Storybook),6261.91,26261.91,6,0,0,0,2,0,0,0,1,0,0,0,1,0,0,1,1,0
+3,MEDA-2905,MEDA,Task,Update Facts component to support the specified background colors. ,Done,2022-08-30T18:16:04.844-0400,2025-05-21T10:25:35.901-0400,,,1.8.8(Storybook),6136.55,25752.55,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2902,MEDA,Task,Contact block,Done,2022-08-30T17:16:35.544-0400,2025-05-21T10:25:39.474-0400,MEDA-2825,MEDA-2825,,6263.85,26279.47,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2901,MEDA,Task,Update Storybook to 1.8.8,Done,2022-08-30T16:50:34.757-0400,2025-05-21T10:26:07.897-0400,,,1.8.8(Storybook),6263.85,26279.58,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2900,MEDA,Task,Add analytics to map locations,Done,2022-08-30T11:50:15.172-0400,2025-05-21T10:23:55.178-0400,,,,6205.2,26045.2,12,1,0,0,2,0,0,1,3,0,0,0,2,1,0,0,0,2
+3,MEDA-2891,MEDA,Task,Add search card analytics to the Find An Investigator block,Done,2022-08-29T10:39:57.807-0400,2025-05-21T10:25:49.411-0400,,,,6265.04,26281.04,12,0,0,0,3,0,0,0,3,0,0,0,3,3,0,0,0,0
+3,MEDA-2890,MEDA,Task,Add search card analytics to the Select Searchable block type,Done,2022-08-29T10:36:43.436-0400,2025-05-21T10:25:53.586-0400,,,,6271.85,26303.49,11,0,0,0,2,0,0,0,2,0,0,2,2,3,0,0,0,0
+3,MEDA-2889,MEDA,Task,Add search card analytics to the Cancer Types search block,Done,2022-08-29T10:32:30.800-0400,2025-05-21T10:25:45.565-0400,,,,6274.55,26306.55,6,0,0,0,3,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2888,MEDA,Bug,Microservice - Fix phynd import geocoding.,Done,2022-08-29T09:38:37.914-0400,2025-05-21T10:25:47.145-0400,,,,6279.2,26311.2,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2886,MEDA,Task,[EVENTS] Create featured teaser and teaser event view mode to use on card grid,Done,2022-08-25T17:39:46.254-0400,2025-05-21T10:25:37.829-0400,,,,6285.37,26381.37,6,0,0,0,2,0,0,0,2,0,0,0,1,0,0,0,1,0
+3,MEDA-2885,MEDA,Task,Create a parameter on the Hero for CT position,Done,2022-08-25T16:45:19.368-0400,2025-05-21T10:25:38.674-0400,,,,6288.08,26400.08,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2882,MEDA,Task,Research section pages are generating an error while attempting to edit in layout tab.,Done,2022-08-25T15:43:01.781-0400,2025-05-21T10:26:09.521-0400,MEDA-2586,MEDA-2586,L2,6287.92,26399.92,4,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0
+3,MEDA-2881,MEDA,Task,"[EVENTS] Create event content type
+",Done,2022-08-25T15:22:18.282-0400,2025-05-21T10:26:09.886-0400,,,,6285.37,26381.37,6,0,0,0,2,0,0,0,2,0,0,0,1,0,0,0,1,0
+3,MEDA-2879,MEDA,Task,[EVENTS] Create event listing view (this is the list + filters),Done,2022-08-24T15:59:03.736-0400,2025-05-21T10:26:08.404-0400,,,,6285.37,26381.37,6,0,0,0,2,0,0,0,2,0,0,0,1,0,0,0,1,0
+3,MEDA-2878,MEDA,Task,Card analytics - rename elementType to linkType,Done,2022-08-24T14:46:00.126-0400,2025-05-21T10:26:08.846-0400,,,,6298.01,26426.01,7,0,0,0,3,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2877,MEDA,Task,Analytics - Tabs component in Drupal,Done,2022-08-24T10:34:43.985-0400,2025-05-21T10:26:01.872-0400,MEDA-2826,MEDA-2826,,6300.2,26428.2,6,0,0,0,3,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2876,MEDA,Task,Add analytics for the main title link,Done,2022-08-24T10:33:23.575-0400,2025-05-21T10:26:02.372-0400,,,,6301.35,26429.35,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2875,MEDA,Task,Microservice - CT daily basis import,Done,2022-08-24T09:53:16.524-0400,2025-05-21T10:25:59.953-0400,,,,6302.96,26430.96,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2874,MEDA,Task,Create the MyChart  component from CLT in Cancer,Done,2022-08-24T08:45:13.107-0400,2025-05-21T10:26:00.807-0400,MEDA-2821,MEDA-2821,,6303.59,26431.59,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2873,MEDA,Task,Consolidating clinical trials block,Done,2022-08-23T17:30:19.254-0400,2025-05-21T10:26:01.190-0400,,,,6303.85,26446.95,6,0,0,0,2,0,0,0,2,0,0,0,0,1,0,0,1,0
+3,MEDA-2872,MEDA,Task,Add storybook styles to WYSIWYG ,Done,2022-08-23T15:49:45.933-0400,2025-05-21T10:26:05.853-0400,,,,6305.02,26449.02,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2870,MEDA,Task,Add mecc_blocks_alert_bar.settings to config ignore,Done,2022-08-19T17:34:40.249-0400,2025-05-21T10:25:30.196-0400,,,,6295.85,26423.23,6,0,0,0,2,0,0,0,2,0,0,1,1,0,0,0,0,0
+3,MEDA-2869,MEDA,Bug,badge size too large. see figma.,Done,2022-08-19T17:20:09.721-0400,2025-05-21T10:25:30.527-0400,,,IMG,6293.74,26405.74,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2868,MEDA,Task,Implement partial matching for cancer types search,Done,2022-08-19T15:00:27.457-0400,2025-05-21T10:25:31.543-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6321.83,26545.83,8,0,0,0,3,0,0,0,1,0,0,2,1,1,0,0,0,0
+3,MEDA-2867,MEDA,Task,CLT - Implement alert bar as part of the navigation component,Done,2022-08-19T11:32:47.583-0400,2025-05-21T10:25:31.877-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6323.05,26547.05,4,0,0,0,2,0,0,0,0,0,0,1,1,0,0,0,0,0
+3,MEDA-2866,MEDA,Task,Add analytics for the Clinical Trials card,Done,2022-08-19T10:45:01.958-0400,2025-05-21T10:25:32.360-0400,,,,6302.34,26430.34,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2863,MEDA,Task,Center the highlights and remove the background,Done,2022-08-18T16:06:50.426-0400,2025-05-21T10:25:28.154-0400,MEDA-2819,MEDA-2819,,6328.64,26568.64,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2859,MEDA,Task,Update overriden _flyout_nav_item.twig,Done,2022-08-18T15:59:09.866-0400,2025-05-21T10:25:29.412-0400,,,1.8.7(Storybook),6326.14,26550.14,4,0,0,0,2,0,0,0,0,0,0,1,1,0,0,0,0,0
+3,MEDA-2858,MEDA,Task,Update Storybook to 1.8.7,Done,2022-08-18T15:55:06.810-0400,2025-05-21T10:25:25.583-0400,,,1.8.7(Storybook),6327.85,26552.35,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2857,MEDA,Task,Add the overview pages into the menu,Done,2022-08-18T12:42:06.019-0400,2025-05-21T10:25:26.542-0400,,,,6317.48,26477.48,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2855,MEDA,Task,Invalidate navigation block cache when saving alert bar settings,Done,2022-08-17T11:21:35.527-0400,2025-05-21T10:25:47.985-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6339.07,26595.07,5,0,0,0,2,0,0,0,0,0,0,1,0,1,0,0,1,0
+3,MEDA-2839,MEDA,Task,Implement analytics for media components,Done,2022-08-16T14:33:49.226-0400,2025-05-21T10:25:40.153-0400,MEDA-2819,MEDA-2819,,6344.19,26616.19,8,0,0,0,3,0,0,0,1,0,0,1,2,1,0,0,0,0
+3,MEDA-2838,MEDA,Task,Cleanup: Use `storybook_component` render element,Done,2022-08-16T12:50:37.964-0400,2025-05-21T10:25:40.277-0400,,,,5992.79,25128.79,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2835,MEDA,Bug,Cancer Types Search Form - Call to a member function label() on null,Done,2022-08-15T16:45:29.186-0400,2025-05-21T10:25:42.522-0400,,,,6348.39,26620.39,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2833,MEDA,Task,Leverage JSON output from the montefiore.org,Done,2022-08-15T11:18:25.136-0400,2025-05-21T10:25:38.469-0400,,,,6319.85,26485.11,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2832,MEDA,Task,Modify Featured Bottom Section to allow for full width components with proper left and right margins as well as top and bottom spacings as per figmas below hhs content on the basic content type pages.,Done,2022-08-15T11:03:52.200-0400,2025-05-21T10:25:36.931-0400,,,Development,6295.85,26420.6,4,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0
+3,MEDA-2830,MEDA,Sub-task,Other pages - Integrate per-breakpoint image fields with the updated media component - ,Done,2022-08-12T10:59:31.852-0400,2025-05-21T10:26:10.594-0400,,MEDA-2444,,6292.1,26404.1,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2829,MEDA,Task,Refactor the way proxy responses are served,Done,2022-08-12T09:12:07.314-0400,2025-05-21T10:26:11.872-0400,,,,6367.64,26719.64,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2828,MEDA,Sub-task,Home Page - Integrate per-breakpoint image fields with the updated media component ,Done,2022-08-11T15:55:16.356-0400,2025-05-21T10:26:15.914-0400,,MEDA-2444,,6351.85,26638.7,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2817,MEDA,Task,Convert cancer_theme/analytics.js to Storybook-based Alpine.js,Done,2022-08-09T14:53:24.551-0400,2025-05-21T10:25:46.289-0400,,,,6383.85,26783.25,5,0,0,0,2,0,0,0,1,0,0,1,0,1,0,0,0,0
+3,MEDA-2816,MEDA,Bug,Location label should be dyanmic,Done,2022-08-09T09:44:04.989-0400,2025-05-21T10:25:47.290-0400,,,,6246.4,26214.4,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2812,MEDA,Task,Move Google CSE search page results markup into a twig template,Done,2022-08-05T12:10:06.230-0400,2025-05-21T10:25:24.215-0400,,,,6401.6,26881.6,5,0,0,0,2,0,0,0,0,0,0,1,1,1,0,0,0,0
+3,MEDA-2811,MEDA,Task,Create Contact — Three Call component from Storybook,Done,2022-08-03T17:07:57.827-0400,2025-05-21T10:25:25.058-0400,MEDA-2823,MEDA-2823,,6319.13,26479.13,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2808,MEDA,Task,Add support for breadcrumb handling of proxied pages,Done,2022-08-03T08:11:54.062-0400,2025-05-21T10:25:20.108-0400,DAP-192,DAP-192,,6399.85,26823.05,5,0,0,0,2,0,0,0,2,0,0,0,1,0,0,0,0,0
+3,MEDA-2806,MEDA,Task,Add support for CSS file rewriting,Done,2022-08-02T09:13:11.806-0400,2025-05-21T10:25:33.909-0400,MEDA-5,MEDA-5,,6423.85,26940.66,10,0,0,0,3,0,0,0,2,0,0,1,3,1,0,0,0,0
+3,MEDA-2805,MEDA,Task,SEO - Enable and configure Metatags module,Done,2022-08-02T08:46:35.234-0400,2025-05-21T10:25:34.510-0400,MEDA-2822,MEDA-2822,,5992.77,25128.77,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2804,MEDA,Task,Configure 403 and 404 pages,Done,2022-08-02T08:43:11.501-0400,2025-05-21T10:25:34.967-0400,,,,5992.75,25128.75,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2776,MEDA,Sub-task,Import employmentStatusType from phynd,Done,2022-07-29T11:47:22.631-0400,2025-05-21T10:25:26.400-0400,,MEDA-2753,,6444.62,27052.62,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2755,MEDA,Sub-task,Results should give a higher priority to last name matches over first name,Done,2022-07-27T14:28:08.211-0400,2025-05-21T10:24:50.494-0400,,MEDA-2753,,6420.82,26932.82,3,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0
+3,MEDA-2754,MEDA,Sub-task,Add new field for the Elsevier link,Done,2022-07-27T14:27:58.138-0400,2025-05-21T10:24:50.712-0400,,MEDA-2753,,6454.74,27078.74,5,0,0,0,2,0,0,0,1,0,0,1,0,1,0,0,0,0
+3,MEDA-2753,MEDA,Task,Find a doctor changes (profile and order of the results),Done,2022-07-27T14:27:25.387-0400,2025-05-21T10:24:38.172-0400,,,,6448.24,27072.24,4,0,0,0,3,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2748,MEDA,Bug,The 'Find a Doctor' menu item does not direct the user to the expected route,Done,2022-07-27T10:16:15.887-0400,2025-05-21T10:24:33.712-0400,,,,6399.85,26863.85,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2747,MEDA,Bug,"The ""Request an Appointment"" Menu Item does not direct the user to the expected route",Done,2022-07-27T10:14:47.975-0400,2025-05-21T10:24:35.085-0400,,,,6402.39,26882.39,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2742,MEDA,Bug,Cancer Navigator Program page does not use global sidebar,Done,2022-07-27T10:04:35.512-0400,2025-05-21T10:24:25.947-0400,MEDA-2821,MEDA-2821,,6359.85,26689.4,11,0,0,0,2,0,0,0,3,0,0,1,2,2,0,0,1,0
+3,MEDA-2728,MEDA,Task,Refactor page-specific first hero to incorporate a separate breadcrumb,Done,2022-07-26T17:32:32.485-0400,2025-05-21T10:24:15.923-0400,MEDA-2820,MEDA-2820,,6323.29,26547.29,7,0,0,0,2,0,0,0,2,0,0,1,1,0,0,0,1,0
+3,MEDA-2727,MEDA,Task,Implement Tabs component in Drupal,Done,2022-07-26T17:23:08.340-0400,2025-05-21T10:24:16.932-0400,MEDA-2826,MEDA-2826,,6319.85,26543.04,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2726,MEDA,Task,"Create ""Find an Investigator"" component",Done,2022-07-26T16:47:57.608-0400,2025-05-21T10:24:17.569-0400,,,,6303.85,26447.46,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2725,MEDA,Task,Add ability to add links with icons to Hero component.,Done,2022-07-26T16:46:33.459-0400,2025-05-21T10:24:17.811-0400,,,,6410.58,26906.58,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2723,MEDA,Task,Implement analytics for the Dropdown component,Done,2022-07-26T15:34:29.406-0400,2025-05-21T10:25:03.782-0400,MEDA-2819,MEDA-2819,,6383.85,26783.02,8,0,0,0,2,0,0,0,1,0,0,1,2,2,0,0,0,0
+3,MEDA-2722,MEDA,Task,Implement analytics tracking on the Section Header,Done,2022-07-26T15:13:19.508-0400,2025-05-21T10:25:10.261-0400,MEDA-2819,MEDA-2819,,6377.7,26761.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2720,MEDA,Task,Implement analytics tracking for the accordion,Done,2022-07-26T14:56:44.960-0400,2025-05-21T10:25:04.856-0400,MEDA-2826,MEDA-2826,,6378.4,26762.4,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2719,MEDA,Task,Implement analytics tracking for the sidebar,Done,2022-07-26T14:56:16.499-0400,2025-05-21T10:25:06.207-0400,MEDA-2820,MEDA-2820,,6384.65,26784.65,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2718,MEDA,Task,Implement analytics tracking in the footer,Done,2022-07-26T14:55:42.759-0400,2025-05-21T10:25:07.796-0400,MEDA-2819,MEDA-2819,,6385.78,26785.78,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2717,MEDA,Task,Implement analytics on breadcrumbs,Done,2022-07-26T14:54:52.012-0400,2025-05-21T10:25:07.607-0400,MEDA-2820,MEDA-2820,,6388.55,26788.55,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2716,MEDA,Task,Implement analytics on the Flyout menu (aka Primary Nav),Done,2022-07-26T14:54:09.428-0400,2025-05-21T10:24:57.896-0400,MEDA-2819,MEDA-2819,,6383.85,26783.52,10,0,0,0,2,0,0,0,3,0,0,1,2,2,0,0,0,0
+3,MEDA-2711,MEDA,Bug,Dev environment reports its using a prod tag,Done,2022-07-26T10:37:00.326-0400,2025-05-21T10:25:02.661-0400,,,,6314.65,26474.65,3,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0
+3,MEDA-2709,MEDA,Bug,Visual List - Drupal integration fixes,Done,2022-07-25T20:36:17.907-0400,2025-05-21T10:25:00.443-0400,MEDA-2825,MEDA-2825,ChangesUI,6302.3,26430.3,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2707,MEDA,Task,Need ability to add SVGs to Media Library.,Done,2022-07-25T16:39:03.324-0400,2025-05-21T10:24:53.703-0400,,,,6167.85,25895.25,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2706,MEDA,Bug,SVG image do not have a preview in the Media Library.,Done,2022-07-25T16:36:07.401-0400,2025-05-21T10:24:54.206-0400,,,,6157.97,25805.97,5,0,0,0,3,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2704,MEDA,Bug,Highlights component does not match figma design.,Done,2022-07-25T16:28:25.928-0400,2025-05-21T10:24:55.291-0400,MEDA-2819,MEDA-2819,,5992.77,25128.77,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2703,MEDA,Task,Implement Hero gradient options,Done,2022-07-25T16:17:45.005-0400,2025-05-21T10:24:55.965-0400,MEDA-2819,MEDA-2819,,6335.85,26591.21,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2691,MEDA,Task,Analytics - submit to storybook,Done,2022-07-22T17:28:30.669-0400,2025-05-21T10:24:53.035-0400,,,,6479.85,27215.35,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2634,MEDA,Task,Add links to team member profiles,Done,2022-07-22T16:19:11.602-0400,2025-05-21T10:24:32.791-0400,MEDA-2820,MEDA-2820,,6322.72,26546.72,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2614,MEDA,Task,Analytics - index list,Done,2022-07-22T15:28:48.150-0400,2025-05-21T10:24:20.335-0400,,,,6475.61,27147.61,9,0,0,0,3,0,0,0,2,0,0,1,2,1,0,0,0,0
+3,MEDA-2607,MEDA,Task,"Figure out how to effectively handle metadata (og tags, ...)",Done,2022-07-22T12:59:11.775-0400,2025-05-21T10:25:08.179-0400,,,,6433.88,26977.88,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2606,MEDA,Task,Handle pages with query arguments,Done,2022-07-22T12:58:00.390-0400,2025-05-21T10:25:09.530-0400,,,,6446.25,27054.25,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2605,MEDA,Task,"Allow to ""rewrite"" paths",Done,2022-07-22T12:56:48.215-0400,2025-05-21T10:25:10.465-0400,,,,6439.85,27009.69,8,0,0,0,2,0,0,0,2,0,0,1,2,1,0,0,0,0
+3,MEDA-2604,MEDA,Task,Investigate if we can control breadcrumbs based on the menu link structure,Done,2022-07-22T12:51:57.214-0400,2025-05-21T10:25:05.165-0400,,,,6447.85,27058.5,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2603,MEDA,Task,For pages that have breadcrumbs allow hiding them ,Done,2022-07-22T12:49:48.931-0400,2025-05-21T10:25:06.995-0400,DAP-192,DAP-192,,6447.85,27060.78,6,0,0,0,2,0,0,0,2,0,0,0,2,0,0,0,0,0
+3,MEDA-2601,MEDA,Task,Change the theme on demo sites to one based on the storybook. ,Done,2022-07-22T12:45:57.511-0400,2025-05-21T10:24:57.199-0400,,,,6479.85,27181.98,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2600,MEDA,Task,Analytics - cards,Done,2022-07-22T12:32:34.488-0400,2025-05-21T10:24:58.591-0400,,,,6484.28,27220.28,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2599,MEDA,Task,Implement carousel component for homepage slideshow,Done,2022-07-22T09:46:33.350-0400,2025-05-21T10:25:01.318-0400,MEDA-2819,MEDA-2819,,6330.19,26570.19,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2598,MEDA,Task,"Create reusable block for ""Schedule a visit""",Done,2022-07-21T13:01:06.663-0400,2025-05-21T10:25:02.829-0400,,,,6458.03,27098.03,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2595,MEDA,Task,"Create reusable, shared block for Events on the cancer type landing pages",Done,2022-07-21T12:55:08.995-0400,2025-05-21T10:24:59.816-0400,,,,6419.5,26931.5,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2594,MEDA,Task,Create blocks for cancer-type specific clinical trials,Done,2022-07-21T12:53:33.078-0400,2025-05-21T10:24:54.683-0400,,,,6200.13,26040.13,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2581,MEDA,Task,Plan for upgrade to PHP 8.0,Done,2022-07-20T11:52:05.130-0400,2025-05-21T10:24:51.550-0400,,,,5992.75,25128.75,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2571,MEDA,Story,Analytics Planning,Done,2022-04-18T15:21:22.599-0400,2025-05-21T10:25:41.190-0400,,,,6627.66,27795.66,6,0,0,0,2,0,0,0,2,0,0,0,0,1,1,0,0,0
+3,MEDA-2566,MEDA,Bug,The 'Clear FIlter' Button on the `Find a Doctor` Search Results Page clears Search Criteria,Done,2022-07-19T18:40:39.667-0400,2025-05-21T10:24:52.054-0400,,,,6501.21,27269.21,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2565,MEDA,Bug,Selecting English in the Language Switcher translates the page's content to a Non-English Language,Done,2022-07-19T18:32:32.603-0400,2025-05-21T10:24:52.924-0400,MEDA-2819,MEDA-2819,,6352.75,26640.75,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2559,MEDA,Task,Update Storybook to 1.8.5 ,Done,2022-07-19T13:21:11.327-0400,2025-05-21T10:24:06.501-0400,,,1.8.5(Storybook),6454.26,27078.26,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2558,MEDA,Task,Update header and footer to use MECC logos. Also update link used for the logo.,Done,2022-07-19T13:19:26.674-0400,2025-05-21T10:24:06.423-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6366.97,26718.97,5,0,0,0,2,0,0,0,0,0,0,1,1,1,0,0,0,0
+3,MEDA-2557,MEDA,Task,Update flyout menu top-level order,Done,2022-07-19T13:17:19.711-0400,2025-05-21T10:24:08.052-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6364.71,26716.71,4,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0
+3,MEDA-2555,MEDA,Task,Implement alert bar as part of the navigation component,Done,2022-07-19T13:13:29.307-0400,2025-05-21T10:24:13.019-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6351.85,26639.48,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2552,MEDA,Task,Hero component updates,Done,2022-07-19T13:07:22.993-0400,2025-05-21T10:24:09.457-0400,MEDA-2819,MEDA-2819,1.8.6(Storybook),6334.72,26574.72,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2550,MEDA,Bug,Language Switcher selected language does not persist on page refresh,Done,2022-07-19T11:58:02.871-0400,2025-05-21T10:23:56.856-0400,,,,6504.48,27288.48,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2548,MEDA,Task,Analytics - refactoring,Done,2022-07-18T12:55:19.952-0400,2025-05-21T10:23:52.827-0400,,,,6511.85,27311.58,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2545,MEDA,Task,Analytics - Audio playback in Quotes,Done,2022-07-18T12:33:09.981-0400,2025-05-21T10:24:00.316-0400,MEDA-2825,MEDA-2825,,6498.25,27266.25,9,0,0,0,2,0,0,0,2,0,0,1,2,2,0,0,0,0
+3,MEDA-2544,MEDA,Task,Analytics - itemTitle,Done,2022-07-18T12:31:28.245-0400,2025-05-21T10:24:00.853-0400,,,,6516.3,27316.3,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2526,MEDA,Task,Top bar doesn't match Figma,Done,2022-07-16T15:40:34.230-0400,2025-05-21T10:24:36.797-0400,,,Pastel,6495.85,27263.25,5,0,0,0,3,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2525,MEDA,Task,Add the 'Research automation' module to cancer,Done,2022-07-15T16:45:00.689-0400,2025-05-21T10:24:42.130-0400,MEDA-2826,MEDA-2826,,6520.1,27384.1,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2524,MEDA,Task,CT - Replace current static xls file of PIs,Done,2022-07-15T11:04:59.973-0400,2025-05-21T10:24:31.967-0400,,,,6525.76,27389.76,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2523,MEDA,Task,Display version build info in environment indicator (if possible),Done,2022-07-14T16:04:36.212-0400,2025-05-21T10:24:32.372-0400,,,,6528.45,27408.45,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2522,MEDA,Task,Add domains to hosts.php,Done,2022-07-14T15:37:16.775-0400,2025-05-21T10:24:34.497-0400,,,,6526.93,27390.93,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2519,MEDA,Task,Manage which utility menu item icons appear in the top bar versus the hamburger,Done,2022-07-14T12:27:27.108-0400,2025-05-21T10:24:24.918-0400,MEDA-2819,MEDA-2819,,6351.85,26639.83,3,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0
+3,MEDA-2518,MEDA,Task,Make sure that it is possible to add proxied pages to the Drupal menu. ,Done,2022-07-14T11:34:33.154-0400,2025-05-21T10:24:25.320-0400,,,,6511.85,27297.62,5,0,0,0,2,0,0,0,1,0,0,0,1,1,0,0,0,0
+3,MEDA-2517,MEDA,Task,Tweak demo frontpage a bit so that it does not look awful,Done,2022-07-14T11:33:21.791-0400,2025-05-21T10:24:26.258-0400,MEDA-5,MEDA-5,,6527.85,27398.42,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2515,MEDA,Bug,Fix inline block access to allow content edits,Done,2022-07-14T11:15:35.896-0400,2025-05-21T10:24:22.160-0400,,,,6527.85,27393.64,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2514,MEDA,Task,Update the README file,Done,2022-07-13T05:30:41.963-0400,2025-05-21T10:24:22.962-0400,,,,6535.58,27415.58,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2513,MEDA,Task,Adjust Location content type based on the new designs,Done,2022-07-12T17:25:02.848-0400,2025-05-21T10:24:15.055-0400,MEDA-2825,MEDA-2825,,6543.85,27455.35,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2510,MEDA,Task,Phynd - Compute Clinical Terms Organizations for Specialties autocomplete,Done,2022-07-12T14:35:57.691-0400,2025-05-21T10:25:08.838-0400,,,,6546.25,27458.25,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2509,MEDA,Bug,Research Programs in hamburger menu do not show child item text,Done,2022-07-12T10:31:42.213-0400,2025-05-21T10:25:11.064-0400,MEDA-2819,MEDA-2819,,6351.85,26639.73,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2507,MEDA,Task,UI is not functional and is just an image.,Done,2022-07-11T16:14:27.071-0400,2025-05-21T10:24:59.011-0400,,,Pastel,6462.43,27102.43,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2497,MEDA,Task,Update site name: Montefiore Einstein Cancer Center,Done,2022-07-11T12:20:52.847-0400,2025-05-21T10:25:54.057-0400,,,,6543.07,27439.07,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2496,MEDA,Task,CT - Add custom form so editors can upload velos feed and import/parse new data,Done,2022-07-11T12:10:27.871-0400,2025-05-21T10:25:54.982-0400,,,,6540.79,27436.79,7,1,0,0,2,0,0,0,2,0,0,0,0,0,1,0,1,0
+3,MEDA-2493,MEDA,Bug,Footer menu shows collapsed items as expanded when inside section,Done,2022-07-08T17:19:26.568-0400,2025-05-21T10:25:59.125-0400,,,,6553.78,27481.78,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2488,MEDA,Bug,Hamburger menu does not adjust for Drupal admin UI,Done,2022-07-08T14:56:18.271-0400,2025-05-21T10:24:05.824-0400,,,,6554.36,27482.36,10,0,0,0,3,0,0,0,1,0,0,1,1,1,1,0,1,1
+3,MEDA-2487,MEDA,Task,Phynd - Add new facet for languages,Done,2022-07-07T16:14:08.199-0400,2025-05-21T10:24:07.636-0400,,,,6564.76,27556.76,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2486,MEDA,Task,Remove Page title block from the block layout,Done,2022-07-07T15:38:07.906-0400,2025-05-21T10:24:11.223-0400,,,,6556.77,27484.77,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2485,MEDA,Task,Configure environment_indicator,Done,2022-07-07T12:26:04.088-0400,2025-05-21T10:24:11.962-0400,,,,6542.18,27438.18,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2483,MEDA,Bug,Duplicate header blocks displayed,Done,2022-07-07T11:47:05.715-0400,2025-05-21T10:24:14.602-0400,,,,6567.85,27573.86,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2482,MEDA,Sub-task,Wire basic Menu Structure from sitemap menu,Done,2022-07-06T17:08:11.673-0400,2025-05-21T10:24:09.213-0400,,MEDA-72,,6575.85,27599.42,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2481,MEDA,Sub-task,"On Menu Item entity Create ""Eyebrow"" Field",Done,2022-07-06T17:05:35.305-0400,2025-05-21T10:23:55.768-0400,,MEDA-72,,6568.7,27576.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2480,MEDA,Sub-task,On Menu Item entity Create CTA Field,Done,2022-07-06T17:04:38.526-0400,2025-05-21T10:23:56.179-0400,,MEDA-72,,6568.7,27576.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2477,MEDA,Task,Configure Akamai for Cancer site,Done,2022-07-06T16:47:27.681-0400,2025-05-21T10:23:52.233-0400,MEDA-2824,MEDA-2824,,5992.76,25128.76,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2476,MEDA,Bug,Use Standalone variant of the header navigation,Done,2022-07-06T16:26:02.103-0400,2025-05-21T10:23:53.917-0400,,,,6567.85,27573.9,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2475,MEDA,Task,Launch task: Disable Shield on production environment,Done,2022-07-06T15:52:09.679-0400,2025-05-21T10:23:57.231-0400,MEDA-2824,MEDA-2824,,6054.95,25398.95,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-2474,MEDA,Task,Implement basic auth for all environments (including prod),Done,2022-07-06T14:47:13.576-0400,2025-05-21T10:24:00.663-0400,,,,6578.06,27602.06,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2473,MEDA,Task,Launch task: Limit .htaccess rewrite to non-prod environments,Done,2022-07-06T10:09:05.770-0400,2025-05-21T10:24:02.745-0400,MEDA-2824,MEDA-2824,,6054.58,25398.58,3,1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2472,MEDA,Task,Configure .htaccess and robots.txt for non-prod environments,Done,2022-07-06T09:22:47.587-0400,2025-05-21T10:23:44.743-0400,,,,6583.46,27607.46,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2471,MEDA,Task,Implement typeahead component for Cancer Types search,Done,2022-07-06T09:20:04.144-0400,2025-05-21T10:23:46.000-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6542.13,27438.13,14,0,0,0,3,0,0,0,2,0,0,2,2,2,1,0,1,1
+3,MEDA-2469,MEDA,Task,Updates to Hamburger Nav - Clinical Trials,Done,2022-07-05T13:47:12.078-0400,2025-05-21T10:23:41.593-0400,,,,6311.85,26471.4,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2468,MEDA,Task,Updates to Hamburger Nav - Cancer,Done,2022-07-05T13:44:13.687-0400,2025-05-21T10:23:42.950-0400,MEDA-2819,MEDA-2819,,6375.85,26758.84,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-2466,MEDA,Task,"Teams - Remove ""Team"" word and Replace placeholder image.",Done,2022-07-05T10:04:59.295-0400,2025-05-21T10:23:47.908-0400,,,,6588.44,27628.44,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2465,MEDA,Task,Optimize/Reduce boilerplate code in tests and plugins,Done,2022-07-04T05:19:42.778-0400,2025-05-21T10:23:48.425-0400,MEDA-5,MEDA-5,,6599.85,27659.52,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2464,MEDA,Task,Clinical Trials - Research index keywords query,Done,2022-07-01T12:20:35.939-0400,2025-05-21T10:23:49.946-0400,,,,6581.62,27605.62,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2463,MEDA,Task,Ensure caching on custom menu blocks,Done,2022-06-29T12:30:38.514-0400,2025-05-21T10:23:35.818-0400,,,,6540.65,27436.65,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2462,MEDA,Task,"Configure ""sitemap"" path alias pattern for all content types",Done,2022-06-29T10:21:52.858-0400,2025-05-21T10:23:36.262-0400,,,,6621.91,27773.91,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2461,MEDA,Task,Clinical Trials Velos integration,Done,2022-06-28T15:11:15.902-0400,2025-05-21T10:23:30.882-0400,,,,6625.64,27793.64,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2458,MEDA,Task,Update footer with multiple info blocks,Done,2022-06-28T14:14:26.701-0400,2025-05-21T10:23:33.912-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6357.19,26645.19,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2457,MEDA,Task,Implement max_col_count in MECC footer,Done,2022-06-28T14:06:24.664-0400,2025-05-21T10:23:39.160-0400,,,,5992.74,25128.74,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-2456,MEDA,Task,Analytics POC with Hamburger Menu,Done,2022-06-28T13:16:17.735-0400,2025-05-21T10:24:46.988-0400,,,,6615.85,27766.35,14,0,0,0,3,0,0,0,2,0,0,2,2,2,1,0,1,1
+3,MEDA-2455,MEDA,Task,Implement setting to manage which menu items should display in the footer,Done,2022-06-28T10:40:12.770-0400,2025-05-21T10:24:48.843-0400,,,,6565.55,27557.55,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2454,MEDA,Task,Implement Team Leaders Carousel component,Done,2022-06-24T11:07:31.103-0400,2025-05-21T10:24:45.498-0400,,,,6522.0,27386.0,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2452,MEDA,Task,Fix 'index list' block after storybook update,Done,2022-06-24T09:51:23.676-0400,2025-05-21T10:24:29.467-0400,,,,6646.98,27894.98,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2451,MEDA,Task,Uninstall core Color and Search modules,Done,2022-06-23T17:08:59.860-0400,2025-05-21T10:24:29.895-0400,,,,6564.62,27556.62,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2450,MEDA,Task,Add alternate domain names ,Done,2022-06-21T21:18:25.727-0400,2025-05-21T10:24:38.986-0400,,,Development,6645.7,27893.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2449,MEDA,Task,Add Clinical Terms into Specialties autocomplete for Phynd Microservice.,Done,2022-06-21T12:46:40.711-0400,2025-05-21T10:24:41.521-0400,,,,6668.06,27964.07,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2447,MEDA,Task,Review Storybook 1.8.4 for any needed updates to components,Done,2022-06-17T16:14:15.950-0400,2025-05-21T10:24:24.329-0400,,,,6679.93,28055.93,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2446,MEDA,Task,Create a 4-column layout section,Done,2022-06-17T12:42:42.058-0400,2025-05-21T10:24:26.888-0400,,,,6672.22,27984.22,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2445,MEDA,Task,Change hero and section header content to text(formatted),Done,2022-06-17T07:58:52.392-0400,2025-05-21T10:24:27.265-0400,,,,6687.85,28064.87,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2444,MEDA,Task,Integrate per-breakpoint image fields with the updated media component,Done,2022-06-16T14:27:24.236-0400,2025-05-21T10:24:23.559-0400,,,1.8.5(Storybook),6297.11,26425.11,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-2432,MEDA,Task,Implement ASSET_PREFIX_PATH for Storybook assets,Done,2022-06-16T13:32:38.741-0400,2025-05-21T10:26:15.480-0400,,,,6569.87,27577.87,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2431,MEDA,Task,Update Storybook to 1.8.4,Done,2022-06-16T11:33:21.223-0400,2025-05-21T10:26:16.759-0400,,,,6692.86,28084.86,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2430,MEDA,Task,Configure stage_file_proxy,Done,2022-06-15T16:26:07.751-0400,2025-05-21T10:26:17.485-0400,,,,6535.08,27415.08,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2429,MEDA,Task,Update the logo grid component to support 6 logos,Done,2022-06-15T16:22:44.445-0400,2025-05-21T10:26:18.554-0400,,,,6558.51,27486.51,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2428,MEDA,Task,Add image fields to support multiple breakpoints,Done,2022-06-15T16:14:25.395-0400,2025-05-21T10:26:13.124-0400,,,,6690.44,28082.44,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2427,MEDA,Task,Microservice Documentation,Done,2022-06-15T12:33:25.023-0400,2025-05-21T10:26:13.391-0400,,,,6700.27,28108.27,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2426,MEDA,Task,Setup configurable testing framework for proxied pages,Done,2022-06-15T04:31:32.515-0400,2025-05-21T10:26:13.787-0400,MEDA-5,MEDA-5,,6703.85,28116.32,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2425,MEDA,Task,Update Drupal Core,Done,2022-06-14T14:36:32.949-0400,2025-05-21T10:26:07.441-0400,,,,6671.85,27983.74,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2420,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-14T13:17:31.354-0400,2025-05-21T11:36:00.203-0400,,MEDA-1007,,6707.55,28131.55,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2415,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-13T19:11:07.353-0400,2025-05-21T11:35:49.533-0400,,MEDA-2414,,6711.85,28149.66,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2410,MEDA,Page Subtask,Copy,Done,2022-06-13T18:20:27.577-0400,2025-05-21T11:35:52.290-0400,,MEDA-2408,,6708.77,28132.77,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2409,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-13T18:20:26.804-0400,2025-05-21T11:35:53.374-0400,,MEDA-2408,,6711.85,28150.46,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2403,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-13T18:10:17.631-0400,2025-05-21T11:35:45.666-0400,,MEDA-574,,6711.85,28150.67,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2398,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-13T18:04:13.399-0400,2025-05-21T11:33:32.742-0400,,MEDA-538,,6711.85,28150.77,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2397,MEDA,Task,"Handle ""Modern look"" pages on Einstein",Done,2022-06-13T13:07:33.402-0400,2025-05-21T10:24:04.146-0400,,,,6612.89,27748.89,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2396,MEDA,Task,"Handle ""Older look"" pages on Einsten",Done,2022-06-13T13:06:50.037-0400,2025-05-21T10:24:05.462-0400,,,,6623.85,27780.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2395,MEDA,Task,"Handle ""Modern template"" pages on Montefiore",Done,2022-06-13T12:52:25.855-0400,2025-05-21T10:24:06.664-0400,,,,6687.85,28064.04,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2394,MEDA,Task,"Handle ""Older template"" pages on Montefiore",Done,2022-06-13T12:51:17.692-0400,2025-05-21T10:24:08.748-0400,,,,6702.02,28110.02,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2393,MEDA,Task,Handle Montefiore Aesthetics page,Done,2022-06-13T12:47:39.038-0400,2025-05-21T10:24:10.679-0400,,,,6703.85,28114.3,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2392,MEDA,Task,Set up demo environment for Einsten,Done,2022-06-13T12:42:55.548-0400,2025-05-21T10:24:12.128-0400,,,,6533.38,27413.38,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2391,MEDA,Sub-task,Create paragraph and wire the 'Services card' component,Done,2022-06-13T09:42:14.446-0400,2025-05-21T10:24:13.385-0400,,MEDA-149,,6711.85,28136.26,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2390,MEDA,Bug,Admin menu not showing on proxied pages,Done,2022-06-13T05:46:35.145-0400,2025-05-21T10:24:14.487-0400,MEDA-5,MEDA-5,,6703.85,28118.16,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2389,MEDA,Task,Make card grid rows/columns dynamic - Hero Card Sizing,Done,2022-06-10T14:22:00.517-0400,2025-05-21T10:23:55.451-0400,MEDA-2826,MEDA-2826,,6711.44,28135.44,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2386,MEDA,Story,Fix blocks not editable after cloning,Done,2022-06-09T14:46:53.177-0400,2025-05-21T10:23:51.707-0400,,,,6730.06,28250.07,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2385,MEDA,Story,Microservice Phynd - Add organizations filter to Specialties autocomplete index endpoint,Done,2022-06-09T12:20:34.158-0400,2025-05-21T10:23:51.871-0400,,,,6724.9,28228.9,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2384,MEDA,Story,Microservice Teams,Done,2022-06-09T12:16:22.864-0400,2025-05-21T10:23:53.984-0400,,,,6732.43,28252.43,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2383,MEDA,Story,Add raw filter to Rich text component,Done,2022-06-08T16:00:30.142-0400,2025-05-21T10:23:57.847-0400,,,,6735.49,28255.49,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2382,MEDA,Task,Add and configure entity clone module,Done,2022-06-08T12:45:01.181-0400,2025-05-21T10:23:59.028-0400,,,,6738.57,28274.57,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2381,MEDA,Story,Make sure custom slug is available in all the content types,Done,2022-06-08T09:53:51.126-0400,2025-05-21T10:24:01.884-0400,,,,6742.95,28278.95,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-2364,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:27:17.615-0400,2025-05-21T11:33:10.686-0400,,MEDA-2363,,6716.16,28156.16,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2359,MEDA,Page Subtask,Copy,Done,2022-06-07T21:26:38.476-0400,2025-05-21T11:33:58.991-0400,,MEDA-2357,,4916.64,20596.64,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2353,MEDA,Page Subtask,Copy,Done,2022-06-07T21:26:00.225-0400,2025-05-21T11:34:00.856-0400,,MEDA-2351,,4916.64,20596.64,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2347,MEDA,Page Subtask,Copy,Done,2022-06-07T21:20:07.360-0400,2025-05-21T11:33:55.264-0400,,MEDA-2345,,4916.64,20596.64,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2341,MEDA,Page Subtask,Copy,Done,2022-06-07T21:14:57.783-0400,2025-05-21T11:33:51.939-0400,,MEDA-2339,,4916.63,20596.63,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2335,MEDA,Page Subtask,Copy,Done,2022-06-07T21:14:06.421-0400,2025-05-21T11:35:22.094-0400,,MEDA-2333,,4916.62,20596.62,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2328,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:13:23.637-0400,2025-05-21T11:35:17.129-0400,,MEDA-2327,,6687.85,28075.62,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2322,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:12:34.386-0400,2025-05-21T11:35:16.400-0400,,MEDA-2321,,6687.85,28075.59,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2316,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:11:50.301-0400,2025-05-21T11:36:09.063-0400,,MEDA-2315,,6687.85,28075.58,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2310,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:10:33.875-0400,2025-05-21T11:36:00.082-0400,,MEDA-2309,,6719.85,28219.77,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2304,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:09:59.959-0400,2025-05-21T11:36:03.281-0400,,MEDA-2303,,6719.85,28220.17,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2298,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:08:11.092-0400,2025-05-21T11:35:49.018-0400,,MEDA-2297,,6735.85,28271.55,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2293,MEDA,Page Subtask,Copy,Done,2022-06-07T21:07:20.560-0400,2025-05-21T11:35:56.265-0400,,MEDA-2291,,4916.63,20596.63,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2287,MEDA,Page Subtask,Copy,Done,2022-06-07T21:06:42.085-0400,2025-05-21T11:35:42.094-0400,,MEDA-2285,,4916.63,20596.63,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2286,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:06:41.386-0400,2025-05-21T11:35:43.384-0400,,MEDA-2285,,6687.85,28075.8,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2280,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:06:00.436-0400,2025-05-21T11:33:32.649-0400,,MEDA-2279,,6687.85,28077.35,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2251,MEDA,Page Subtask,Copy,Done,2022-06-07T21:02:18.530-0400,2025-05-21T11:33:20.661-0400,,MEDA-2249,,4916.64,20596.64,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2246,MEDA,Page Subtask,Images,Done,2022-06-07T21:01:36.161-0400,2025-05-21T11:33:12.063-0400,,MEDA-2243,,6712.37,28152.37,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2245,MEDA,Page Subtask,Copy,Done,2022-06-07T21:01:35.495-0400,2025-05-21T11:33:13.826-0400,,MEDA-2243,,6712.37,28152.37,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2244,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:01:34.743-0400,2025-05-21T11:33:09.130-0400,,MEDA-2243,,6719.85,28183.11,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2238,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T21:00:53.415-0400,2025-05-21T11:35:38.699-0400,,MEDA-2237,,6687.85,28078.92,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2233,MEDA,Page Subtask,Copy,Done,2022-06-07T20:59:40.451-0400,2025-05-21T11:35:36.506-0400,,MEDA-2231,,4916.61,20596.61,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2227,MEDA,Page Subtask,Copy,Done,2022-06-07T20:58:55.705-0400,2025-05-21T11:35:30.659-0400,,MEDA-2225,,4916.62,20596.62,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2226,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:58:54.853-0400,2025-05-21T11:35:31.028-0400,,MEDA-2225,,6688.72,28080.72,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2220,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:58:14.349-0400,2025-05-21T11:35:23.784-0400,,MEDA-2219,,6687.85,28075.24,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2214,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:57:39.248-0400,2025-05-21T11:35:21.533-0400,,MEDA-2213,,6687.85,28075.25,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2208,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:56:54.295-0400,2025-05-21T11:35:14.005-0400,,MEDA-2207,,6687.85,28075.27,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2203,MEDA,Page Subtask,Copy,Done,2022-06-07T20:56:08.792-0400,2025-05-21T11:35:15.263-0400,,MEDA-2201,,4916.62,20596.62,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2202,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:56:07.988-0400,2025-05-21T11:35:16.053-0400,,MEDA-2201,,6687.85,28075.9,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2197,MEDA,Page Subtask,Copy,Done,2022-06-07T20:55:26.413-0400,2025-05-21T11:36:05.616-0400,,MEDA-2195,,4916.62,20596.62,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2191,MEDA,Page Subtask,Copy,Done,2022-06-07T20:54:48.631-0400,2025-05-21T11:36:07.153-0400,,MEDA-2189,,4916.6,20596.6,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2190,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:54:47.664-0400,2025-05-21T11:35:59.615-0400,,MEDA-2189,,6687.85,28076.03,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2185,MEDA,Page Subtask,Copy,Done,2022-06-07T20:53:21.384-0400,2025-05-21T11:36:01.502-0400,,MEDA-2183,,6702.18,28110.18,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2184,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:53:20.672-0400,2025-05-21T11:36:02.422-0400,,MEDA-2183,,6743.85,28281.92,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2173,MEDA,Page Subtask,Copy,Done,2022-06-07T20:51:52.117-0400,2025-05-21T11:35:55.349-0400,,MEDA-2171,,4916.61,20596.61,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2172,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:51:51.137-0400,2025-05-21T11:35:55.780-0400,,MEDA-2171,,6695.85,28101.51,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2167,MEDA,Page Subtask,Copy,Done,2022-06-07T20:51:10.396-0400,2025-05-21T11:35:40.895-0400,,MEDA-2165,,4916.6,20596.6,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2166,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:51:09.432-0400,2025-05-21T11:35:41.956-0400,,MEDA-2165,,6697.44,28105.45,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2161,MEDA,Page Subtask,Copy,Done,2022-06-07T20:50:27.163-0400,2025-05-21T11:35:46.433-0400,,MEDA-2159,,4917.44,20597.44,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2155,MEDA,Page Subtask,Copy,Done,2022-06-07T20:49:24.084-0400,2025-05-21T11:33:30.805-0400,,MEDA-2153,,4916.6,20596.6,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2154,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:49:23.260-0400,2025-05-21T11:33:31.213-0400,,MEDA-2153,,6695.85,28101.49,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2149,MEDA,Page Subtask,Copy,Done,2022-06-07T20:48:38.275-0400,2025-05-21T11:33:26.606-0400,,MEDA-2147,,4916.61,20596.61,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2148,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:48:37.638-0400,2025-05-21T11:33:27.173-0400,,MEDA-2147,,6695.85,28101.47,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2143,MEDA,Page Subtask,Copy,Done,2022-06-07T20:47:50.346-0400,2025-05-21T11:33:25.829-0400,,MEDA-2141,,4916.59,20596.6,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2142,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:47:49.492-0400,2025-05-21T11:33:26.098-0400,,MEDA-2141,,6698.64,28106.64,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2137,MEDA,Page Subtask,Copy,Done,2022-06-07T20:46:56.144-0400,2025-05-21T11:35:01.083-0400,,MEDA-2135,,4916.58,20596.58,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2125,MEDA,Page Subtask,Copy,Done,2022-06-07T20:44:51.407-0400,2025-05-21T11:34:59.206-0400,,MEDA-2123,,6712.6,28152.6,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2124,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:44:50.558-0400,2025-05-21T11:35:00.287-0400,,MEDA-2123,,6719.85,28182.35,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2119,MEDA,Page Subtask,Copy,Done,2022-06-07T20:43:59.877-0400,2025-05-21T11:35:37.840-0400,,MEDA-2117,,6712.71,28152.71,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2118,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:43:59.078-0400,2025-05-21T11:35:38.249-0400,,MEDA-2117,,6719.85,28220.58,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2113,MEDA,Page Subtask,Copy,Done,2022-06-07T20:43:02.679-0400,2025-05-21T11:35:34.922-0400,,MEDA-2111,,4916.58,20596.58,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2112,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:43:01.748-0400,2025-05-21T11:35:36.123-0400,,MEDA-2111,,6697.98,28105.98,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2107,MEDA,Page Subtask,Copy,Done,2022-06-07T20:42:22.230-0400,2025-05-21T11:35:28.954-0400,,MEDA-2105,,4916.59,20596.59,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2106,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:42:21.449-0400,2025-05-21T11:35:29.671-0400,,MEDA-2105,,6698.12,28106.12,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2101,MEDA,Page Subtask,Copy,Done,2022-06-07T20:41:43.264-0400,2025-05-21T11:35:27.428-0400,,MEDA-2099,,4916.58,20596.58,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2100,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:41:42.329-0400,2025-05-21T11:35:19.912-0400,,MEDA-2099,,6698.21,28106.21,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2095,MEDA,Page Subtask,Copy,Done,2022-06-07T20:41:04.414-0400,2025-05-21T11:35:23.406-0400,,MEDA-2093,,4916.58,20596.58,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2094,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:41:03.689-0400,2025-05-21T11:35:24.341-0400,,MEDA-2093,,6698.35,28106.35,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2089,MEDA,Page Subtask,Copy,Done,2022-06-07T20:40:19.670-0400,2025-05-21T11:35:12.446-0400,,MEDA-2087,,4916.56,20596.56,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2088,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:40:18.679-0400,2025-05-21T11:35:13.375-0400,,MEDA-2087,,6698.45,28106.45,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2082,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:39:39.291-0400,2025-05-21T11:35:14.266-0400,,MEDA-2081,,6711.85,28150.03,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2076,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:38:56.383-0400,2025-05-21T11:36:06.104-0400,,MEDA-2075,,6698.87,28106.87,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2070,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:38:10.088-0400,2025-05-21T11:35:59.245-0400,,MEDA-2069,,6698.98,28106.98,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2065,MEDA,Page Subtask,Copy,Done,2022-06-07T20:36:25.997-0400,2025-05-21T11:35:59.058-0400,,MEDA-2063,,4916.57,20596.57,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2064,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:36:25.362-0400,2025-05-21T11:36:01.932-0400,,MEDA-2063,,6683.55,28059.55,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2059,MEDA,Page Subtask,Copy,Done,2022-06-07T20:35:30.088-0400,2025-05-21T11:35:50.362-0400,,MEDA-2057,,4916.56,20596.56,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2058,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:35:29.429-0400,2025-05-21T11:35:51.812-0400,,MEDA-2057,,6696.5,28104.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2052,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:34:40.138-0400,2025-05-21T11:35:54.105-0400,,MEDA-2051,,6719.85,28205.72,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2047,MEDA,Page Subtask,Copy,Done,2022-06-07T20:33:05.033-0400,2025-05-21T11:35:44.909-0400,,MEDA-2045,,4916.56,20596.56,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2046,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:33:04.331-0400,2025-05-21T11:35:40.133-0400,,MEDA-2045,,6696.52,28104.52,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2041,MEDA,Page Subtask,Copy,Done,2022-06-07T20:32:21.128-0400,2025-05-21T11:35:46.026-0400,,MEDA-2039,,4916.54,20596.54,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2040,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:32:20.226-0400,2025-05-21T11:35:10.791-0400,,MEDA-2039,,6696.57,28104.57,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2035,MEDA,Page Subtask,Copy,Done,2022-06-07T20:31:35.052-0400,2025-05-21T11:35:10.334-0400,,MEDA-2033,,4916.54,20596.54,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2034,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:31:34.217-0400,2025-05-21T11:35:11.318-0400,,MEDA-2033,,6700.89,28108.89,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2029,MEDA,Page Subtask,Copy,Done,2022-06-07T20:30:54.146-0400,2025-05-21T11:35:07.043-0400,,MEDA-2027,,6712.38,28152.38,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2028,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:30:53.183-0400,2025-05-21T11:35:07.324-0400,,MEDA-2027,,6719.85,28180.37,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2023,MEDA,Page Subtask,Copy,Done,2022-06-07T20:30:14.273-0400,2025-05-21T11:35:08.373-0400,,MEDA-2021,,4916.56,20596.56,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2022,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:30:13.570-0400,2025-05-21T11:35:09.124-0400,,MEDA-2021,,6702.09,28110.09,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2017,MEDA,Page Subtask,Copy,Done,2022-06-07T20:29:33.929-0400,2025-05-21T11:35:03.085-0400,,MEDA-2015,,4916.55,20596.55,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2016,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:29:33.164-0400,2025-05-21T11:35:01.445-0400,,MEDA-2015,,6702.07,28110.07,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2011,MEDA,Page Subtask,Copy,Done,2022-06-07T20:28:49.247-0400,2025-05-21T11:35:04.733-0400,,MEDA-2009,,4916.55,20596.55,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2010,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:28:48.456-0400,2025-05-21T11:34:57.555-0400,,MEDA-2009,,6683.48,28059.48,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-2005,MEDA,Page Subtask,Copy,Done,2022-06-07T20:27:54.667-0400,2025-05-21T11:34:58.423-0400,,MEDA-2003,,6712.69,28152.69,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-2004,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:27:53.978-0400,2025-05-21T11:34:59.865-0400,,MEDA-2003,,6719.85,28222.4,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1999,MEDA,Page Subtask,Copy,Done,2022-06-07T20:27:04.588-0400,2025-05-21T11:35:33.921-0400,,MEDA-1997,,6712.79,28152.79,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1998,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:27:03.571-0400,2025-05-21T11:35:37.243-0400,,MEDA-1997,,6727.59,28231.59,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1992,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T20:26:01.038-0400,2025-05-21T11:35:35.538-0400,,MEDA-1991,,6743.85,28290.8,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1915,MEDA,Page Subtask,Copy,Done,2022-06-07T19:08:09.675-0400,2025-05-21T11:35:10.233-0400,,MEDA-1913,,4916.53,20596.54,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1914,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:08:08.870-0400,2025-05-21T11:35:10.524-0400,,MEDA-1913,,6699.68,28107.68,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1909,MEDA,Page Subtask,Copy,Done,2022-06-07T19:07:21.275-0400,2025-05-21T11:35:05.591-0400,,MEDA-1907,,4916.54,20596.54,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1908,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:07:20.663-0400,2025-05-21T11:35:06.453-0400,,MEDA-1907,,6700.43,28108.43,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1903,MEDA,Page Subtask,Copy,Done,2022-06-07T19:06:37.308-0400,2025-05-21T11:35:05.254-0400,,MEDA-1901,,4916.54,20596.54,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1902,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:06:36.463-0400,2025-05-21T11:35:08.422-0400,,MEDA-1901,,6700.96,28108.96,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1896,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:05:38.836-0400,2025-05-21T11:35:02.621-0400,,MEDA-1895,,6701.23,28109.23,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1891,MEDA,Page Subtask,Copy,Done,2022-06-07T19:04:25.445-0400,2025-05-21T11:35:03.747-0400,,MEDA-1889,,4916.53,20596.53,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1890,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:04:24.787-0400,2025-05-21T11:34:56.950-0400,,MEDA-1889,,6701.54,28109.54,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1885,MEDA,Page Subtask,Copy,Done,2022-06-07T19:03:09.402-0400,2025-05-21T11:35:00.761-0400,,MEDA-1883,,4916.53,20596.53,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1884,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:03:08.702-0400,2025-05-21T11:34:57.887-0400,,MEDA-1883,,6701.77,28109.77,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1879,MEDA,Page Subtask,Copy,Done,2022-06-07T19:01:53.512-0400,2025-05-21T11:35:33.189-0400,,MEDA-1877,,4916.52,20596.52,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1878,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:01:52.525-0400,2025-05-21T11:35:33.735-0400,,MEDA-1877,,6702.13,28110.13,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1873,MEDA,Page Subtask,Copy,Done,2022-06-07T19:00:15.058-0400,2025-05-21T11:35:34.467-0400,,MEDA-1871,,4916.51,20596.51,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1872,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T19:00:14.215-0400,2025-05-21T11:35:34.680-0400,,MEDA-1871,,6695.85,28101.55,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1867,MEDA,Page Subtask,Copy,Done,2022-06-07T18:45:09.458-0400,2025-05-21T11:35:25.098-0400,,MEDA-1865,,6702.14,28110.14,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1866,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T18:45:08.672-0400,2025-05-21T11:35:28.349-0400,,MEDA-1865,,6705.91,28129.91,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1861,MEDA,Page Subtask,Copy,Done,2022-06-07T17:18:32.055-0400,2025-05-21T11:35:25.606-0400,,MEDA-1859,,4916.53,20596.53,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1860,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T17:18:31.050-0400,2025-05-21T11:35:20.693-0400,,MEDA-1859,,6703.85,28114.19,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1855,MEDA,Page Subtask,Copy,Done,2022-06-07T17:17:00.438-0400,2025-05-21T11:35:22.501-0400,,MEDA-1853,,6712.45,28152.45,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1854,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T17:16:59.483-0400,2025-05-21T11:35:23.171-0400,,MEDA-1853,,6712.44,28152.44,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1853,MEDA,Page,Curriculum,Done,2022-06-07T17:16:57.554-0400,2025-05-21T11:35:23.592-0400,,,L3,4916.43,20596.43,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1848,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T17:14:34.181-0400,2025-05-21T11:35:11.517-0400,,MEDA-1847,,6719.85,28180.47,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1843,MEDA,Page Subtask,Copy,Done,2022-06-07T17:13:14.284-0400,2025-05-21T11:35:18.399-0400,,MEDA-1841,,4916.5,20596.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1842,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T17:13:13.393-0400,2025-05-21T11:35:18.601-0400,,MEDA-1841,,6683.26,28059.26,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1837,MEDA,Page Subtask,Copy,Done,2022-06-07T17:11:33.856-0400,2025-05-21T11:33:37.846-0400,,MEDA-1835,,4916.5,20596.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1836,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T17:11:33.012-0400,2025-05-21T11:33:36.898-0400,,MEDA-1835,,6683.22,28059.22,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1833,MEDA,Task,Update dependencies on Pantheon site,Done,2022-06-07T15:00:50.721-0400,2025-05-21T10:24:21.732-0400,,,,6589.69,27629.69,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-1832,MEDA,Task,Enable automatic deployments to Pantheon on merges,Done,2022-06-07T15:00:14.757-0400,2025-05-21T10:24:21.034-0400,,,,6734.98,28254.98,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-1828,MEDA,Page Subtask,Copy,Done,2022-06-07T14:18:42.974-0400,2025-05-21T11:34:46.862-0400,,MEDA-1826,,6712.68,28152.68,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1827,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-07T14:18:42.236-0400,2025-05-21T11:34:46.854-0400,,MEDA-1826,,6719.85,28223.52,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1777,MEDA,Sub-task,Create paragraph and wire the 'Featured card' component,Done,2022-06-07T10:32:59.776-0400,2025-05-21T10:25:14.564-0400,,MEDA-149,,6742.83,28278.83,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-1776,MEDA,Sub-task,Create block and wire the 'Visual list' component,Done,2022-06-07T09:22:14.437-0400,2025-05-21T10:25:15.104-0400,,MEDA-149,,6726.07,28230.07,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-1772,MEDA,Page Subtask,Copy,Done,2022-06-06T20:25:43.056-0400,2025-05-21T11:34:49.835-0400,,MEDA-1770,,4916.51,20596.51,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1771,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:25:42.224-0400,2025-05-21T11:34:52.250-0400,,MEDA-1770,,6683.14,28059.14,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1766,MEDA,Page Subtask,Copy,Done,2022-06-06T20:24:59.821-0400,2025-05-21T11:34:49.091-0400,,MEDA-1764,,4916.51,20596.51,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1765,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:24:59.135-0400,2025-05-21T11:34:50.692-0400,,MEDA-1764,,6703.85,28112.34,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1760,MEDA,Page Subtask,Copy,Done,2022-06-06T20:24:17.896-0400,2025-05-21T11:34:47.017-0400,,MEDA-1758,,6712.48,28152.48,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1759,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:24:17.121-0400,2025-05-21T11:34:47.323-0400,,MEDA-1758,,6719.85,28180.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1754,MEDA,Page Subtask,Copy,Done,2022-06-06T20:23:30.377-0400,2025-05-21T11:34:50.517-0400,,MEDA-1752,,4916.51,20596.51,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1753,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:23:29.679-0400,2025-05-21T11:34:48.734-0400,,MEDA-1752,,6703.85,28112.46,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1748,MEDA,Page Subtask,Copy,Done,2022-06-06T20:22:40.575-0400,2025-05-21T11:34:54.865-0400,,MEDA-1746,,6712.49,28152.49,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1747,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:22:39.514-0400,2025-05-21T11:34:54.566-0400,,MEDA-1746,,6719.85,28180.54,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1742,MEDA,Page Subtask,Copy,Done,2022-06-06T20:21:52.508-0400,2025-05-21T11:34:55.546-0400,,MEDA-1740,,4916.5,20596.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1741,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:21:51.720-0400,2025-05-21T11:33:57.242-0400,,MEDA-1740,,6703.85,28123.02,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1736,MEDA,Page Subtask,Copy,Done,2022-06-06T20:21:03.110-0400,2025-05-21T11:33:52.784-0400,,MEDA-1734,,4916.5,20596.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1735,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:21:02.388-0400,2025-05-21T11:33:57.630-0400,,MEDA-1734,,6683.1,28059.1,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1730,MEDA,Page Subtask,Copy,Done,2022-06-06T20:20:13.443-0400,2025-05-21T11:33:46.488-0400,,MEDA-1728,,6712.51,28152.51,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1729,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:20:12.702-0400,2025-05-21T11:33:45.745-0400,,MEDA-1728,,6719.85,28180.59,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1724,MEDA,Page Subtask,Copy,Done,2022-06-06T20:19:21.450-0400,2025-05-21T11:33:48.216-0400,,MEDA-1722,,6712.52,28152.52,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1723,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:19:20.444-0400,2025-05-21T11:33:47.589-0400,,MEDA-1722,,6719.85,28180.62,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1706,MEDA,Page Subtask,Copy,Done,2022-06-06T20:16:39.768-0400,2025-05-21T11:34:45.168-0400,,MEDA-1704,,6712.66,28152.66,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1705,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:16:39.015-0400,2025-05-21T11:34:45.504-0400,,MEDA-1704,,6719.85,28223.68,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1699,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:14:05.149-0400,2025-05-21T11:34:45.829-0400,,MEDA-1698,,6743.85,28292.26,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1688,MEDA,Page Subtask,Copy,Done,2022-06-06T20:11:23.096-0400,2025-05-21T11:34:14.006-0400,,MEDA-1686,,6712.65,28152.65,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1687,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:11:22.321-0400,2025-05-21T11:34:12.850-0400,,MEDA-1686,,6720.0,28224.0,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1682,MEDA,Page Subtask,Copy,Done,2022-06-06T20:10:31.992-0400,2025-05-21T11:34:12.028-0400,,MEDA-1680,,4916.49,20596.49,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1681,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:10:31.298-0400,2025-05-21T11:34:05.787-0400,,MEDA-1680,,6724.97,28228.97,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1670,MEDA,Page Subtask,Copy,Done,2022-06-06T20:07:30.496-0400,2025-05-21T11:34:52.618-0400,,MEDA-1668,,4916.48,20596.48,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1669,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:07:29.734-0400,2025-05-21T11:34:50.409-0400,,MEDA-1668,,6719.85,28180.98,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1646,MEDA,Page Subtask,Copy,Done,2022-06-06T20:03:55.510-0400,2025-05-21T11:34:47.627-0400,,MEDA-1644,,6695.85,28103.23,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1645,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:03:54.594-0400,2025-05-21T11:34:48.429-0400,,MEDA-1644,,6703.85,28113.92,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1634,MEDA,Page Subtask,Copy,Done,2022-06-06T20:02:13.374-0400,2025-05-21T11:33:17.473-0400,,MEDA-1632,,4916.47,20596.48,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1633,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:02:12.585-0400,2025-05-21T11:33:15.991-0400,,MEDA-1632,,6703.85,28113.95,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1628,MEDA,Page Subtask,Copy,Done,2022-06-06T20:01:25.892-0400,2025-05-21T11:33:59.529-0400,,MEDA-1626,,6695.85,28103.26,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1627,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:01:25.116-0400,2025-05-21T11:34:02.442-0400,,MEDA-1626,,6703.85,28113.98,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1622,MEDA,Page Subtask,Copy,Done,2022-06-06T20:00:54.221-0400,2025-05-21T11:34:03.695-0400,,MEDA-1620,,6695.85,28103.27,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1621,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T20:00:53.329-0400,2025-05-21T11:33:55.825-0400,,MEDA-1620,,6703.85,28114.02,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1616,MEDA,Page Subtask,Copy,Done,2022-06-06T19:59:24.747-0400,2025-05-21T11:33:54.838-0400,,MEDA-1614,,4916.48,20596.48,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1615,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:59:23.827-0400,2025-05-21T11:33:51.802-0400,,MEDA-1614,,6703.85,28114.04,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1609,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:57:14.315-0400,2025-05-21T11:33:46.700-0400,,MEDA-1608,,6695.85,28102.8,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1604,MEDA,Page Subtask,Copy,Done,2022-06-06T19:55:22.707-0400,2025-05-21T11:33:41.136-0400,,MEDA-1602,,6697.2,28105.2,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1603,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:55:21.799-0400,2025-05-21T11:33:49.177-0400,,MEDA-1602,,6703.85,28113.32,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1597,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:54:09.856-0400,2025-05-21T11:33:38.677-0400,,MEDA-1596,,6695.85,28102.78,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1592,MEDA,Page Subtask,Copy,Done,2022-06-06T19:51:55.709-0400,2025-05-21T11:33:40.596-0400,,MEDA-1590,,6697.22,28105.22,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1591,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:51:54.998-0400,2025-05-21T11:34:44.673-0400,,MEDA-1590,,6703.85,28113.26,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1585,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:50:38.528-0400,2025-05-21T11:34:47.510-0400,,MEDA-1584,,6695.85,28102.82,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1580,MEDA,Page Subtask,Copy,Done,2022-06-06T19:48:54.010-0400,2025-05-21T11:34:45.956-0400,,MEDA-1578,,6697.19,28105.19,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1579,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:48:53.277-0400,2025-05-21T11:34:41.504-0400,,MEDA-1578,,6703.85,28113.22,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1573,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:47:35.118-0400,2025-05-21T11:34:43.266-0400,,MEDA-1572,,6695.85,28102.76,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1567,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:45:56.801-0400,2025-05-21T11:34:13.577-0400,,MEDA-1566,,6703.85,28114.1,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1562,MEDA,Page Subtask,Copy,Done,2022-06-06T19:44:25.462-0400,2025-05-21T11:34:11.224-0400,,MEDA-1560,,6695.85,28103.57,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1561,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:44:24.562-0400,2025-05-21T11:34:06.285-0400,,MEDA-1560,,6703.85,28114.12,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1556,MEDA,Page Subtask,Copy,Done,2022-06-06T19:43:15.324-0400,2025-05-21T11:34:10.149-0400,,MEDA-1554,,6702.11,28110.11,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1555,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:43:14.256-0400,2025-05-21T11:34:08.077-0400,,MEDA-1554,,6725.07,28229.07,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1543,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:41:26.820-0400,2025-05-21T11:34:52.985-0400,,MEDA-1542,,6725.2,28229.2,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1537,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:38:41.555-0400,2025-05-21T11:33:28.885-0400,,MEDA-1536,,6745.62,28297.62,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1526,MEDA,Page Subtask,Copy,Done,2022-06-06T19:36:19.203-0400,2025-05-21T11:33:22.467-0400,,MEDA-1524,,6695.85,28103.64,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1525,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:36:18.278-0400,2025-05-21T11:33:21.821-0400,,MEDA-1524,,6703.85,28125.04,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1520,MEDA,Page Subtask,Copy,Done,2022-06-06T19:35:09.657-0400,2025-05-21T11:33:12.173-0400,,MEDA-1518,,6695.85,28103.65,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1519,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:35:08.849-0400,2025-05-21T11:33:10.820-0400,,MEDA-1518,,6703.85,28125.09,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1514,MEDA,Page Subtask,Copy,Done,2022-06-06T19:34:20.012-0400,2025-05-21T11:33:14.470-0400,,MEDA-1512,,6695.85,28103.69,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1513,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:34:19.237-0400,2025-05-21T11:33:17.113-0400,,MEDA-1512,,6703.85,28125.38,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1508,MEDA,Page Subtask,Copy,Done,2022-06-06T19:33:25.233-0400,2025-05-21T11:34:01.176-0400,,MEDA-1506,,6700.81,28108.81,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1507,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:33:24.218-0400,2025-05-21T11:33:59.358-0400,,MEDA-1506,,6703.85,28125.93,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1502,MEDA,Page Subtask,Copy,Done,2022-06-06T19:32:13.378-0400,2025-05-21T11:34:04.464-0400,,MEDA-1500,,6701.07,28109.07,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1501,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:32:12.630-0400,2025-05-21T11:33:56.895-0400,,MEDA-1500,,6703.85,28126.18,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1496,MEDA,Page Subtask,Copy,Done,2022-06-06T19:31:06.501-0400,2025-05-21T11:33:50.770-0400,,MEDA-1494,,6701.33,28109.33,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1495,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:31:05.631-0400,2025-05-21T11:33:53.339-0400,,MEDA-1494,,6703.85,28127.8,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1490,MEDA,Page Subtask,Copy,Done,2022-06-06T19:29:51.823-0400,2025-05-21T11:33:45.245-0400,,MEDA-1488,,6701.3,28109.3,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1489,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:29:50.751-0400,2025-05-21T11:33:43.565-0400,,MEDA-1488,,6703.85,28126.75,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1484,MEDA,Page Subtask,Copy,Done,2022-06-06T19:28:46.621-0400,2025-05-21T11:33:43.388-0400,,MEDA-1482,,6701.35,28109.35,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1483,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:28:45.891-0400,2025-05-21T11:33:42.256-0400,,MEDA-1482,,6705.04,28129.04,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1477,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:27:39.741-0400,2025-05-21T11:33:39.455-0400,,MEDA-1476,,6705.22,28129.22,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1472,MEDA,Page Subtask,Copy,Done,2022-06-06T19:26:34.614-0400,2025-05-21T11:33:38.628-0400,,MEDA-1470,,6704.67,28128.67,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1471,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:26:33.824-0400,2025-05-21T11:34:44.364-0400,,MEDA-1470,,6707.27,28131.27,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1466,MEDA,Page Subtask,Copy,Done,2022-06-06T19:25:25.751-0400,2025-05-21T11:34:46.958-0400,,MEDA-1464,,6701.94,28109.94,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1465,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:25:25.050-0400,2025-05-21T11:34:46.240-0400,,MEDA-1464,,6719.85,28160.41,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1460,MEDA,Page Subtask,Copy,Done,2022-06-06T19:24:15.406-0400,2025-05-21T11:34:41.436-0400,,MEDA-1458,,6701.29,28109.29,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1459,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T19:24:14.558-0400,2025-05-21T11:34:48.922-0400,,MEDA-1458,,6706.06,28130.06,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1453,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:39:33.395-0400,2025-05-21T11:34:43.849-0400,,MEDA-1452,,6687.85,28075.14,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1447,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:38:43.082-0400,2025-05-21T11:34:10.776-0400,,MEDA-1446,,6687.85,28075.12,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1441,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:37:31.356-0400,2025-05-21T11:35:39.091-0400,,MEDA-1440,,6687.85,28075.1,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1436,MEDA,Page Subtask,Copy,Done,2022-06-06T18:34:59.360-0400,2025-05-21T11:35:48.441-0400,,MEDA-1434,,6712.22,28152.22,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1435,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:34:58.325-0400,2025-05-21T11:35:46.736-0400,,MEDA-1434,,6719.85,28160.16,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1429,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:33:54.000-0400,2025-05-21T11:33:31.758-0400,,MEDA-1428,,6719.85,28160.19,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1423,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:32:22.863-0400,2025-05-21T11:33:34.426-0400,,MEDA-1422,,6719.85,28160.21,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1417,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:31:19.092-0400,2025-05-21T11:33:24.839-0400,,MEDA-1416,,6687.85,28075.07,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1405,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:27:37.487-0400,2025-05-21T11:33:22.522-0400,,MEDA-1404,,6701.39,28109.39,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1399,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:26:47.495-0400,2025-05-21T11:33:13.803-0400,,MEDA-1398,,6701.36,28109.36,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1393,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:25:26.558-0400,2025-05-21T11:33:15.500-0400,,MEDA-1392,,6701.34,28109.34,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1387,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:09:11.477-0400,2025-05-21T11:34:00.095-0400,,MEDA-1386,,6711.85,28147.24,10,0,1,0,3,1,1,0,1,1,1,0,0,0,0,0,1,0
+3,MEDA-1381,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:02:12.921-0400,2025-05-21T11:33:50.432-0400,,MEDA-1380,,6708.24,28132.24,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1375,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T18:00:40.636-0400,2025-05-21T11:33:51.518-0400,,MEDA-1374,,6711.85,28147.5,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1369,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:59:23.376-0400,2025-05-21T11:33:45.596-0400,,MEDA-1368,,6719.85,28160.24,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1363,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:57:12.444-0400,2025-05-21T11:33:42.583-0400,,MEDA-1362,,6711.85,28147.92,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1357,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:55:47.936-0400,2025-05-21T11:33:38.683-0400,,MEDA-1356,,6719.85,28160.27,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1351,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:54:12.526-0400,2025-05-21T11:34:44.727-0400,,MEDA-1350,,6711.85,28148.1,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1345,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:52:46.463-0400,2025-05-21T11:34:52.028-0400,,MEDA-1344,,6719.85,28160.3,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1339,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:51:23.673-0400,2025-05-21T11:36:02.797-0400,,MEDA-1338,,6711.85,28148.24,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1333,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:49:44.329-0400,2025-05-21T11:36:00.480-0400,,MEDA-1332,,6719.85,28160.31,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1321,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T17:32:41.356-0400,2025-05-21T11:35:42.440-0400,,MEDA-1320,,6719.85,28160.35,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1316,MEDA,Page Subtask,Copy,Done,2022-06-06T15:36:04.949-0400,2025-05-21T11:35:45.438-0400,,MEDA-1314,,6712.21,28152.21,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1315,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T15:36:04.054-0400,2025-05-21T11:35:47.881-0400,,MEDA-1314,,6719.85,28160.09,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1309,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T15:34:54.740-0400,2025-05-21T11:33:30.682-0400,,MEDA-1308,,6711.85,28150.81,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1303,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T15:33:27.621-0400,2025-05-21T11:33:35.692-0400,,MEDA-1302,,6687.85,28075.0,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1297,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T15:31:57.982-0400,2025-05-21T11:33:26.251-0400,,MEDA-1296,,6726.82,28230.82,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1292,MEDA,Page Subtask,Copy,Done,2022-06-06T14:26:16.787-0400,2025-05-21T11:33:29.586-0400,,MEDA-1290,,6701.21,28109.21,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1291,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:26:15.958-0400,2025-05-21T11:33:20.036-0400,,MEDA-1290,,6706.21,28130.21,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1285,MEDA,Page Subtask,Copy,Done,2022-06-06T14:24:32.387-0400,2025-05-21T11:33:19.112-0400,,MEDA-1283,,6701.2,28109.2,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1284,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:24:31.278-0400,2025-05-21T11:33:22.984-0400,,MEDA-1283,,6735.85,28269.2,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1279,MEDA,Page Subtask,Copy,Done,2022-06-06T14:23:01.047-0400,2025-05-21T11:33:13.493-0400,,MEDA-1277,,6701.15,28109.15,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1278,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:23:00.213-0400,2025-05-21T11:33:11.587-0400,,MEDA-1277,,6735.85,28269.3,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1272,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:22:10.936-0400,2025-05-21T11:33:14.887-0400,,MEDA-1271,,6743.85,28292.7,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1266,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:20:51.041-0400,2025-05-21T11:34:01.242-0400,,MEDA-1265,,6706.25,28130.25,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1260,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:19:17.636-0400,2025-05-21T11:33:49.947-0400,,MEDA-1259,,6719.85,28184.41,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1253,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:18:09.341-0400,2025-05-21T11:33:54.016-0400,,MEDA-1252,,6719.85,28184.31,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1247,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:16:51.285-0400,2025-05-21T11:33:44.366-0400,,MEDA-1246,,6719.85,28184.15,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1241,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:15:25.531-0400,2025-05-21T11:35:12.793-0400,,MEDA-1240,,6719.85,28184.1,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1235,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:13:30.310-0400,2025-05-21T11:35:15.352-0400,,MEDA-1234,,6719.85,28184.08,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1230,MEDA,Page Subtask,Copy,Done,2022-06-06T14:12:11.676-0400,2025-05-21T11:36:04.317-0400,,MEDA-1228,,4916.47,20596.47,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1229,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:12:10.787-0400,2025-05-21T11:36:10.271-0400,,MEDA-1228,,6728.24,28248.24,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1224,MEDA,Page Subtask,Copy,Done,2022-06-06T14:11:35.034-0400,2025-05-21T11:36:06.891-0400,,MEDA-1222,,6703.06,28111.06,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1223,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:11:34.271-0400,2025-05-21T11:36:08.450-0400,,MEDA-1222,,6706.32,28130.32,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1217,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:10:32.669-0400,2025-05-21T11:36:01.825-0400,,MEDA-1216,,6719.85,28183.96,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1209,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:08:47.882-0400,2025-05-21T11:35:49.811-0400,,MEDA-1208,,6719.85,28184.02,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1204,MEDA,Page Subtask,Copy,Done,2022-06-06T14:07:15.914-0400,2025-05-21T11:35:56.861-0400,,MEDA-1202,,6700.84,28108.84,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1203,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:07:15.176-0400,2025-05-21T11:35:52.274-0400,,MEDA-1202,,6728.43,28248.43,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1198,MEDA,Page Subtask,Copy,Done,2022-06-06T14:06:44.233-0400,2025-05-21T11:35:44.078-0400,,MEDA-1196,,6704.99,28128.99,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1197,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:06:43.443-0400,2025-05-21T11:35:43.421-0400,,MEDA-1196,,6706.37,28130.37,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1191,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:05:51.031-0400,2025-05-21T11:33:33.640-0400,,MEDA-1190,,6719.85,28183.91,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1185,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:05:18.531-0400,2025-05-21T11:33:35.138-0400,,MEDA-1184,,6706.39,28130.39,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1179,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:04:40.555-0400,2025-05-21T11:33:27.645-0400,,MEDA-1178,,6706.41,28130.41,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1173,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:04:02.972-0400,2025-05-21T11:33:27.909-0400,,MEDA-1172,,6706.43,28130.43,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1167,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:03:14.793-0400,2025-05-21T11:33:18.204-0400,,MEDA-1166,,6706.44,28130.44,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1161,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:02:26.463-0400,2025-05-21T11:33:08.440-0400,,MEDA-1160,,6706.45,28130.45,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1155,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:01:35.476-0400,2025-05-21T11:33:09.105-0400,,MEDA-1154,,6706.46,28130.46,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1149,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T14:00:40.435-0400,2025-05-21T11:34:02.721-0400,,MEDA-1148,,6706.47,28130.47,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1143,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T13:59:39.442-0400,2025-05-21T11:34:01.522-0400,,MEDA-1142,,6706.48,28130.48,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1138,MEDA,Page Subtask,Copy,Done,2022-06-06T13:26:01.155-0400,2025-05-21T11:35:30.426-0400,,MEDA-1136,,6704.89,28128.89,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1137,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T13:26:00.425-0400,2025-05-21T11:35:25.730-0400,,MEDA-1136,,6728.69,28248.69,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1132,MEDA,Page Subtask,Copy,Done,2022-06-06T13:24:37.664-0400,2025-05-21T11:35:32.342-0400,,MEDA-1130,,6701.05,28109.05,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1131,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T13:24:36.765-0400,2025-05-21T11:35:20.464-0400,,MEDA-1130,,6706.82,28130.82,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1125,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T13:23:21.429-0400,2025-05-21T11:35:21.594-0400,,MEDA-1124,,6706.94,28130.94,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1119,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:52:44.206-0400,2025-05-21T11:35:18.338-0400,,MEDA-1118,,6706.95,28130.95,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1113,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:50:55.728-0400,2025-05-21T11:35:16.845-0400,,MEDA-1112,,6706.96,28130.96,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1108,MEDA,Page Subtask,Copy,Done,2022-06-06T12:49:33.167-0400,2025-05-21T11:36:09.369-0400,,MEDA-1106,,6704.85,28128.85,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1107,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:49:32.220-0400,2025-05-21T11:36:08.334-0400,,MEDA-1106,,6746.68,28298.68,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1101,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:48:34.660-0400,2025-05-21T11:35:57.725-0400,,MEDA-1100,,6707.15,28131.15,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1095,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:47:18.618-0400,2025-05-21T11:36:04.249-0400,,MEDA-1094,,6707.17,28131.17,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1089,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:46:25.737-0400,2025-05-21T11:35:49.059-0400,,MEDA-1088,,6707.22,28131.22,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1084,MEDA,Page Subtask,Copy,Done,2022-06-06T12:45:37.248-0400,2025-05-21T11:35:57.037-0400,,MEDA-1082,,6704.66,28128.66,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1083,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:45:36.443-0400,2025-05-21T11:35:55.836-0400,,MEDA-1082,,6707.27,28131.27,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1078,MEDA,Page Subtask,Copy,Done,2022-06-06T12:43:22.111-0400,2025-05-21T11:35:40.008-0400,,MEDA-1076,,6701.04,28109.04,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1077,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:43:21.239-0400,2025-05-21T11:35:43.986-0400,,MEDA-1076,,6707.29,28131.29,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1071,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T12:42:14.638-0400,2025-05-21T11:33:31.884-0400,,MEDA-1070,,6682.27,28058.27,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1057,MEDA,Page Subtask,Copy,Done,2022-06-06T11:05:28.829-0400,2025-05-21T11:33:24.579-0400,,MEDA-1055,L2,6701.03,28109.03,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1056,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T11:05:28.052-0400,2025-05-21T11:33:23.731-0400,,MEDA-1055,L2,6707.44,28131.44,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1050,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T11:04:45.867-0400,2025-05-21T11:33:20.357-0400,,MEDA-1049,,6707.48,28131.48,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1045,MEDA,Page Subtask,Copy,Done,2022-06-06T10:53:13.633-0400,2025-05-21T11:33:18.095-0400,,MEDA-1043,,6701.0,28109.0,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1044,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-06T10:53:12.677-0400,2025-05-21T11:33:20.040-0400,,MEDA-1043,,6746.72,28298.72,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1021,MEDA,Page Subtask,Copy,Done,2022-06-05T22:31:19.205-0400,2025-05-21T11:35:27.702-0400,,MEDA-1019,L2,6695.9,28103.9,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1020,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:31:18.812-0400,2025-05-21T11:35:31.803-0400,,MEDA-1019,L2,6707.51,28131.51,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1019,MEDA,Page,HIV Oncology Team,Done,2022-06-05T22:31:18.095-0400,2025-05-21T11:35:29.575-0400,MEDA-2582,MEDA-2582,L2,6707.5,28131.51,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1015,MEDA,Page Subtask,Copy,Done,2022-06-05T22:30:04.736-0400,2025-05-21T11:35:26.470-0400,,MEDA-1013,L2,6700.98,28108.98,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-1014,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:30:04.078-0400,2025-05-21T11:35:32.358-0400,,MEDA-1013,L2,6707.52,28131.53,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-1002,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:25:42.583-0400,2025-05-21T11:35:14.063-0400,,MEDA-1001,L1,6729.89,28249.89,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-997,MEDA,Page Subtask,Copy,Done,2022-06-05T22:24:02.743-0400,2025-05-21T11:35:19.133-0400,,MEDA-995,L2,4916.47,20596.47,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-996,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:24:02.346-0400,2025-05-21T11:35:15.482-0400,,MEDA-995,L2,6682.2,28058.2,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-990,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:22:43.680-0400,2025-05-21T11:36:04.475-0400,,MEDA-989,L2,6735.85,28256.81,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-984,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:21:28.223-0400,2025-05-21T11:36:06.665-0400,,MEDA-983,L2,6711.85,28149.43,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-978,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:20:07.540-0400,2025-05-21T11:36:02.078-0400,,MEDA-977,L2,6711.85,28149.45,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-972,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:18:58.959-0400,2025-05-21T11:35:50.884-0400,,MEDA-971,L2,6711.85,28149.46,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-966,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:17:43.261-0400,2025-05-21T11:35:53.481-0400,,MEDA-965,L2,6711.85,28149.48,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-960,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:16:25.852-0400,2025-05-21T11:35:41.521-0400,,MEDA-959,L2,6711.85,28149.49,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-954,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:15:07.867-0400,2025-05-21T11:35:47.668-0400,,MEDA-953,L2,6711.85,28149.51,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-948,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:13:49.415-0400,2025-05-21T11:33:29.852-0400,,MEDA-947,L2,6711.85,28149.54,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-942,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:12:36.942-0400,2025-05-21T11:35:06.191-0400,,MEDA-941,L2,6711.85,28149.55,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-936,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:11:24.550-0400,2025-05-21T11:35:08.793-0400,,MEDA-935,L2,6711.85,28149.56,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-930,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:09:53.519-0400,2025-05-21T11:35:01.942-0400,,MEDA-929,L2,6711.85,28149.57,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-926,MEDA,Page Subtask,Copy,Done,2022-06-05T22:06:05.164-0400,2025-05-21T11:35:03.744-0400,,MEDA-923,L1,6696.12,28104.12,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-924,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:06:03.927-0400,2025-05-21T11:35:05.439-0400,,MEDA-923,L1,6746.54,28298.54,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-919,MEDA,Page Subtask,Copy,Done,2022-06-05T22:04:07.677-0400,2025-05-21T11:34:59.293-0400,,MEDA-917,L2,6696.44,28104.44,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-918,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:04:07.211-0400,2025-05-21T11:34:58.492-0400,,MEDA-917,L2,6711.85,28149.59,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-912,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:02:09.686-0400,2025-05-21T11:35:38.474-0400,,MEDA-911,L2,6711.85,28149.61,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-906,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T22:00:15.115-0400,2025-05-21T11:35:36.824-0400,,MEDA-905,L2,6735.85,28257.26,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-900,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:58:17.744-0400,2025-05-21T11:35:28.096-0400,,MEDA-899,L2,6711.85,28149.62,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-894,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:56:52.160-0400,2025-05-21T11:35:26.896-0400,,MEDA-893,L2,6711.85,28149.64,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-888,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:54:28.646-0400,2025-05-21T11:35:25.209-0400,,MEDA-887,L2,6711.85,28149.71,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-882,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:52:40.422-0400,2025-05-21T11:35:11.940-0400,,MEDA-881,L2,6711.85,28149.72,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-876,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:49:55.516-0400,2025-05-21T11:35:19.552-0400,,MEDA-875,L2,6711.85,28149.73,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-870,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:48:24.014-0400,2025-05-21T11:36:05.355-0400,,MEDA-869,L2,6711.85,28149.75,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-864,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:46:57.726-0400,2025-05-21T11:36:07.632-0400,,MEDA-863,L2,6711.85,28149.76,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-858,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:45:30.505-0400,2025-05-21T11:35:58.598-0400,,MEDA-857,L2,6711.85,28149.77,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-852,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:43:24.800-0400,2025-05-21T11:35:51.204-0400,,MEDA-851,L2,6711.85,28149.78,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-846,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:41:59.532-0400,2025-05-21T11:35:54.789-0400,,MEDA-845,L2,6711.85,28149.79,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-841,MEDA,Page Subtask,Copy,Done,2022-06-05T21:40:27.494-0400,2025-05-21T11:34:15.149-0400,,MEDA-839,L2,6696.69,28104.69,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-840,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:40:27.063-0400,2025-05-21T11:34:14.159-0400,,MEDA-839,L2,6711.85,28149.8,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-834,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:38:25.428-0400,2025-05-21T11:34:15.656-0400,,MEDA-833,L2,6711.85,28149.81,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-830,MEDA,Page Subtask,Copy,Done,2022-06-05T21:35:04.473-0400,2025-05-21T11:34:09.277-0400,,MEDA-827,L1,4916.46,20596.46,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-828,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:35:03.155-0400,2025-05-21T11:34:06.717-0400,,MEDA-827,L1,6746.57,28298.57,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-824,MEDA,Page Subtask,Copy,Done,2022-06-05T21:32:18.103-0400,2025-05-21T11:34:10.248-0400,,MEDA-821,L2,6696.81,28104.81,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-822,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:32:17.251-0400,2025-05-21T11:34:51.362-0400,,MEDA-821,L2,6711.85,28149.85,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-816,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:30:58.086-0400,2025-05-21T11:34:52.572-0400,,MEDA-815,L2,6711.85,28149.86,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-812,MEDA,Page Subtask,Copy,Done,2022-06-05T21:29:18.140-0400,2025-05-21T11:34:49.815-0400,,MEDA-809,L2,6707.25,28131.25,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-810,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:29:16.855-0400,2025-05-21T11:34:49.947-0400,,MEDA-809,L2,6711.85,28149.88,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-806,MEDA,Page Subtask,Copy,Done,2022-06-05T21:27:04.809-0400,2025-05-21T11:34:50.893-0400,,MEDA-803,L2,6707.33,28131.33,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-804,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:27:03.418-0400,2025-05-21T11:34:51.723-0400,,MEDA-803,L2,6711.85,28149.9,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-798,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-05T21:25:23.761-0400,2025-05-21T11:34:50.419-0400,,MEDA-797,L2,6711.85,28149.91,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-792,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T23:07:05.201-0400,2025-05-21T11:34:46.833-0400,,MEDA-791,L2,6711.85,28149.92,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-786,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T23:05:50.663-0400,2025-05-21T11:34:50.738-0400,,MEDA-785,L2,6711.85,28149.93,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-780,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T23:04:37.392-0400,2025-05-21T11:34:54.140-0400,,MEDA-779,L2,6711.85,28149.95,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-774,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T23:03:27.944-0400,2025-05-21T11:34:55.943-0400,,MEDA-773,L2,6711.85,28149.96,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-768,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T23:02:12.362-0400,2025-05-21T11:34:53.583-0400,,MEDA-767,L2,6711.85,28149.98,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-762,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T23:00:29.180-0400,2025-05-21T11:34:53.060-0400,,MEDA-761,L2,6711.85,28150.93,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-758,MEDA,Page Subtask,Copy,Done,2022-06-03T22:39:24.108-0400,2025-05-21T11:34:53.310-0400,,MEDA-755,L2,6708.5,28132.5,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-756,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:39:23.209-0400,2025-05-21T11:34:52.876-0400,,MEDA-755,L2,6711.85,28150.06,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-750,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:37:52.491-0400,2025-05-21T11:34:52.391-0400,,MEDA-749,L2,6711.85,28150.08,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-744,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:36:39.060-0400,2025-05-21T11:34:52.776-0400,,MEDA-743,L2,6711.85,28150.09,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-738,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:35:19.708-0400,2025-05-21T11:34:48.767-0400,,MEDA-737,L2,6711.85,28150.12,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-732,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:33:55.567-0400,2025-05-21T11:34:44.639-0400,,MEDA-731,L2,6711.85,28150.14,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-726,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:32:40.335-0400,2025-05-21T11:34:44.260-0400,,MEDA-725,L2,6711.85,28150.17,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-720,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:31:37.248-0400,2025-05-21T11:34:14.659-0400,,MEDA-719,L2,6711.85,28150.18,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-714,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:30:23.746-0400,2025-05-21T11:34:41.842-0400,,MEDA-713,L2,6711.85,28150.19,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-708,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:29:10.925-0400,2025-05-21T11:34:09.676-0400,,MEDA-707,L2,6711.85,28150.2,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-702,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:27:40.554-0400,2025-05-21T11:34:50.688-0400,,MEDA-701,L2,6711.85,28150.21,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-698,MEDA,Page Subtask,Copy,Done,2022-06-03T22:26:55.769-0400,2025-05-21T11:34:52.383-0400,,MEDA-695,L2,6696.96,28104.96,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-696,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:26:54.883-0400,2025-05-21T11:34:52.958-0400,,MEDA-695,L2,6711.85,28150.25,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-689,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:23:58.692-0400,2025-05-21T11:34:51.358-0400,,MEDA-688,L2,6711.85,28150.27,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-683,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:22:58.861-0400,2025-05-21T11:34:49.113-0400,,MEDA-682,L2,6708.84,28132.84,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-680,MEDA,Page Subtask,Images,Done,2022-06-03T22:18:44.859-0400,2025-05-21T11:34:48.453-0400,,MEDA-676,L2,6709.04,28133.04,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-679,MEDA,Page Subtask,Copy,Done,2022-06-03T22:18:44.189-0400,2025-05-21T11:34:50.646-0400,,MEDA-676,L2,6709.04,28133.04,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-678,MEDA,Page Subtask,Page Components,Done,2022-06-03T22:18:43.496-0400,2025-05-21T11:34:50.887-0400,,MEDA-676,L2,6735.18,28255.18,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-677,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:18:42.743-0400,2025-05-21T11:34:48.796-0400,,MEDA-676,L2,6735.18,28255.18,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-665,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:14:11.685-0400,2025-05-21T11:34:47.621-0400,,MEDA-664,L2,6735.19,28255.19,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-661,MEDA,Page Subtask,Copy,Done,2022-06-03T22:12:56.082-0400,2025-05-21T11:34:56.960-0400,,MEDA-658,L1,6709.06,28133.06,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-659,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:12:54.751-0400,2025-05-21T11:34:54.000-0400,,MEDA-658,L1,6735.21,28255.21,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-654,MEDA,Page Subtask,Copy,Done,2022-06-03T22:10:46.176-0400,2025-05-21T11:34:56.524-0400,,MEDA-652,L2,6709.03,28133.03,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-653,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:10:45.771-0400,2025-05-21T11:34:53.849-0400,,MEDA-652,L2,6711.85,28150.35,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-648,MEDA,Page Subtask,Copy,Done,2022-06-03T22:09:38.867-0400,2025-05-21T11:34:53.469-0400,,MEDA-646,L2,6696.98,28104.98,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-647,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:09:38.504-0400,2025-05-21T11:34:53.693-0400,,MEDA-646,L2,6711.85,28150.37,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-641,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:08:36.436-0400,2025-05-21T11:33:40.785-0400,,MEDA-640,L2,6735.85,28255.95,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-635,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:07:32.210-0400,2025-05-21T11:33:49.644-0400,,MEDA-634,L2,6735.23,28255.23,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-629,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:06:24.201-0400,2025-05-21T11:33:36.668-0400,,MEDA-628,L2,6735.25,28255.25,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-623,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:04:52.722-0400,2025-05-21T11:34:47.961-0400,,MEDA-622,L2,6735.26,28255.26,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-617,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:03:37.615-0400,2025-05-21T11:34:47.113-0400,,MEDA-616,L2,6735.61,28255.61,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-611,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:02:25.326-0400,2025-05-21T11:34:44.574-0400,,MEDA-610,L2,6735.64,28255.64,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-605,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T22:01:16.570-0400,2025-05-21T11:34:44.008-0400,,MEDA-604,L2,6735.66,28255.66,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-599,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:58:53.773-0400,2025-05-21T11:34:15.358-0400,,MEDA-598,L2,6735.67,28255.67,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-595,MEDA,Page Subtask,Copy,Done,2022-06-03T21:54:18.828-0400,2025-05-21T11:34:11.473-0400,,MEDA-592,L1,4916.46,20596.46,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-593,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:54:17.240-0400,2025-05-21T11:34:04.493-0400,,MEDA-592,L1,6746.59,28298.6,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-589,MEDA,Page Subtask,Copy,Done,2022-06-03T21:50:45.553-0400,2025-05-21T11:34:07.433-0400,,MEDA-586,L1,6708.56,28132.57,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-587,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:50:44.857-0400,2025-05-21T11:34:08.525-0400,,MEDA-586,L1,6711.85,28150.65,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-581,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:48:55.445-0400,2025-05-21T11:34:51.365-0400,,MEDA-580,L2,6735.68,28255.68,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-569,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:46:24.945-0400,2025-05-21T11:34:48.899-0400,,MEDA-568,L2,6735.72,28255.72,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-563,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:45:09.914-0400,2025-05-21T11:34:47.803-0400,,MEDA-562,L2,6735.85,28255.93,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-557,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:43:29.761-0400,2025-05-21T11:34:49.814-0400,,MEDA-556,L2,6735.84,28255.84,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-551,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:41:37.055-0400,2025-05-21T11:34:47.254-0400,,MEDA-550,L2,6735.85,28255.85,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-545,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:40:20.085-0400,2025-05-21T11:34:50.660-0400,,MEDA-544,L2,6735.85,28255.86,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-533,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:37:51.647-0400,2025-05-21T11:33:56.808-0400,,MEDA-532,L2,6711.85,28150.8,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-527,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:36:13.018-0400,2025-05-21T11:33:58.181-0400,,MEDA-526,L2,6735.85,28255.9,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-521,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:34:36.340-0400,2025-05-21T11:33:46.129-0400,,MEDA-520,L2,6735.85,28255.97,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-515,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:33:10.272-0400,2025-05-21T11:33:48.201-0400,,MEDA-514,L2,6735.85,28256.06,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-509,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:31:32.176-0400,2025-05-21T11:33:36.907-0400,,MEDA-508,L2,6735.85,28256.16,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-503,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:30:22.699-0400,2025-05-21T11:34:44.633-0400,,MEDA-502,L2,6735.85,28256.17,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-497,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:28:59.671-0400,2025-05-21T11:34:45.235-0400,,MEDA-496,L2,6735.85,28256.42,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-491,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:27:22.578-0400,2025-05-21T11:34:45.181-0400,,MEDA-490,L2,6735.85,28256.19,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-485,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:26:05.368-0400,2025-05-21T11:34:45.683-0400,,MEDA-484,L2,6735.85,28256.2,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-479,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:24:54.936-0400,2025-05-21T11:34:12.654-0400,,MEDA-478,L2,6735.85,28256.26,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-473,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:22:01.615-0400,2025-05-21T11:34:05.493-0400,,MEDA-472,L2,6735.85,28256.35,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-467,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:05:10.468-0400,2025-05-21T11:34:09.859-0400,,MEDA-466,L2,6735.85,28256.53,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-461,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:03:53.757-0400,2025-05-21T11:34:51.395-0400,,MEDA-460,L2,6735.85,28256.54,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-455,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T21:01:21.572-0400,2025-05-21T11:34:54.727-0400,,MEDA-454,L2,6735.85,28256.56,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-449,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:58:31.596-0400,2025-05-21T11:34:49.222-0400,,MEDA-448,L2,6735.85,28256.57,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-443,MEDA,Page Subtask,CLONE - Initial Content Loaded Into Dev,Done,2022-06-03T20:56:32.439-0400,2025-05-21T11:33:18.683-0400,,MEDA-442,L2,6735.85,28257.39,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-437,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:53:56.067-0400,2025-05-21T11:33:23.742-0400,,MEDA-436,L2,6735.85,28257.42,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-431,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:52:06.444-0400,2025-05-21T11:33:09.967-0400,,MEDA-430,L2,6735.85,28257.44,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-425,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:49:37.452-0400,2025-05-21T11:33:16.102-0400,,MEDA-424,L2,6735.85,28257.46,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-419,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:48:01.895-0400,2025-05-21T11:34:02.579-0400,,MEDA-418,L2,6735.85,28257.5,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-413,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:46:25.460-0400,2025-05-21T11:33:54.953-0400,,MEDA-412,L2,6735.85,28257.53,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-407,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:44:23.705-0400,2025-05-21T11:33:52.881-0400,,MEDA-406,L2,6735.85,28257.56,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-401,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:38:35.774-0400,2025-05-21T11:33:47.199-0400,,MEDA-400,L2,6735.85,28257.6,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-397,MEDA,Page Subtask,Copy,Done,2022-06-03T20:35:33.434-0400,2025-05-21T11:33:42.765-0400,,MEDA-394,L1,6720.63,28224.63,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-395,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:35:32.174-0400,2025-05-21T11:33:49.738-0400,,MEDA-394,L1,6735.85,28269.55,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-389,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:31:38.349-0400,2025-05-21T11:33:39.125-0400,,MEDA-388,L2,6735.85,28257.63,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-384,MEDA,Page Subtask,Copy,Done,2022-06-03T20:29:59.794-0400,2025-05-21T11:33:40.585-0400,,MEDA-382,L2,6707.3,28131.3,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-383,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:29:59.407-0400,2025-05-21T11:34:44.791-0400,,MEDA-382,L2,6711.85,28151.75,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-379,MEDA,Page Subtask,Copy,Done,2022-06-03T20:27:41.375-0400,2025-05-21T11:34:46.631-0400,,MEDA-376,L1,4916.46,20596.46,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-377,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:27:40.040-0400,2025-05-21T11:34:45.690-0400,,MEDA-376,L1,6735.85,28269.62,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-371,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:25:47.240-0400,2025-05-21T11:34:42.211-0400,,MEDA-370,L2,6735.85,28257.65,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-365,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:24:09.320-0400,2025-05-21T11:34:49.595-0400,,MEDA-364,L2,6735.85,28257.7,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-359,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:22:23.243-0400,2025-05-21T11:34:13.370-0400,,MEDA-358,L2,6735.85,28257.76,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-353,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:17:02.588-0400,2025-05-21T11:34:05.753-0400,,MEDA-352,L2,6735.85,28257.77,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-347,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:13:26.342-0400,2025-05-21T11:34:07.821-0400,,MEDA-346,L2,6735.85,28257.8,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-343,MEDA,Page Subtask,Copy,Done,2022-06-03T20:11:02.424-0400,2025-05-21T11:33:29.444-0400,,MEDA-340,L1,6711.85,28151.79,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-341,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:11:01.354-0400,2025-05-21T11:33:31.449-0400,,MEDA-340,L1,6711.85,28151.81,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-336,MEDA,Page Subtask,Copy,Done,2022-06-03T20:08:32.168-0400,2025-05-21T11:33:34.359-0400,,MEDA-334,L2,6701.36,28109.37,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-335,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:08:31.713-0400,2025-05-21T11:33:33.630-0400,,MEDA-334,L2,6712.21,28152.21,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-329,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T20:03:25.531-0400,2025-05-21T11:33:28.496-0400,,MEDA-328,L2,6735.85,28257.85,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-323,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:58:46.682-0400,2025-05-21T11:33:20.869-0400,,MEDA-322,L1,6746.64,28298.64,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-317,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:55:58.638-0400,2025-05-21T11:33:21.852-0400,,MEDA-316,L1,6711.86,28151.87,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-312,MEDA,Page Subtask,Copy,Done,2022-06-03T19:53:44.814-0400,2025-05-21T11:33:12.677-0400,,MEDA-310,L2,6711.85,28151.82,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-311,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:53:44.377-0400,2025-05-21T11:33:10.505-0400,,MEDA-310,L1,6711.9,28151.9,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-305,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:50:51.865-0400,2025-05-21T11:33:17.121-0400,,MEDA-304,L1,6735.85,28258.43,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-299,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:47:00.431-0400,2025-05-21T11:33:59.462-0400,,MEDA-298,L1,6735.85,28258.46,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-293,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:44:33.566-0400,2025-05-21T11:33:56.218-0400,,MEDA-292,L1,6711.9,28151.9,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-287,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:41:27.154-0400,2025-05-21T11:33:54.075-0400,,MEDA-286,L1,6712.01,28152.01,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-281,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:38:50.788-0400,2025-05-21T11:33:44.502-0400,,MEDA-280,L1,6712.08,28152.08,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-275,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:36:26.341-0400,2025-05-21T11:33:41.454-0400,,MEDA-274,L1,6743.85,28293.68,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-272,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:32:59.731-0400,2025-05-21T11:33:35.641-0400,,MEDA-268,L1,6743.85,28293.85,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-263,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T19:23:02.432-0400,2025-05-21T11:34:44.730-0400,,MEDA-262,L0,6663.85,27956.34,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-255,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T15:08:07.924-0400,2025-05-21T11:34:45.648-0400,,MEDA-209,L2,6743.85,28293.94,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-253,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-03T15:03:23.852-0400,2025-05-21T11:34:42.039-0400,,MEDA-211,L0,6740.44,28276.44,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-252,MEDA,Task,Research Clinical Trials - Microservice,Done,2022-06-03T11:38:46.852-0400,2025-05-21T10:24:56.793-0400,,,,6765.2,28397.2,3,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0
+3,MEDA-249,MEDA,Task,Source storybook components via composer,Done,2022-06-03T11:02:02.213-0400,2025-05-21T10:25:02.212-0400,,,,6765.75,28397.75,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-248,MEDA,Task,Set ASSET_PREFIX_URL environment variables,Done,2022-06-02T15:05:05.647-0400,2025-05-21T10:25:00.668-0400,,,,6759.06,28327.06,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-244,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-02T11:03:18.431-0400,2025-05-21T11:34:44.161-0400,,MEDA-239,L1,6743.85,28293.91,9,0,1,0,3,0,1,0,1,0,1,0,1,0,0,0,1,0
+3,MEDA-237,MEDA,Page Subtask,Initial Content Loaded Into Dev,Done,2022-06-02T11:01:19.726-0400,2025-05-21T11:35:53.087-0400,,MEDA-208,L1,6747.16,28299.16,5,0,1,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0
+3,MEDA-233,MEDA,Page Subtask,Copy,Done,2022-06-02T10:55:49.243-0400,2025-05-21T11:35:40.181-0400,,MEDA-208,L1,6697.12,28105.12,5,0,0,0,2,1,0,0,1,1,0,0,0,0,0,0,0,0
+3,MEDA-217,MEDA,Sub-task,Set up MECC Menu to use Fieldable Menu Items and Layout Builder for creating flyout menu content,Done,2022-06-01T12:47:19.319-0400,2025-05-21T10:24:10.189-0400,,MEDA-67,,6581.4,27605.4,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-206,MEDA,Task,Use ME's Google Maps API key,Done,2022-06-01T10:48:52.537-0400,2025-05-21T10:23:40.967-0400,,,,6641.91,27889.91,14,0,0,0,3,0,0,0,2,0,0,2,2,2,1,0,1,1
+3,MEDA-200,MEDA,Task,Setup the new module on Pantheon,Done,2022-05-30T07:48:20.039-0400,2025-05-21T10:23:49.360-0400,MEDA-5,MEDA-5,,6775.85,28427.53,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-199,MEDA,Task,Update plugin manager to allow multiple plugin processing,Done,2022-05-30T06:41:03.983-0400,2025-05-21T10:23:34.135-0400,MEDA-5,MEDA-5,,6791.38,28471.38,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-181,MEDA,Sub-task,Theming for React,Done,2022-05-26T16:31:00.345-0400,2025-05-21T10:24:27.904-0400,,MEDA-177,,6803.59,28563.59,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-180,MEDA,Sub-task,Theming for Drupal,Done,2022-05-26T16:30:46.177-0400,2025-05-21T10:24:39.668-0400,,MEDA-177,,6625.65,27793.65,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-179,MEDA,Sub-task,Create the Team content type,Done,2022-05-26T16:30:28.057-0400,2025-05-21T10:24:37.545-0400,,MEDA-177,,6716.73,28156.73,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-178,MEDA,Sub-task,Designs for the Cancer Teams,Done,2022-05-26T16:30:01.108-0400,2025-05-21T10:24:42.432-0400,,MEDA-177,,6804.08,28564.08,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-177,MEDA,Task,"Teams pages (Cancer teams, Clinical Trial teams)",Done,2022-05-26T16:29:15.891-0400,2025-05-21T10:24:40.894-0400,MEDA-3,MEDA-3,,6684.01,28060.01,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-174,MEDA,Task,Sidebar menu,Done,2022-05-26T16:26:25.342-0400,2025-05-21T10:24:36.232-0400,,,,6637.53,27821.53,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-158,MEDA,Task,Translation Support,Done,2022-05-26T14:11:01.950-0400,2025-05-21T10:24:19.547-0400,MEDA-3,MEDA-3,,6775.85,28439.47,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-157,MEDA,Sub-task,Logo grid,Done,2022-05-26T12:56:22.105-0400,2025-05-21T10:24:18.857-0400,,MEDA-149,,6785.37,28465.37,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-156,MEDA,Sub-task,"Map component, locations versions",Done,2022-05-26T11:53:29.136-0400,2025-05-21T10:24:20.073-0400,,MEDA-149,,6782.12,28446.12,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-153,MEDA,Sub-task,Related events ,Done,2022-05-26T11:49:17.169-0400,2025-05-21T10:24:16.056-0400,,MEDA-149,,6682.34,28058.34,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-152,MEDA,Sub-task,Find a clinical trial (react),Done,2022-05-26T11:48:41.077-0400,2025-05-21T10:24:18.308-0400,,MEDA-149,,6720.21,28224.21,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-151,MEDA,Task,Create clinical trials card,Done,2022-05-26T11:48:14.432-0400,2025-05-21T10:26:10.926-0400,MEDA-2819,MEDA-2819,,6720.2,28224.2,14,0,0,0,3,0,0,0,3,0,0,2,2,1,1,0,1,1
+3,MEDA-150,MEDA,Sub-task,Card grid,Done,2022-05-26T11:47:42.097-0400,2025-05-21T10:26:17.098-0400,,MEDA-149,,6807.85,28583.44,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-149,MEDA,Task,Implement Storybook Components in Drupal,Done,2022-05-26T11:45:44.942-0400,2025-05-21T10:26:15.087-0400,MEDA-3,MEDA-3,DesignApprovalNeeded,6486.47,27222.47,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-148,MEDA,Task,Customize breadcrumb,Done,2022-05-26T11:43:10.041-0400,2025-05-21T10:26:17.950-0400,MEDA-3,MEDA-3,DesignApprovalNeeded,6583.85,27623.4,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-145,MEDA,Task,Clinical Trials - Search block on homepage,Done,2022-05-26T11:41:14.860-0400,2025-05-21T10:26:11.922-0400,MEDA-2819,MEDA-2819,,6332.94,26572.94,8,0,0,0,2,0,0,0,2,0,0,1,1,0,0,1,1,0
+3,MEDA-144,MEDA,Task,Create First Hero (without layout builder),Done,2022-05-26T11:40:34.716-0400,2025-05-21T10:26:14.385-0400,MEDA-3,MEDA-3,,6671.85,27968.18,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-122,MEDA,Task,Research - Clinical Trials,Done,2022-05-26T11:26:12.185-0400,2025-05-21T10:26:05.305-0400,MEDA-195,MEDA-195,DesignApprovalNeeded,5992.74,25128.74,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-117,MEDA,Sub-task,Place on homepage,Done,2022-05-26T11:20:34.258-0400,2025-05-21T10:25:58.450-0400,,MEDA-115,,6311.85,26471.38,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,MEDA-116,MEDA,Sub-task,Implement block,Done,2022-05-26T11:20:12.945-0400,2025-05-21T10:25:57.932-0400,,MEDA-115,,6330.78,26570.78,5,0,0,0,2,0,0,0,0,0,0,1,1,1,0,0,0,0
+3,MEDA-115,MEDA,Task,Cancer Types - Search block on homepage,Done,2022-05-26T11:19:40.177-0400,2025-05-21T10:26:00.153-0400,MEDA-2819,MEDA-2819,1.8.5(Storybook),6342.55,26598.55,5,0,0,0,2,0,0,0,1,0,0,1,1,0,0,0,0,0
+3,MEDA-98,MEDA,Task,Update Storybook,Done,2022-05-26T10:47:10.348-0400,2025-05-21T10:23:51.063-0400,MEDA-3,MEDA-3,,6808.32,28584.32,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-95,MEDA,Task,Create a homepage node and configure it as the site frontpage,Done,2022-05-26T10:44:04.098-0400,2025-05-21T10:23:59.235-0400,MEDA-3,MEDA-3,DesignApprovalNeeded,6681.6,28057.6,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-94,MEDA,Sub-task,Configure components for landing pages,Done,2022-05-26T10:40:13.632-0400,2025-05-21T10:23:58.385-0400,,MEDA-91,,6754.76,28322.76,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-93,MEDA,Sub-task,Lock component types,Done,2022-05-26T10:39:46.533-0400,2025-05-21T10:24:03.268-0400,,MEDA-91,DesignApprovalNeeded,6782.2,28446.2,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-92,MEDA,Sub-task,Create content type,Done,2022-05-26T10:39:18.191-0400,2025-05-21T10:24:01.794-0400,,MEDA-91,,6814.17,28590.17,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-91,MEDA,Task,Landing Page Content Type,Done,2022-05-26T10:38:56.105-0400,2025-05-21T10:23:43.867-0400,MEDA-3,MEDA-3,,6781.97,28445.97,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-90,MEDA,Sub-task,Create routes and controller for Find A Doctor,Done,2022-05-25T14:19:44.862-0400,2025-05-21T10:23:46.932-0400,,MEDA-88,,6566.12,27558.12,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-89,MEDA,Sub-task,What url should be used for the find the doctor app on cancer so we can hard code it in the header?,Done,2022-05-25T14:18:10.327-0400,2025-05-21T10:23:45.741-0400,,MEDA-88,,6806.28,28566.28,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-88,MEDA,Task,Global - Find a Doctor,Done,2022-05-25T14:17:08.024-0400,2025-05-21T10:23:40.845-0400,MEDA-3,MEDA-3,,6564.89,27556.89,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-87,MEDA,Sub-task,Integrate Google CSE search form with the Twig component,Done,2022-05-24T19:50:40.940-0400,2025-05-21T10:23:40.303-0400,,MEDA-82,,6484.51,27220.51,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-86,MEDA,Sub-task,Designs for Search results,Done,2022-05-24T19:49:45.414-0400,2025-05-21T10:23:44.035-0400,,MEDA-82,,6801.9,28561.9,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-85,MEDA,Sub-task,Implement Google CSE,Done,2022-05-24T19:49:04.799-0400,2025-05-21T10:23:42.772-0400,,MEDA-82,,6511.85,27310.52,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-82,MEDA,Task,Global - Search (site wide),Done,2022-05-24T17:43:35.451-0400,2025-05-21T10:23:50.333-0400,MEDA-3,MEDA-3,,6479.85,27215.22,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-81,MEDA,Sub-task,Confirm the menu content,Done,2022-05-24T17:38:47.148-0400,2025-05-21T10:23:35.547-0400,,MEDA-77,,6802.21,28562.21,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-78,MEDA,Sub-task,Create sitemap menu,Done,2022-05-24T17:35:38.496-0400,2025-05-21T10:23:36.989-0400,,MEDA-77,,6823.85,28631.21,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-77,MEDA,Task,Global - Footer Sitemap,Done,2022-05-24T17:35:10.354-0400,2025-05-21T10:23:32.383-0400,MEDA-3,MEDA-3,,6644.24,27892.24,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-76,MEDA,Sub-task,Confirm menu content,Done,2022-05-24T17:33:40.639-0400,2025-05-21T10:23:31.833-0400,,MEDA-72,,6802.04,28562.04,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-75,MEDA,Sub-task,Drupal menus populating Twig component(s),Done,2022-05-24T17:32:29.021-0400,2025-05-21T10:23:32.980-0400,,MEDA-72,,6575.86,27599.87,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-74,MEDA,Sub-task,Content (menu items) loaded into dev,Done,2022-05-24T17:28:34.925-0400,2025-05-21T10:23:32.575-0400,,MEDA-72,,6801.94,28561.94,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-73,MEDA,Sub-task,Menu created,Done,2022-05-24T17:27:53.428-0400,2025-05-21T10:23:38.595-0400,,MEDA-72,,6782.34,28446.34,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-72,MEDA,Task,Global - Header Hamburger Menu,Done,2022-05-24T17:26:27.568-0400,2025-05-21T10:23:38.060-0400,MEDA-3,MEDA-3,,6621.43,27773.43,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-70,MEDA,Sub-task,Drupal menu populating Twig component(s),Done,2022-05-24T17:18:25.934-0400,2025-05-21T10:24:47.774-0400,,MEDA-67,,6581.4,27605.4,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-69,MEDA,Sub-task,Determine menu management UI for flyout/megamenus,Done,2022-05-24T17:17:58.473-0400,2025-05-21T10:24:47.098-0400,,MEDA-67,,6780.08,28444.08,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-68,MEDA,Sub-task,Menu created,Done,2022-05-24T17:17:27.367-0400,2025-05-21T10:24:49.517-0400,,MEDA-67,,6823.85,28631.45,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-67,MEDA,Task,Global - Primary Nav,Done,2022-05-24T17:16:54.774-0400,2025-05-21T10:24:48.667-0400,MEDA-3,MEDA-3,,6607.46,27727.46,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-66,MEDA,Sub-task,Drupal menu populating Twig component(s),Done,2022-05-24T17:12:41.834-0400,2025-05-21T10:24:44.074-0400,,MEDA-62,,6620.7,27772.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-65,MEDA,Sub-task,Menu items loaded into dev,Done,2022-05-24T17:12:04.896-0400,2025-05-21T10:24:43.460-0400,,MEDA-62,,6783.85,28460.17,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-63,MEDA,Sub-task,Menu created,Done,2022-05-24T17:10:11.594-0400,2025-05-21T10:24:44.292-0400,,MEDA-62,,6823.85,28631.67,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-62,MEDA,Task,Global - Utility Menus in Header,Done,2022-05-24T17:08:43.899-0400,2025-05-21T10:24:50.120-0400,MEDA-3,MEDA-3,,6652.29,27916.29,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-61,MEDA,Sub-task,Confirm the path alias,Done,2022-05-24T16:52:45.098-0400,2025-05-21T10:24:30.499-0400,,MEDA-57,,6823.85,28631.73,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-60,MEDA,Sub-task,Populate each of the created pages with the embedded code,Done,2022-05-24T16:52:10.590-0400,2025-05-21T10:24:27.701-0400,,MEDA-57,,6823.92,28631.92,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-59,MEDA,Sub-task,Create pages based on sitemap,Done,2022-05-24T16:51:29.497-0400,2025-05-21T10:24:38.911-0400,,MEDA-57,,6823.85,28631.75,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-58,MEDA,Sub-task,Handoff from Lucas to Dee to create these pages,Done,2022-05-24T16:50:41.656-0400,2025-05-21T10:24:36.956-0400,,MEDA-57,,6823.96,28631.96,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-57,MEDA,Task,Cancer detail page content type,Done,2022-05-24T16:45:08.230-0400,2025-05-21T10:24:43.038-0400,MEDA-193,MEDA-193,,6804.38,28564.38,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-56,MEDA,Sub-task,Design for pages,Done,2022-05-24T16:43:58.080-0400,2025-05-21T10:24:40.034-0400,,MEDA-51,DesignApprovalNeeded,6804.45,28564.45,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-54,MEDA,Sub-task,Configure pages in layout builder,Done,2022-05-24T16:42:41.586-0400,2025-05-21T10:24:31.364-0400,,MEDA-51,DesignApprovalNeeded,6783.85,28460.36,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-53,MEDA,Sub-task,Terms loaded into dev,Done,2022-05-24T16:42:09.880-0400,2025-05-21T10:24:35.394-0400,,MEDA-51,,6808.52,28584.52,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-52,MEDA,Sub-task,vocabulary created,Done,2022-05-24T16:40:34.519-0400,2025-05-21T10:24:34.117-0400,,MEDA-51,,6808.5,28584.5,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-51,MEDA,Task,Cancer Type Category (taxonomy term),Done,2022-05-24T16:39:17.474-0400,2025-05-21T10:25:43.995-0400,MEDA-193,MEDA-193,,6808.42,28584.42,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-45,MEDA,Task,Cancer Types Landing - Filter/Search,Done,2022-05-24T15:50:24.558-0400,2025-05-21T10:25:43.517-0400,MEDA-193,MEDA-193,Departments,6699.33,28107.33,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-44,MEDA,Sub-task,Link the cancer type term name to the term's landing page,Done,2022-05-24T13:33:32.736-0400,2025-05-21T10:25:43.102-0400,,MEDA-41,,6727.85,28232.55,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-43,MEDA,Sub-task,Add cancer teams to the list of menu items,Done,2022-05-24T13:32:16.914-0400,2025-05-21T10:25:45.369-0400,,MEDA-41,,6727.85,28232.16,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-42,MEDA,Sub-task,Create the cancer types sidebar block,Done,2022-05-24T13:28:02.392-0400,2025-05-21T10:25:44.773-0400,,MEDA-41,,6808.55,28584.55,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-41,MEDA,Task,Cancer types detail sidebar,Done,2022-05-24T13:07:01.088-0400,2025-05-21T10:25:35.586-0400,MEDA-193,MEDA-193,Departments;Development,6706.21,28130.21,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-38,MEDA,Spike,Test Gatekeeper,Done,2022-05-24T11:33:20.843-0400,2025-05-21T11:38:06.519-0400,,,,6829.29,28637.29,4,0,0,0,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+3,MEDA-33,MEDA,Story,Fix issues with static code checks on GitHub actions,Done,2022-05-20T04:58:14.757-0400,2025-05-21T10:26:06.582-0400,MEDA-5,MEDA-5,,6835.08,28659.08,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-32,MEDA,Task,Components autodetect Libraries,Done,2022-05-12T17:34:42.232-0400,2025-05-21T10:23:44.952-0400,MEDA-3,MEDA-3,,6503.56,27271.56,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-27,MEDA,Task,Add test coverage for BAHN-style HTML content,Done,2022-05-10T12:27:03.250-0400,2025-05-21T10:23:48.727-0400,MEDA-5,MEDA-5,,6747.7,28299.7,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-26,MEDA,Task,Add test coverage for static assets,Done,2022-05-10T12:25:11.082-0400,2025-05-21T10:23:47.228-0400,MEDA-5,MEDA-5,,6831.85,28643.92,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-25,MEDA,Task,Make `me_content_proxy` configurable,Done,2022-05-10T12:23:21.977-0400,2025-05-21T10:23:30.543-0400,MEDA-5,MEDA-5,,6791.39,28471.39,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-16,MEDA,Task,Use Drupal's standard plugin system to serve BAHN-style HTML content,Done,2022-05-10T11:04:43.552-0400,2025-05-21T10:23:38.386-0400,MEDA-5,MEDA-5,,6758.79,28326.79,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-15,MEDA,Task,Use Drupal's standard plugin system to serve static assets,Done,2022-05-10T11:01:23.708-0400,2025-05-21T10:25:51.176-0400,MEDA-5,MEDA-5,,6807.85,28573.83,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-14,MEDA,Task,Use Drupal's standard plugin system to identify BAHN-style HTML content,Done,2022-05-10T10:59:21.642-0400,2025-05-21T10:25:52.676-0400,MEDA-5,MEDA-5,,6831.85,28646.64,14,0,0,0,3,0,0,0,2,0,0,2,2,2,1,0,1,1
+3,MEDA-13,MEDA,Task,Use Drupal's standard plugin system to identify static assets,Done,2022-05-10T10:55:42.317-0400,2025-05-21T10:25:52.352-0400,MEDA-5,MEDA-5,,6847.85,28739.93,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-12,MEDA,Task,Add configurable caching to the me_content_proxy module,Done,2022-05-10T10:49:33.073-0400,2025-05-21T10:25:48.945-0400,MEDA-5,MEDA-5,,6746.32,28298.32,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0
+3,MEDA-10,MEDA,Story,Site builder can install content proxy / plugins,Done,2022-05-10T10:30:21.826-0400,2025-05-21T10:25:50.470-0400,MEDA-5,MEDA-5,,6607.85,27733.05,6,0,0,0,2,0,0,0,1,0,0,1,1,1,0,0,0,0

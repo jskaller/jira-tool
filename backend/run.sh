@@ -1,36 +1,38 @@
-#!/usr/bin/env bash
-set -euo pipefail
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export PYTHONUNBUFFERED=1
 
-# Choose a Python that is compatible with pydantic-core (avoid 3.13 for now).
-choose_python() {
-  for c in python3.12 python3.11 python3; do
-    if command -v "$c" >/dev/null 2>&1; then
-      ver=$($c -c 'import sys;print(".".join(map(str, sys.version_info[:3])))')
-      case "$ver" in
-        3.13.*) continue ;; # skip 3.13
-      esac
-      echo "$c"
-      return 0
+    # Resolve repo root and cd there
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+    cd "${ROOT_DIR}"
+
+    # Auto-activate local virtualenv if present
+    if [ -d ".venv" ]; then
+      # shellcheck disable=SC1091
+      source ".venv/bin/activate"
     fi
-  done
-  return 1
-}
 
-if ! PY_BIN=$(choose_python); then
-  echo "No suitable Python found."
-  echo "Please install Python 3.12 (recommended) or 3.11."
-  echo "On macOS (Homebrew):  brew install python@3.12"
-  exit 1
-fi
+    # Safely load .env
+    if [ -f ".env" ]; then
+      set -a
+      . ./.env
+      set +a
+    fi
 
-echo "[using] $PY_BIN ($($PY_BIN -V))"
-$PY_BIN -m venv .venv
-source .venv/bin/activate
-python -V
+    # Dependency sanity check
+    python - <<'PY'
+import sys
+try:
+    import cryptography  # noqa
+    import uvicorn  # noqa
+except Exception as e:
+    print("\n[run.sh] Missing dependency in current interpreter:", sys.executable)
+    print("[run.sh] Error:", e)
+    print("[run.sh] Try:")
+    print("  source .venv/bin/activate && pip install -r requirements.txt")
+    sys.exit(1)
+PY
 
-pip install -U pip
-pip install -r requirements.txt
-
-cp -n .env.example .env || true
-
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+    PORT=${PORT:-8000}
+    exec python -m uvicorn app.main:app --reload --port "$PORT" --host 0.0.0.0
