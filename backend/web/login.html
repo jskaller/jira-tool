@@ -1,72 +1,81 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools — Sign in</title>
-  <style>
-    :root{--b:#2563eb;--bg:#f6f7fb;--card:#fff;--border:#e5e7eb;}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial}
-    header{background:#fff;border-bottom:1px solid var(--border);padding:12px 16px}
-    .wrap{display:grid;place-items:center;padding:24px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.06);padding:24px;max-width:380px;width:100%;margin-top:40px}
-    h1{margin:0 0 12px 0;font-size:20px}
-    label{display:block;margin-top:12px;font-size:14px;color:#374151}
-    input{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;margin-top:6px}
-    .row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:14px}
-    button{background:var(--b);color:#fff;border:none;border-radius:10px;padding:10px 12px;cursor:pointer;width:100%}
-    .muted{color:#6b7280;font-size:12px;margin-top:10px}
-    .err{color:#b91c1c;font-size:13px;margin-top:8px;white-space:pre-wrap}
-  </style>
-</head>
-<body>
-  <header><strong>Jira Tools</strong></header>
-  <div class="wrap">
-    <div class="card">
-      <h1>Sign in</h1>
-      <label>Email</label>
-      <input id="email" placeholder="admin@example.com" autocomplete="username" />
-      <label>Password</label>
-      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
-      <div class="row">
-        <button id="btn" onclick="login()">Sign in</button>
-      </div>
-      <div class="err" id="err"></div>
-      <div class="muted">Bootstrap: admin@example.com / admin123</div>
-    </div>
-  </div>
-<script>
-async function login(){
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  document.getElementById('err').textContent='';
-  try{
-    const res = await fetch('/api/auth/login',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({email,password})
-    });
-    const text = await res.text();
-    let data = {}; try{ data = JSON.parse(text) }catch{}
-    if(!res.ok){
-      document.getElementById('err').textContent = (data.detail || text || ('HTTP '+res.status));
-      return;
+  <title>Sign In · Jira Reporting</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script>
+    async function init() {
+      try {
+        const r = await fetch('/api/auth/bootstrap');
+        const j = await r.json();
+        const hint = document.getElementById('hint');
+        if (j.bootstrap_email) {
+          document.getElementById('email').value = j.bootstrap_email;
+          hint.textContent = 'Bootstrap: ' + j.bootstrap_email + ' / (your BOOTSTRAP_ADMIN_PASSWORD)';
+        }
+        if (!j.has_users) {
+          document.getElementById('sync').style.display = 'inline-block';
+        }
+      } catch {}
     }
-    let token = data.token || (data.data && data.data.token) || data.session || data.access_token || data.key || '';
-    if(!token){
-      // Cookie session fallback
-      const ping = await fetch('/api/admin/settings');
-      if(ping.ok){
-        sessionStorage.setItem('token','');
-        window.location.href='/admin.html';
-        return;
+    async function login(ev) {
+      ev.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const r = await fetch('/api/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password})});
+      const j = await r.json().catch(()=>({}));
+      const status = document.getElementById('status');
+      if (r.ok) {
+        status.textContent = 'Signed in as ' + j.email;
+        setTimeout(()=>{ window.location.href = '/admin.html'; }, 400);
+      } else {
+        status.textContent = 'Login failed: ' + (j.detail || r.status);
       }
     }
-    sessionStorage.setItem('token', token || '');
-    window.location.href='/admin.html';
-  }catch(e){
-    document.getElementById('err').textContent = 'Error: '+e.message;
-  }
-}
-</script>
+    async function syncBootstrap() {
+      const r = await fetch('/api/auth/bootstrap-sync', {method:'POST'});
+      const j = await r.json().catch(()=>({}));
+      const status = document.getElementById('status');
+      if (r.ok) {
+        status.textContent = 'Bootstrap user synced for ' + j.email + '. Now sign in.';
+      } else {
+        status.textContent = 'Sync failed: ' + (j.detail || r.status);
+      }
+    }
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Sign In</h1>
+    <nav>
+      <a href="/admin.html">Admin</a>
+      <a href="/reports.html">Reports</a>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <form onsubmit="login(event)">
+        <div class="row">
+          <div style="flex:1 1 280px">
+            <label>Email</label>
+            <input id="email" placeholder="name@company.com">
+          </div>
+          <div style="flex:1 1 200px">
+            <label>Password</label>
+            <input id="password" type="password" placeholder="••••••••">
+          </div>
+          <div style="align-self:flex-end">
+            <button type="submit">Sign In</button>
+          </div>
+        </div>
+        <p id="status" class="hint"></p>
+        <p id="hint" class="hint"></p>
+        <button id="sync" type="button" onclick="syncBootstrap()" style="display:none">Sync bootstrap user</button>
+        <p class="hint">If you changed BOOTSTRAP_ADMIN_EMAIL/PASSWORD in .env, click "Sync bootstrap user" first.</p>
+      </form>
+    </div>
+  </main>
 </body>
 </html>
