@@ -51,6 +51,7 @@ async def _ensure_report_tables():
         needed = {
             'name': "TEXT DEFAULT 'Report'",
             'params_json': "TEXT DEFAULT '{}'",
+            'filters_json': "TEXT NOT NULL DEFAULT '{}'",
             'window_days': "INTEGER DEFAULT 180",
             'business_mode': "TEXT DEFAULT 'both'",
             'aggregate_by': "TEXT DEFAULT 'name'",
@@ -65,6 +66,8 @@ async def _ensure_report_tables():
             uid_row = (await session.execute(text("SELECT id FROM users ORDER BY id ASC LIMIT 1"))).first()
             if uid_row:
                 await session.execute(text("UPDATE reports SET owner_id = :uid WHERE owner_id IS NULL"), {"uid": uid_row[0]})
+        # Backfill filters_json for any NULL/empty rows (in case existing schema had NOT NULL but no default)
+        await session.execute(text("UPDATE reports SET filters_json='{}' WHERE filters_json IS NULL OR TRIM(filters_json)=''"))
         await session.commit()
 
 def _build_timeline(issue: JiraIssue, transitions: List[JiraTransition]) -> List[Dict[str, Any]]:
@@ -121,7 +124,6 @@ async def list_reports(user=Depends(current_admin)):
     await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
-        # Show all for now (could be filtered by owner_id == user.id)
         res = await session.execute(select(Report).order_by(Report.id.desc()))
         rows = res.scalars().all()
         return [{
@@ -200,11 +202,19 @@ async def run_report(req: RunReportRequest, user=Depends(current_admin)):
                 k = getattr(tr, join_attr)
                 transitions_by.setdefault(k, []).append(tr)
 
-        # Create report shell (owner_id is required by schema)
+        # Create report shell (owner_id + filters_json)
+        filters = {
+            "projects": req.projects,
+            "labels": req.labels,
+            "jql_like": req.jql_like,
+            "max_issues": req.max_issues,
+            "updated_window_days": req.updated_window_days,
+        }
         r = Report(
             owner_id=getattr(user, "id", None) or getattr(user, "user_id", None) or 1,
             name=req.name or f"Report {datetime.utcnow().isoformat(timespec='seconds')}",
             params_json=json.dumps(req.model_dump()),
+            filters_json=json.dumps(filters),
             window_days=req.updated_window_days or 180,
             business_mode=req.business_mode or "both",
             aggregate_by=req.aggregate_by or "name",

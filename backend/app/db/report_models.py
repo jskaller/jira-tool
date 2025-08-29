@@ -10,11 +10,11 @@ class Report(BaseReport):
     __tablename__ = "reports"
     id = Column(Integer, primary_key=True, autoincrement=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    # Owner of the report (user id). Existing DBs already have NOT NULL constraint.
     owner_id = Column(Integer, nullable=False)
     # Metadata
     name = Column(String(255), default="Report", nullable=False)
     params_json = Column(Text, default="{}", nullable=False)
+    filters_json = Column(Text, default="{}", nullable=False)  # <-- ensure NOT NULL
     window_days = Column(Integer, default=180, nullable=False)
     business_mode = Column(String(20), default="both", nullable=False)   # business|wall|both
     aggregate_by = Column(String(20), default="name", nullable=False)     # name|both (category later)
