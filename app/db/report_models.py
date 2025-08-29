@@ -1,43 +1,72 @@
-# app/db/report_models.py
-# Single authoritative SQLAlchemy model for the 'reports' table.
-# - Adds missing columns used by API: owner_id, filters_json, time_mode.
-# - Provides sane NOT NULL defaults to prevent sqlite IntegrityError.
-# - Uses extend_existing=True to avoid 'Table reports is already defined' crashes
-#   when another legacy model also declared the same table.
+from __future__ import annotations
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Text, func
-from sqlalchemy.orm import declarative_base
+from typing import Optional
+
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Integer, String, Text, DateTime, ForeignKey
 
 # IMPORTANT:
-# We declare our own Base here to avoid cross-import cycles and to prevent
-# duplicate MetaData conflicts in case an older models module declared 'reports' too.
-# This keeps the mapper independent and safe to import anywhere.
-Base = declarative_base()
+# - This class uses __table_args__ = {'extend_existing': True} so that if any
+#   older module already registered a 'reports' Table on this metadata, we
+#   extend it instead of crashing with "Table 'reports' is already defined".
+# - All NOT NULL columns have default+server_default to protect existing rows.
+#
+# Your project should expose a shared Base. Adjust this import if your Base lives elsewhere.
+try:
+    # Most common place in this codebase
+    from app.db.database import Base  # type: ignore
+except Exception:
+    # Fallback to a local declarative base if the above import path differs in your repo.
+    from sqlalchemy.orm import DeclarativeBase
+    class Base(DeclarativeBase):
+        pass
 
-class Report(Base):  # type: ignore[misc]
+class Report(Base):  # type: ignore[name-defined]
     __tablename__ = "reports"
     __table_args__ = {"extend_existing": True}
 
-    id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow, server_default=func.now())
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
 
-    # Required for ownership and filtering by user. Default 0 so NOT NULL inserts never fail
-    # even if older code paths forgot to pass it.
-    owner_id = Column(Integer, nullable=False, default=0)
+    # Ownership (nullable to avoid legacy rows failing inserts)
+    owner_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("users.id"), nullable=True
+    )
 
-    # A human-friendly name for the saved/run report
-    name = Column(String(255), nullable=False, default="untitled")
+    # Human-friendly name
+    name: Mapped[str] = mapped_column(
+        String(255), nullable=False, default="untitled", server_default="untitled"
+    )
 
-    # JSON blobs stored as TEXT in sqlite
-    params_json = Column(Text, nullable=False, default="{}")
-    filters_json = Column(Text, nullable=False, default="{}")
+    # Serialized parameters / filters
+    params_json: Mapped[str] = mapped_column(
+        Text, nullable=False, default="{}", server_default="{}"
+    )
+    filters_json: Mapped[str] = mapped_column(
+        Text, nullable=False, default="{}", server_default="{}"
+    )
 
-    # Window and aggregation controls
-    window_days = Column(Integer, nullable=False, default=180)
-    business_mode = Column(String(16), nullable=False, default="both")   # "wall" | "business" | "both"
-    aggregate_by = Column(String(16), nullable=False, default="both")    # "created" | "resolved" | "both"
-    time_mode = Column(String(16), nullable=False, default="updated")    # "updated" | "created" | "resolved" | "both"
+    # Report config
+    window_days: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=90, server_default="90"
+    )
+    business_mode: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="wall", server_default="wall"
+    )
+    aggregate_by: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="both", server_default="both"
+    )
+    time_mode: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="updated", server_default="updated"
+    )
 
-    # Path to exported CSV (if any)
-    csv_path = Column(String(1024), nullable=False, default="")
+    # Output path (if any)
+    csv_path: Mapped[str] = mapped_column(
+        String(1024), nullable=False, default="", server_default=""
+    )
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<Report id={self.id} name={self.name!r}>"

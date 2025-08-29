@@ -1,57 +1,58 @@
-# -*- coding: utf-8 -*-
-"""
-Drop-in replacement for Report ORM model.
-Adds/ensures the following columns exist on the model:
-- owner_id (INT, NOT NULL)
-- name (TEXT, NOT NULL, default "")
-- params_json (TEXT, NOT NULL, default "{}")
-- filters_json (TEXT, NOT NULL, default "{}")
-- window_days (INT, NOT NULL, default 180)
-- time_mode (TEXT, NOT NULL, default "updated")
-- business_mode (TEXT, NOT NULL, default "both")
-- aggregate_by (TEXT, NOT NULL, default "both")
-- csv_path (TEXT, NOT NULL, default "")
-"""
 from __future__ import annotations
 
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Integer, String, Text
+from sqlalchemy import text as sa_text
+from sqlalchemy.orm import Mapped, mapped_column
 
-# Try to reuse project's Base if present; otherwise fall back to local declarative_base.
-Base = None
-try:
-    # common locations for project's shared Base
-    from .base import Base  # type: ignore
-except Exception:
-    try:
-        from .session import Base  # type: ignore
-    except Exception:
-        try:
-            from .models import Base  # type: ignore
-        except Exception:
-            from sqlalchemy.orm import declarative_base
-            Base = declarative_base()  # type: ignore
+# Import the project's shared Base (via shim for safety)
+from .base import Base  # type: ignore
 
 
-class Report(Base):  # type: ignore[name-defined]
+class Report(Base):  # type: ignore[misc]
     __tablename__ = "reports"
+    # Allow live-reload / multiple imports without metadata conflicts
+    __table_args__ = {"extend_existing": True}
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    # Keep both client- and server-side defaults so inserts never fail.
+    created_at: Mapped[datetime] = mapped_column(
+        nullable=False,
+        default=datetime.utcnow,
+        server_default=sa_text("(datetime('now'))"),
+    )
 
-    # Required columns (match DB)
-    owner_id = Column(Integer, nullable=False)                                 # user id owning the report
-    name = Column(String(255), nullable=False, default="", server_default="")
-    params_json = Column(Text, nullable=False, default="{}", server_default="{}")
-    filters_json = Column(Text, nullable=False, default="{}", server_default="{}")
-    window_days = Column(Integer, nullable=False, default=180, server_default="180")
-    time_mode = Column(String(32), nullable=False, default="updated", server_default="updated")  # created|updated
-    business_mode = Column(String(32), nullable=False, default="both", server_default="both")    # wall|work|both
-    aggregate_by = Column(String(32), nullable=False, default="both", server_default="both")     # created|updated|both
-    csv_path = Column(String(512), nullable=False, default="", server_default="")
+    # Make owner_id optional on the ORM side to avoid IntegrityError when
+    # older DBs don't have a default yet. API can (and often does) pass it.
+    owner_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
-    # Optional: string repr for debugging
+    # Columns that were missing on older DBs — give them safe defaults
+    name: Mapped[str] = mapped_column(
+        String(255), nullable=False, default="", server_default=sa_text("''")
+    )
+    params_json: Mapped[str] = mapped_column(
+        Text, nullable=False, default="{}", server_default=sa_text("'{}'")
+    )
+    filters_json: Mapped[str] = mapped_column(
+        Text, nullable=False, default="{}", server_default=sa_text("'{}'")
+    )
+    window_days: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=90, server_default=sa_text("90")
+    )
+    business_mode: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="wall", server_default=sa_text("'wall'")
+    )
+    aggregate_by: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="both", server_default=sa_text("'both'")
+    )
+    time_mode: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="updated", server_default=sa_text("'updated'")
+    )
+    csv_path: Mapped[str] = mapped_column(
+        String(512), nullable=False, default="", server_default=sa_text("''")
+    )
+
     def __repr__(self) -> str:  # pragma: no cover
         return f"<Report id={self.id} name={self.name!r} owner_id={self.owner_id}>"
