@@ -10,6 +10,8 @@ import httpx
 import json
 from datetime import datetime
 import re
+import base64
+import hashlib
 
 try:
     from cryptography.fernet import Fernet
@@ -234,12 +236,9 @@ async def diag_save_token(
     enc = token
     if HAVE_CRYPTO:
         try:
-            from cryptography.fernet import Fernet
-            import base64, hashlib
-            h = hashlib.sha256((s.app_secret or "").encode()).digest()
-            key = base64.urlsafe_b64encode(h)
-            f = Fernet(key)
-            enc = f.encrypt(token.encode()).decode()
+            f = _fernet_from_secret(s.app_secret)
+            if f:
+                enc = f.encrypt(token.encode()).decode()
         except Exception:
             pass
 
@@ -363,7 +362,7 @@ async def get_project(base_url: Optional[str] = None, email: Optional[str] = Non
 @router.get("/projects")
 async def list_projects(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
     base, em, tk = await _resolve_strict(base_url, email, token)
-    url = f"{base}/rest/api/3/project/search")
+    url = f"{base}/rest/api/3/project/search"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
         r = await client.get(url, headers=headers, auth=(em, tk), params={"maxResults": 1000})
