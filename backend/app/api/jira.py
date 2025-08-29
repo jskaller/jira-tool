@@ -13,7 +13,6 @@ import re
 
 try:
     from cryptography.fernet import Fernet
-    import base64, hashlib
     HAVE_CRYPTO = True
 except Exception:
     HAVE_CRYPTO = False
@@ -33,7 +32,7 @@ class IngestRequest(BaseModel):
 KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')
 
 def _quote(s: str) -> str:
-    s = s.replace('\"', '\\\"')
+    s = s.replace('"', '\\"')
     return f'"{s}"'
 
 def _build_jql(req: IngestRequest) -> str:
@@ -225,16 +224,21 @@ async def diag_save_token(
     email: Optional[str] = Body(default=None),
     _=Depends(current_admin),
 ):
-    \"\"\"Write the provided token into the settings table under any known '*_encrypted' token column.
+    """
+    Write the provided token into the settings table under any known '*_encrypted' token column.
     Also optionally update base_url/email if provided. Returns updated diagnostics.
-    \"\"\"
+    """
     Session = get_sessionmaker()
     s = get_settings()
 
     enc = token
     if HAVE_CRYPTO:
         try:
-            f = _fernet_from_secret(s.app_secret)
+            from cryptography.fernet import Fernet
+            import base64, hashlib
+            h = hashlib.sha256((s.app_secret or "").encode()).digest()
+            key = base64.urlsafe_b64encode(h)
+            f = Fernet(key)
             enc = f.encrypt(token.encode()).decode()
         except Exception:
             pass
@@ -246,17 +250,13 @@ async def diag_save_token(
                 # ensure settings table exists
                 tables = [r[0] for r in conn.execute(text("SELECT name FROM sqlite_master WHERE type='table'")).fetchall()]
                 if "settings" not in tables:
-                    # create a minimal settings table if missing
                     conn.execute(text("CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY AUTOINCREMENT, jira_base_url TEXT, jira_email TEXT, jira_token_encrypted TEXT)"))
                 cols = [row[1] for row in conn.execute(text("PRAGMA table_info(settings)")).fetchall()]
-                # find token column to use
                 token_cols = [c for c in cols if c in ("jira_api_token_encrypted", "jira_token_encrypted", "encrypted_token", "api_token")]
                 token_col = token_cols[0] if token_cols else "jira_token_encrypted"
-                # ensure column exists
                 if token_col not in cols:
                     conn.execute(text(f"ALTER TABLE settings ADD COLUMN {token_col} TEXT"))
                     cols.append(token_col)
-                # upsert latest row (rowid max)
                 row = conn.execute(text("SELECT rowid, * FROM settings ORDER BY rowid DESC LIMIT 1")).fetchone()
                 if row:
                     sets = []
@@ -277,7 +277,6 @@ async def diag_save_token(
             return True
         await session.run_sync(_sync_write)
 
-    # return latest diagnostics
     _, _, _, meta = await _resolve_meta_only(base_url=None, email=None, token=None)
     return {"ok": meta["ok"], "meta": meta}
 
@@ -364,7 +363,7 @@ async def get_project(base_url: Optional[str] = None, email: Optional[str] = Non
 @router.get("/projects")
 async def list_projects(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
     base, em, tk = await _resolve_strict(base_url, email, token)
-    url = f"{base}/rest/api/3/project/search"
+    url = f"{base}/rest/api/3/project/search")
     headers = {"Accept": "application/json"}
     async with await _client() as client:
         r = await client.get(url, headers=headers, auth=(em, tk), params={"maxResults": 1000})
