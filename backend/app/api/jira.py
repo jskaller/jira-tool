@@ -70,12 +70,12 @@ async def _ensure_tables():
             BaseJira.metadata.create_all(bind=bind)
         await session.run_sync(_create)
 
-# ---------- DB Settings Scanner (robust, with synonyms) ----------------------
 SETTINGS_SYNONYMS = {
     "base_url": ["jira_base_url", "base_url", "jira_url", "url"],
     "email": ["jira_email", "email", "username", "user_email"],
     "token": ["jira_api_token", "api_token", "jira_token", "jira_api_token_encrypted", "token", "encrypted_token"],
 }
+
 def _first_present(row: Dict[str, Any], names: List[str]):
     for n in names:
         if n in row and row[n]:
@@ -94,7 +94,6 @@ async def _scan_db_for_settings_candidates() -> List[Dict[str, Any]]:
                     try:
                         cols = [row[1] for row in conn.execute(text(f"PRAGMA table_info({t})")).fetchall()]
                         colset = set(cols)
-                        # Quick skip: if none of the synonyms exist, ignore
                         if not any(name in colset for names in SETTINGS_SYNONYMS.values() for name in names):
                             continue
                         row = conn.execute(text(f"SELECT * FROM {t} ORDER BY rowid DESC LIMIT 1")).mappings().fetchone()
@@ -120,7 +119,6 @@ async def _scan_db_for_settings_candidates() -> List[Dict[str, Any]]:
 async def _load_saved_jira_settings_from_db() -> Tuple[Optional[str], Optional[str], Optional[str], Dict[str, Any]]:
     candidates = await _scan_db_for_settings_candidates()
     meta = {"candidates": candidates}
-    # Prefer a candidate where at least 2 fields are present
     def score(c):
         return sum(1 for k in ["base_url", "email", "token"] if c[k]["value"])
     best = None
@@ -136,42 +134,40 @@ def _mask_token(token: Optional[str]) -> Dict[str, Any]:
         return {"present": False, "len": 0, "preview": ""}
     return {"present": True, "len": len(token), "preview": (token[:4] + "…" if len(token) > 4 else token)}
 
-async def _resolve_from_params_with_meta(base_url: Optional[str], email: Optional[str], token: Optional[str]) -> Tuple[str, str, str, Dict[str, Any]]:
+async def _resolve_meta_only(base_url: Optional[str], email: Optional[str], token: Optional[str]) -> Tuple[Optional[str], Optional[str], Optional[str], Dict[str, Any]]:
     meta: Dict[str, Any] = {"sources": {}, "env": {}, "db": {}}
     s = get_settings()
-    # Start with params
+
     base = (base_url or "").rstrip("/")
     em = email or ""
     tk = token or ""
+    meta["sources"]["params"] = {"base_url": bool(base_url), "email": bool(email), "token": bool(token)}
 
-    # Fill from DB if missing
-    if not (base and em and tk):
-        db_base, db_email, db_token, db_meta = await _load_saved_jira_settings_from_db()
-        meta["db"] = db_meta
-        base = base or (db_base or "")
-        em = em or (db_email or "")
-        tk = tk or (db_token or "")
-        meta["sources"]["db"] = {"used": bool(db_base or db_email or db_token)}
+    db_base, db_email, db_token, db_meta = await _load_saved_jira_settings_from_db()
+    meta["db"] = db_meta
+    if not base: base = (db_base or "")
+    if not em: em = (db_email or "")
+    if not tk: tk = (db_token or "")
 
-    # Fall back to env/settings
-    base = base or (s.jira_base_url or "")
-    em = em or (s.jira_email or "")
-    tk = tk or (s.jira_api_token or "")
+    if not base: base = (s.jira_base_url or "")
+    if not em: em = (s.jira_email or "")
+    if not tk: tk = (s.jira_api_token or "")
 
     base = base.rstrip("/")
-    meta["sources"]["params"] = {"base_url": bool(base_url), "email": bool(email), "token": bool(token)}
     meta["sources"]["env"] = {"used": bool(s.jira_base_url or s.jira_email or s.jira_api_token)}
     meta["resolved"] = {"base_url": base, "email": em, "token": _mask_token(tk)}
+    meta["myself_url"] = f"{base}/rest/api/3/myself" if base else None
+    ok = bool(base and em and tk)
+    meta["ok"] = ok
+    return (base if ok else None), (em if ok else None), (tk if ok else None), meta
+
+async def _resolve_strict(base_url: Optional[str], email: Optional[str], token: Optional[str]) -> Tuple[str, str, str]:
+    base, em, tk, meta = await _resolve_meta_only(base_url, email, token)
     if not (base and em and tk):
         raise HTTPException(status_code=400, detail="Missing Jira credentials. Provide base_url, email, token or save them in Admin → Settings.")
-    return base, em, tk, meta
+    return base, em, tk
 
-# ------------------- Public diagnostics endpoints ----------------------------
-@router.get("/diagnostics/db-schema")
-async def db_schema(_=Depends(current_admin)):
-    cands = await _scan_db_for_settings_candidates()
-    return {"ok": True, "candidates": cands}
-
+# ------------------- Diagnostics ---------------------------------------------
 @router.get("/diagnostics/creds")
 async def creds_diag(
     base_url: Optional[str] = Query(default=None),
@@ -179,11 +175,15 @@ async def creds_diag(
     token: Optional[str] = Query(default=None),
     _=Depends(current_admin),
 ):
-    base, em, tk, meta = await _resolve_from_params_with_meta(base_url, email, token)
-    meta["myself_url"] = f"{base}/rest/api/3/myself"
-    return {"ok": True, "resolved": {"base_url": base, "email": em, "token": _mask_token(tk)}, "meta": meta}
+    _, _, _, meta = await _resolve_meta_only(base_url, email, token)
+    return {"ok": meta["ok"], "meta": meta}
 
-# ------------------- Core Jira helpers ---------------------------------------
+@router.get("/diagnostics/db-schema")
+async def db_schema(_=Depends(current_admin)):
+    cands = await _scan_db_for_settings_candidates()
+    return {"ok": True, "candidates": cands}
+
+# ------------------- Jira endpoints ------------------------------------------
 async def _client():
     return httpx.AsyncClient(timeout=30)
 
@@ -238,10 +238,9 @@ def _extract_transitions(issue: Dict[str, Any]):
     out.sort(key=lambda x: x["when"])
     return out
 
-# ------------------- Jira endpoints ------------------------------------------
 @router.get("/whoami")
 async def whoami(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
-    base, em, tk, _ = await _resolve_from_params_with_meta(base_url, email, token)
+    base, em, tk = await _resolve_strict(base_url, email, token)
     url = f"{base}/rest/api/3/myself"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
@@ -253,7 +252,7 @@ async def whoami(base_url: Optional[str] = None, email: Optional[str] = None, to
 
 @router.get("/project")
 async def get_project(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, id_or_key: str = "", _=Depends(current_admin)):
-    base, em, tk, _ = await _resolve_from_params_with_meta(base_url, email, token)
+    base, em, tk = await _resolve_strict(base_url, email, token)
     if not id_or_key:
         raise HTTPException(status_code=400, detail="id_or_key is required")
     url = f"{base}/rest/api/3/project/{id_or_key}"
@@ -266,7 +265,7 @@ async def get_project(base_url: Optional[str] = None, email: Optional[str] = Non
 
 @router.get("/projects")
 async def list_projects(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, _=Depends(current_admin)):
-    base, em, tk, _ = await _resolve_from_params_with_meta(base_url, email, token)
+    base, em, tk = await _resolve_strict(base_url, email, token)
     url = f"{base}/rest/api/3/project/search"
     headers = {"Accept": "application/json"}
     async with await _client() as client:
@@ -291,7 +290,7 @@ async def list_projects(base_url: Optional[str] = None, email: Optional[str] = N
 
 @router.get("/jql-check")
 async def jql_check(base_url: Optional[str] = None, email: Optional[str] = None, token: Optional[str] = None, jql: str = "", _=Depends(current_admin)):
-    base, em, tk, _ = await _resolve_from_params_with_meta(base_url, email, token)
+    base, em, tk = await _resolve_strict(base_url, email, token)
     if not jql:
         raise HTTPException(status_code=400, detail="jql is required")
     url = f"{base}/rest/api/3/search"
@@ -304,8 +303,7 @@ async def jql_check(base_url: Optional[str] = None, email: Optional[str] = None,
 
 @router.post("/ingest")
 async def ingest(req: IngestRequest, _=Depends(current_admin)):
-    # Resolve creds using params → DB → env
-    base, email, token, _ = await _resolve_from_params_with_meta(req.jira_base_url, req.jira_email, req.jira_api_token)
+    base, email, token = await _resolve_strict(req.jira_base_url, req.jira_email, req.jira_api_token)
     await _ensure_tables()
 
     jql = _build_jql(req)

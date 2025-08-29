@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (UI v0023)</title>
+  <title>Jira Tools (UI v0025)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -15,13 +15,7 @@
     .btn.gray { background:#e5e7eb; color:#111827; }
     .btn.green { background:#16a34a; }
     .input, select, textarea { border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px; min-width: 200px; }
-    table { width:100%; border-collapse: collapse; font-size: 14px; }
-    th, td { padding: 8px; text-align: left; border-top:1px solid #e5e7eb; }
-    h1 { font-size: 20px; margin:0 0 8px 0; }
-    h2 { font-size: 16px; margin:0 0 8px 0; }
-    .muted { color:#6b7280; font-size:12px; }
     .code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#f3f4f6; padding:6px; border-radius:6px; display:block; white-space:pre-wrap; }
-    .hidden { display:none; }
   </style>
 </head>
 <body>
@@ -32,30 +26,23 @@
 
   <main>
     <div class="card">
-      <h1>Admin</h1>
-      <div class="muted">Settings, Jira connectivity, and diagnostics.</div>
-
-      <h2>Settings</h2>
-      <div id="adminError" class="muted"></div>
       <div class="row">
-        <input id="jira_base_url" class="input" placeholder="Base URL (https://your.atlassian.net)" />
-        <input id="jira_email" class="input" placeholder="Jira Email" />
-        <input id="jira_api_token" type="password" class="input" placeholder="Jira API Token" />
+        <input id="jira_base_url" class="input" placeholder="Base URL (https://your.atlassian.net)" style="min-width:320px"/>
+        <input id="jira_email" class="input" placeholder="Jira Email" style="min-width:260px"/>
+        <input id="jira_api_token" type="password" class="input" placeholder="Jira API Token" style="min-width:280px"/>
         <button class="btn" onclick="saveSettings()">Save</button>
       </div>
 
-      <h2>Diagnostics</h2>
+      <h2 style="margin-top:12px">Diagnostics</h2>
       <div class="row">
-        <button class="btn" onclick="whoAmI()">Who am I?</button>
-        <button class="btn gray" onclick="discoverProjects()">Discover Projects</button>
+        <button class="btn" onclick="whoAmI(true)">Who am I (use fields if filled)</button>
+        <button class="btn gray" onclick="discoverProjects(true)">Discover Projects</button>
         <input id="lookup_key" class="input" placeholder="Lookup project (key or ID)" />
-        <button class="btn gray" onclick="lookupProject()">Lookup Project</button>
+        <button class="btn gray" onclick="lookupProject(true)">Lookup Project</button>
         <button class="btn" onclick="showCreds()">Show resolved creds</button>
         <button class="btn gray" onclick="showDbSchema()">DB schema</button>
       </div>
-      <div class="row" style="margin-top:8px">
-        <textarea id="diagOut" class="input" style="width:100%; min-height:140px" placeholder="Diagnostics output…" readonly></textarea>
-      </div>
+      <textarea id="diagOut" class="input" style="width:100%; min-height:180px; margin-top:10px" placeholder="Diagnostics output…" readonly></textarea>
     </div>
   </main>
 
@@ -64,20 +51,6 @@
       const t = sessionStorage.getItem('token')
       return t ? { 'X-Session': t } : {}
     }
-    async function me(){
-      try{
-        const res = await fetch('/api/auth/me', { credentials:'include', headers: authHeaders() })
-        if(!res.ok) throw 0;
-        const u = await res.json()
-        document.getElementById('userArea').textContent = u.email + ' ('+u.role+')'
-        return u
-      }catch{
-        document.getElementById('userArea').textContent = 'Not signed in'
-        return null
-      }
-    }
-    me()
-
     async function saveSettings(){
       const payload = {
         jira_base_url: document.getElementById('jira_base_url').value || null,
@@ -96,32 +69,44 @@
         alert('Failed saving settings: ' + (b.detail || ('(' + res.status + ') ' + txt)))
       }
     }
-
-    async function whoAmI(){
+    function addOptionalParams(url){
+      const base = document.getElementById('jira_base_url').value.trim()
+      const em = document.getElementById('jira_email').value.trim()
+      const tk = document.getElementById('jira_api_token').value.trim()
+      if(base) url.searchParams.set('base_url', base)
+      if(em) url.searchParams.set('email', em)
+      if(tk) url.searchParams.set('token', tk)
+    }
+    async function whoAmI(useFields){
       try{
-        const r = await fetch('/api/jira/whoami', { headers: authHeaders() })
+        const url = new URL('/api/jira/whoami', window.location.origin)
+        if(useFields) addOptionalParams(url)
+        const r = await fetch(url, { headers: authHeaders() })
         const t = await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}
         document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t))
-      }catch(e){
-        document.getElementById('diagOut').value = 'JS error: ' + e.message
-      }
+      }catch(e){ document.getElementById('diagOut').value = 'JS error: ' + e.message }
     }
-    async function discoverProjects(){
-      const r = await fetch('/api/jira/projects', { headers: authHeaders() })
+    async function discoverProjects(useFields){
+      const url = new URL('/api/jira/projects', window.location.origin)
+      if(useFields) addOptionalParams(url)
+      const r = await fetch(url, { headers: authHeaders() })
       const t = await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}
       document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t))
     }
-    async function lookupProject(){
+    async function lookupProject(useFields){
       const idOrKey = document.getElementById('lookup_key').value.trim()
       if(!idOrKey){ alert('Enter a key or numeric ID'); return }
       const url = new URL('/api/jira/project', window.location.origin)
       url.searchParams.set('id_or_key', idOrKey)
+      if(useFields) addOptionalParams(url)
       const r = await fetch(url, { headers: authHeaders() })
       const t = await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}
       document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t))
     }
     async function showCreds(){
-      const r = await fetch('/api/jira/diagnostics/creds', { headers: authHeaders() })
+      const url = new URL('/api/jira/diagnostics/creds', window.location.origin)
+      addOptionalParams(url)
+      const r = await fetch(url, { headers: authHeaders() })
       const t = await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}
       document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t))
     }
