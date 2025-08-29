@@ -14,7 +14,7 @@ from ..db.database import get_sessionmaker
 from ..db.jira_models import JiraIssue, JiraTransition
 from ..db.report_models import BaseReport, Report, ReportRow, ReportStatusStat
 from ..services.business_time import business_seconds_between
-from sqlalchemy import select, delete, func
+from sqlalchemy import select, delete, text
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 
@@ -25,8 +25,8 @@ class RunReportRequest(BaseModel):
     labels: List[str] = Field(default_factory=list)  # reserved
     aggregate_by: str = "name"   # name|both (category later)
     business_mode: str = "both"  # business|wall|both
+    max_issues: int = 25000
     jql_like: Optional[str] = None  # reserved, local filter
-    # Admin-calculated fields (read from settings)
     business_hours_start: Optional[str] = None
     business_hours_end: Optional[str] = None
     business_days: Optional[str] = None
@@ -38,12 +38,28 @@ def _ensure_dirs() -> Path:
     return p
 
 async def _ensure_report_tables():
+    """Create tables if missing and migrate columns if older schema exists."""
     Session = get_sessionmaker()
     async with Session() as session:
         def _create(sync_session):
             bind = sync_session.get_bind()
             BaseReport.metadata.create_all(bind=bind)
         await session.run_sync(_create)
+
+        # Minimal migrations for SQLite (add missing columns to 'reports')
+        cols = {row['name'] for row in (await session.execute(text("PRAGMA table_info(reports)"))).mappings()}
+        needed = {
+            'name': "TEXT DEFAULT 'Report'",
+            'params_json': "TEXT DEFAULT '{}'",
+            'window_days': "INTEGER DEFAULT 180",
+            'business_mode': "TEXT DEFAULT 'both'",
+            'aggregate_by': "TEXT DEFAULT 'name'",
+            'csv_path': "TEXT DEFAULT ''",
+        }
+        for col, ddl in needed.items():
+            if col not in cols:
+                await session.execute(text(f"ALTER TABLE reports ADD COLUMN {col} {ddl}"))
+        await session.commit()
 
 def _in_project(pkeys: List[str], project_key: str) -> bool:
     if not pkeys:
@@ -52,10 +68,6 @@ def _in_project(pkeys: List[str], project_key: str) -> bool:
     return (project_key or "").upper() in pkeys_norm
 
 def _build_timeline(issue: JiraIssue, transitions: List[JiraTransition]) -> List[Dict[str, Any]]:
-    """
-    Returns list of {start, end, status} datetimes for this issue based on transitions.
-    """
-    # Sort transitions by time
     transitions = [t for t in transitions if getattr(t, "when", None) is not None]
     transitions.sort(key=lambda t: t.when)
 
@@ -63,27 +75,22 @@ def _build_timeline(issue: JiraIssue, transitions: List[JiraTransition]) -> List
         timeline = []
         first = transitions[0]
         first_from = getattr(first, "from_status", None)
-        first_to = getattr(first, "to_status", None)
 
         if issue.created and first.when and first_from:
             timeline.append({"start": issue.created, "end": first.when, "status": first_from})
 
-        # between transitions
         for i in range(len(transitions)-1):
-            cur = transitions[i]
-            nxt = transitions[i+1]
+            cur = transitions[i]; nxt = transitions[i+1]
             cur_to = getattr(cur, "to_status", None)
             if cur.when and nxt.when:
                 timeline.append({"start": cur.when, "end": nxt.when, "status": cur_to or ""})
 
-        # tail
         last = transitions[-1]
         tail_end = issue.updated or datetime.now(timezone.utc)
         last_to = getattr(last, "to_status", None)
         if last.when and tail_end and last_to:
             timeline.append({"start": last.when, "end": tail_end, "status": last_to})
 
-        # filter bad segments
         out = []
         for seg in timeline:
             if not seg["status"]:
@@ -95,21 +102,18 @@ def _build_timeline(issue: JiraIssue, transitions: List[JiraTransition]) -> List
             out.append(seg)
         return out
 
-    # no transitions; single bucket with current status if available
     if getattr(issue, "created", None) and getattr(issue, "updated", None) and getattr(issue, "status", None):
         return [{"start": issue.created, "end": issue.updated, "status": issue.status}]
     return []
 
-def _summarize(timeline: List[Dict[str, Any]], tz: str, bh_start: str, bh_end: str, bdays: str) -> Dict[str, Dict[str, Any]]:
+def _summarize(tl: List[Dict[str, Any]], tz: str, bs: str, be: str, bdays: str) -> Dict[str, Dict[str, Any]]:
     agg: Dict[str, Dict[str, Any]] = {}
-    for seg in timeline:
+    for seg in tl:
         st = seg["status"]
         wall = int((seg["end"] - seg["start"]).total_seconds())
-        biz = business_seconds_between(seg["start"], seg["end"], tz_name=tz, business_start=bh_start, business_end=bh_end, business_days_csv=bdays)
+        biz = business_seconds_between(seg["start"], seg["end"], tz_name=tz, business_start=bs, business_end=be, business_days_csv=bdays)
         bucket = agg.setdefault(st, {"entered_count": 0, "wall_seconds": 0, "business_seconds": 0})
-        bucket["entered_count"] += 1
-        bucket["wall_seconds"] += wall
-        bucket["business_seconds"] += biz
+        bucket["entered_count"] += 1; bucket["wall_seconds"] += wall; bucket["business_seconds"] += biz
     return agg
 
 @router.get("")
@@ -134,9 +138,9 @@ async def delete_report(report_id: int, _=Depends(current_admin)):
     await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
-        await session.execute(delete(ReportStatusStat).where(ReportStatusStat.report_id == report_id))
-        await session.execute(delete(ReportRow).where(ReportRow.report_id == report_id))
-        await session.execute(delete(Report).where(Report.id == report_id))
+        await session.execute(text("DELETE FROM report_status_stats WHERE report_id = :rid"), {"rid": report_id})
+        await session.execute(text("DELETE FROM report_rows WHERE report_id = :rid"), {"rid": report_id})
+        await session.execute(text("DELETE FROM reports WHERE id = :rid"), {"rid": report_id})
         await session.commit()
     return {"ok": True}
 
@@ -160,49 +164,42 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
     Session = get_sessionmaker()
 
     async with Session() as session:
-        # time window
         cutoff = datetime.now(timezone.utc) - timedelta(days=req.updated_window_days or 180)
 
-        # load issues in window
-        res_issues = await session.execute(select(JiraIssue).where(JiraIssue.updated >= cutoff))
+        # Load issues in window (limit + order)
+        stmt = select(JiraIssue).where(JiraIssue.updated >= cutoff).order_by(JiraIssue.updated.desc()).limit(req.max_issues or 25000)
+        res_issues = await session.execute(stmt)
         issues: list[JiraIssue] = res_issues.scalars().all()
 
-        # filter by projects if given
         if req.projects:
             pset = {p.strip().upper() for p in req.projects if p.strip()}
             issues = [i for i in issues if (getattr(i, "project_key", "") or "").upper() in pset]
 
-        # Determine how to join transitions: by issue_key or issue_id
+        # Group transitions by issue_key or issue_id
         join_attr = None
         if hasattr(JiraTransition, "issue_key") and hasattr(JiraIssue, "key"):
             join_attr = "issue_key"
-            keys = [i.key for i in issues if getattr(i, "key", None)]
-            in_values = list({k for k in keys})
+            in_values = list({i.key for i in issues if getattr(i, "key", None)})
         elif hasattr(JiraTransition, "issue_id") and hasattr(JiraIssue, "issue_id"):
             join_attr = "issue_id"
-            ids = [i.issue_id for i in issues if getattr(i, "issue_id", None)]
-            in_values = list({x for x in ids})
+            in_values = list({i.issue_id for i in issues if getattr(i, "issue_id", None)})
         else:
-            # Fallback: no way to pair, run with no transitions
-            in_values = []
-            join_attr = None
+            in_values = []; join_attr = None
 
-        transitions_by_key: Dict[Any, List[JiraTransition]] = {}
+        transitions_by: Dict[str, List[JiraTransition]] = {}
         if join_attr and in_values:
-            # Chunk IN list if very large
             CHUNK = 900
+            col = getattr(JiraTransition, join_attr)
             all_rows: List[JiraTransition] = []
-            for start in range(0, len(in_values), CHUNK):
-                chunk = in_values[start:start+CHUNK]
-                col = getattr(JiraTransition, join_attr)
+            for s in range(0, len(in_values), CHUNK):
+                chunk = in_values[s:s+CHUNK]
                 res_tr = await session.execute(select(JiraTransition).where(col.in_(chunk)))
                 all_rows.extend(res_tr.scalars().all())
-            # group
             for tr in all_rows:
                 k = getattr(tr, join_attr)
-                transitions_by_key.setdefault(k, []).append(tr)
+                transitions_by.setdefault(k, []).append(tr)
 
-        # Create report row
+        # Create report shell
         r = Report(
             name=req.name or f"Report {datetime.utcnow().isoformat(timespec='seconds')}",
             params_json=json.dumps(req.model_dump()),
@@ -211,16 +208,12 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
             aggregate_by=req.aggregate_by or "name",
             csv_path="",
         )
-        session.add(r)
-        await session.flush()  # generate r.id
+        session.add(r); await session.flush()
 
-        # business config
         tz = req.timezone or "America/New_York"
-        bh_start = (req.business_hours_start or "09:00")
-        bh_end = (req.business_hours_end or "17:00")
+        bs = (req.business_hours_start or "09:00"); be = (req.business_hours_end or "17:00")
         bdays = (req.business_days or "Mon,Tue,Wed,Thu,Fri")
 
-        # iterate issues and compute stats
         for issue in issues:
             row = ReportRow(
                 report_id=r.id,
@@ -238,17 +231,13 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
             )
             session.add(row)
 
-            # Pull transitions for this issue
             key_val = getattr(issue, "key", None) if join_attr == "issue_key" else getattr(issue, "issue_id", None)
-            transitions = transitions_by_key.get(key_val, []) if key_val is not None else []
-
-            timeline = _build_timeline(issue, transitions)
-            if not timeline:
-                continue
-
-            stats = _summarize(timeline, tz=tz, bh_start=bh_start, bh_end=bh_end, bdays=bdays)
-            for status_name, vals in stats.items():
-                st = ReportStatusStat(
+            transitions = transitions_by.get(key_val, []) if key_val is not None else []
+            tl = _build_timeline(issue, transitions)
+            if not tl: continue
+            agg = _summarize(tl, tz=tz, bs=bs, be=be, bdays=bdays)
+            for status_name, vals in agg.items():
+                session.add(ReportStatusStat(
                     report_id=r.id,
                     issue_key=getattr(issue, "key", "") or "",
                     bucket="name",
@@ -256,19 +245,14 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
                     entered_count=vals["entered_count"],
                     wall_seconds=vals["wall_seconds"],
                     business_seconds=vals["business_seconds"],
-                )
-                session.add(st)
+                ))
 
         await session.commit()
 
-        # Build CSV
-        out_dir = _ensure_dirs()
-        csv_path = out_dir / f"report_{r.id}.csv"
-
+        # CSV
+        out_dir = _ensure_dirs(); csv_path = out_dir / f"report_{r.id}.csv"
         res_stats = await session.execute(select(ReportStatusStat).where(ReportStatusStat.report_id == r.id))
         stats_rows = res_stats.scalars().all()
-
-        # Build quick lookup for issue metadata
         meta = {getattr(i, "key", ""): i for i in issues}
 
         with open(csv_path, "w", newline="") as f:
@@ -276,8 +260,7 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
             w.writerow(["issue_key","project_key","issue_type","assignee","parent_key","epic_key","bucket","status","entered_count","wall_hours","business_hours"])
             for st in stats_rows:
                 ii = meta.get(st.issue_key)
-                if not ii:
-                    continue
+                if not ii: continue
                 w.writerow([
                     getattr(ii, "key", ""),
                     getattr(ii, "project_key", "") or "",
@@ -285,16 +268,9 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
                     getattr(ii, "assignee", "") or "",
                     getattr(ii, "parent_key", "") or "",
                     getattr(ii, "epic_key", "") or "",
-                    st.bucket,
-                    st.status,
-                    st.entered_count,
-                    round(st.wall_seconds/3600.0,3),
-                    round(st.business_seconds/3600.0,3)
+                    st.bucket, st.status, st.entered_count,
+                    round(st.wall_seconds/3600.0,3), round(st.business_seconds/3600.0,3)
                 ])
 
-        # Save path to DB
-        r.csv_path = str(csv_path)
-        session.add(r)
-        await session.commit()
-
+        r.csv_path = str(csv_path); session.add(r); await session.commit()
         return {"ok": True, "report_id": r.id, "csv_path": r.csv_path, "issues_count": len(issues)}

@@ -49,7 +49,7 @@
     <div class="kv">
       <label>Jira Base URL</label><input id="jira_base_url" class="w320" placeholder="https://your.atlassian.net" />
       <label>Jira Email</label><input id="jira_email" class="w260" placeholder="you@example.com" />
-      <label>Jira API Token</label><input id="jira_api_token" class="w320" type="password" placeholder="Paste token (use Save token button below)" />
+      <label>Jira API Token</label><input id="jira_api_token" class="w320" type="password" placeholder="Paste token (stored on Save)" />
       <label>Window (days)</label><input id="default_window_days" class="w200" type="number" min="1" step="1" placeholder="180" />
       <label>Business hours start</label><input id="business_hours_start" class="w200" placeholder="09:00" />
       <label>Business hours end</label><input id="business_hours_end" class="w200" placeholder="17:00" />
@@ -58,9 +58,9 @@
     </div>
     <div class="row" style="margin-top:10px">
       <button onclick="saveSettings()">Save</button>
-      <button class="green" onclick="saveTokenDiag()">Save token (diagnostics)</button>
       <span id="settingsStatus" class="muted"></span>
     </div>
+    <div class="muted" id="tokenHint"></div>
   </section>
 
   <section id="reports" class="card hidden">
@@ -69,6 +69,7 @@
       <label>Name</label><input id="rep_name" class="w320" placeholder="My report" />
       <label>Projects</label><input id="rep_projects" class="w320" placeholder="MEDA, OTHERPROJ" />
       <label>Updated window (days)</label><input id="rep_days" type="number" class="w200" placeholder="180" />
+      <label>Max issues</label><input id="rep_max" type="number" class="w200" placeholder="25000" />
       <label>Business mode</label>
       <select id="rep_bmode" class="w200">
         <option value="both">Both</option>
@@ -128,16 +129,11 @@
     <div class="row">
       <button onclick="whoAmI(true)">Who am I (use fields if filled)</button>
       <button class="gray" onclick="discoverProjects(true)">Discover Projects</button>
-      <input id="lookup_key" placeholder="Lookup project (key or ID)" />
-      <button class="gray" onclick="lookupProject(true)">Lookup Project</button>
-      <button onclick="showCreds()">Show resolved creds</button>
-      <button class="gray" onclick="showDbSchema()">DB schema</button>
     </div>
     <textarea id="diagOut" placeholder="Diagnostics output…" readonly></textarea>
   </section>
 </main>
 
-<!-- User modal -->
 <div id="userModal" class="hidden" aria-hidden="true">
   <div class="card" style="width:520px" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
     <h3 id="userModalTitle">New user</h3>
@@ -168,8 +164,7 @@ function switchTab(e){
   document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
   const tab = e.target.getAttribute('data-tab');
   e.target.classList.add('active');
-  const sec = document.getElementById(tab);
-  sec.classList.remove('hidden');
+  document.getElementById(tab).classList.remove('hidden');
   if(tab==='users'){ maybeLoadUsers(); }
   if(tab==='reports'){ listReports(); }
 }
@@ -183,8 +178,8 @@ async function loadSettings(){
     const map = ['jira_base_url','jira_email','default_window_days','business_hours_start','business_hours_end','business_days','timezone'];
     map.forEach(k=>{ if(b[k]!==undefined && document.getElementById(k)) document.getElementById(k).value = b[k]; });
     document.getElementById('settingsStatus').textContent='Loaded settings.';
-    // Fill defaults on Reports form
     document.getElementById('rep_days').value = b.default_window_days || 180;
+    document.getElementById('tokenHint').textContent = b.token_present ? '✅ Token stored.' : '⚠️ No token stored yet.';
   }else{
     document.getElementById('settingsStatus').textContent='Failed to load settings: '+(b.detail||t);
   }
@@ -193,7 +188,7 @@ async function saveSettings(){
   const payload = {
     jira_base_url: val('jira_base_url'),
     jira_email: val('jira_email'),
-    jira_api_token: val('jira_api_token') || null,
+    jira_api_token: val('jira_api_token') || undefined,
     default_window_days: num('default_window_days'),
     business_hours_start: val('business_hours_start'),
     business_hours_end: val('business_hours_end'),
@@ -202,16 +197,13 @@ async function saveSettings(){
   };
   const r = await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
   const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  if(r.ok){ if(payload.jira_api_token) document.getElementById('jira_api_token').value=''; document.getElementById('settingsStatus').textContent='Saved settings.';}
-  else{ document.getElementById('settingsStatus').textContent='Failed to save: '+(b.detail||t); }
-}
-async function saveTokenDiag(){
-  const base = val('jira_base_url'); const em = val('jira_email'); const tk = val('jira_api_token');
-  if(!tk){ alert('Enter a token first'); return }
-  const r = await fetch('/api/jira/diagnostics/save-token', {method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({ token: tk, base_url: base||null, email: em||null })});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  alert(r.ok ? 'Token saved.' : ('Failed: '+(b.detail||t)));
-  if(r.ok){ document.getElementById('jira_api_token').value=''; }
+  if(r.ok){
+    document.getElementById('settingsStatus').textContent='Saved settings.';
+    if(payload.jira_api_token) document.getElementById('jira_api_token').value='';
+    await loadSettings();
+  } else {
+    document.getElementById('settingsStatus').textContent='Failed to save: '+(b.detail||t);
+  }
 }
 
 // Reports
@@ -220,10 +212,10 @@ async function runReport(){
   const payload = {
     name: val('rep_name')||null,
     updated_window_days: num('rep_days')||180,
+    max_issues: num('rep_max')||25000,
     projects: splitCSV(val('rep_projects')),
     aggregate_by: document.getElementById('rep_ab').value,
     business_mode: document.getElementById('rep_bmode').value,
-    // pass current business config so back-end doesn't need another fetch
     business_hours_start: val('business_hours_start')||null,
     business_hours_end: val('business_hours_end')||null,
     business_days: val('business_days')||null,
@@ -254,7 +246,7 @@ async function listReports(){
   });
 }
 
-// Users feature detect (as in 0031)
+// Users feature detect (as before)
 let usersFeature = {checked:false, available:false};
 async function featureDetectUsers(){
   if(usersFeature.checked) return usersFeature.available;
@@ -323,7 +315,7 @@ function closeUserModal(){ const modal = document.getElementById('userModal'); m
 document.getElementById('userModal').addEventListener('click', (e)=>{ if(e.target.id === 'userModal'){ closeUserModal(); }});
 document.addEventListener('keydown',(e)=>{ if(e.key === 'Escape'){ closeUserModal(); }});
 
-// Ingest (existing)
+// Ingest
 function splitCSV2(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
 async function runIngest(){
   const payload = {
@@ -343,18 +335,19 @@ async function runIngest(){
   document.getElementById('ingestStatus').textContent = r.ok ? 'Done.' : 'Failed.';
 }
 
-// Diagnostics (unchanged)
-function addOptionalParams(url){
-  const base = val('jira_base_url'); const em = val('jira_email'); const tk = val('jira_api_token');
-  if(base) url.searchParams.set('base_url', base);
-  if(em) url.searchParams.set('email', em);
-  if(tk) url.searchParams.set('token', tk);
+// Diagnostics
+async function whoAmI(useFields){
+  const url=new URL('/api/jira/whoami',window.location.origin);
+  const r=await fetch(url,{headers:authHeaders()});
+  const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{};
+  document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t));
 }
-async function whoAmI(useFields){ const url=new URL('/api/jira/whoami',window.location.origin); if(useFields) addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
-async function discoverProjects(useFields){ const url=new URL('/api/jira/projects',window.location.origin); if(useFields) addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
-async function lookupProject(useFields){ const idOrKey=val('lookup_key'); if(!idOrKey){ alert('Enter a key or numeric ID'); return } const url=new URL('/api/jira/project',window.location.origin); url.searchParams.set('id_or_key',idOrKey); if(useFields) addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
-async function showCreds(){ const url=new URL('/api/jira/diagnostics/creds',window.location.origin); addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
-async function showDbSchema(){ const r=await fetch('/api/jira/diagnostics/db-schema',{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
+async function discoverProjects(useFields){
+  const url=new URL('/api/jira/projects',window.location.origin);
+  const r=await fetch(url,{headers:authHeaders()});
+  const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{};
+  document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t));
+}
 
 // utils
 function val(id){ return (document.getElementById(id)?.value||'').trim(); }
