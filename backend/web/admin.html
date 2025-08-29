@@ -23,9 +23,12 @@
     textarea{width:100%;min-height:140px}
     table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;font-size:14px}
-    .hidden{display:none}
+    .hidden{display:none !important}
     .kv{display:grid;grid-template-columns: 240px 1fr; gap:8px 12px}
     .w200{min-width:200px}.w260{min-width:260px}.w320{min-width:320px}
+    /* Modal */
+    #userModal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:grid;place-items:center}
+    #userModal.hidden{display:none !important}
   </style>
 </head>
 <body>
@@ -38,7 +41,7 @@
 <main>
   <div class="tabs">
     <div class="tab active" data-tab="settings" onclick="switchTab(event)">Settings</div>
-    <div class="tab" data-tab="users" onclick="switchTab(event)">Users</div>
+    <div class="tab" data-tab="users" id="tab-users" onclick="switchTab(event)">Users</div>
     <div class="tab" data-tab="ingest" onclick="switchTab(event)">Ingest</div>
     <div class="tab" data-tab="diagnostics" onclick="switchTab(event)">Diagnostics</div>
   </div>
@@ -60,19 +63,6 @@
       <button class="green" onclick="saveTokenDiag()">Save token (diagnostics)</button>
       <span id="settingsStatus" class="muted"></span>
     </div>
-
-    <h3 style="margin-top:18px">Reporting defaults</h3>
-    <div class="kv">
-      <label>Aggregation basis</label>
-      <select id="aggregation_mode" class="w200">
-        <option value="both">Status name + category</option>
-        <option value="name">Status name only</option>
-        <option value="category">Status category only</option>
-      </select>
-      <label>Custom categories (JSON)</label>
-      <textarea id="custom_categories" placeholder='{"In Progress":["In Progress","Doing"], "Review":["Code Review","QA"]}'></textarea>
-    </div>
-    <div class="muted">Note: aggregation/custom categories are saved client-side for now unless your backend accepts these keys.</div>
   </section>
 
   <section id="users" class="card hidden">
@@ -82,7 +72,8 @@
       <button class="green" onclick="openUserModal()">Add user</button>
       <span id="usersStatus" class="muted"></span>
     </div>
-    <table>
+    <div id="usersFeatureMissing" class="muted hidden">User management endpoints are not available on this server (skipping Users tab).</div>
+    <table id="usersTable">
       <thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
       <tbody id="usersTbody"></tbody>
     </table>
@@ -119,8 +110,8 @@
 </main>
 
 <!-- User modal -->
-<div id="userModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.25);display:grid;place-items:center;">
-  <div class="card" style="width:520px">
+<div id="userModal" class="hidden" aria-hidden="true">
+  <div class="card" style="width:520px" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
     <h3 id="userModalTitle">New user</h3>
     <div class="kv">
       <label>Email</label><input id="um_email" class="w320"/>
@@ -149,9 +140,10 @@ function switchTab(e){
   document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
   const tab = e.target.getAttribute('data-tab');
   e.target.classList.add('active');
-  document.getElementById(tab).classList.remove('hidden');
+  const sec = document.getElementById(tab);
+  sec.classList.remove('hidden');
+  if(tab==='users'){ maybeLoadUsers(); }
 }
-
 function logout(){ sessionStorage.removeItem('token'); window.location.href='/login.html'; }
 
 // Settings
@@ -191,26 +183,45 @@ async function saveTokenDiag(){
   if(r.ok){ document.getElementById('jira_api_token').value=''; }
 }
 
-// Users
-function openUserModal(user){
-  document.getElementById('userModal').classList.remove('hidden');
-  document.getElementById('userModalStatus').textContent='';
-  if(user){
-    document.getElementById('userModalTitle').textContent='Edit user';
-    document.getElementById('um_email').value=user.email; document.getElementById('um_email').disabled=true;
-    document.getElementById('um_name').value=user.name||'';
-    document.getElementById('um_role').value=user.role||'user';
-    document.getElementById('um_password').value='';
-    document.getElementById('userModal').dataset.userId = user.id;
-  }else{
-    document.getElementById('userModalTitle').textContent='New user';
-    ['um_email','um_name','um_password'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('um_email').disabled=false;
-    document.getElementById('um_role').value='user';
-    delete document.getElementById('userModal').dataset.userId;
+// Users — feature detect and lazy load
+let usersFeature = {checked:false, available:false};
+async function featureDetectUsers(){
+  if(usersFeature.checked) return usersFeature.available;
+  usersFeature.checked = true;
+  try{
+    const r = await fetch('/api/users', {headers: authHeaders()});
+    if(r.status === 404){
+      usersFeature.available = Falsey(); // force false
+    }else{
+      usersFeature.available = r.ok;
+    }
+  }catch(e){
+    usersFeature.available = false;
   }
+  const tab = document.getElementById('tab-users');
+  const sec = document.getElementById('users');
+  if(!usersFeature.available){
+    if(tab) tab.classList.add('hidden');
+    if(sec) sec.classList.add('hidden');
+  }
+  return usersFeature.available;
 }
-function closeUserModal(){ document.getElementById('userModal').classList.add('hidden'); }
+function Falsey(){ return false; } // helper to keep minified style
+
+async function maybeLoadUsers(){
+  const ok = await featureDetectUsers();
+  const sec = document.getElementById('users');
+  if(!ok){
+    // Show a tiny note that the feature is missing, but keep the rest hidden
+    if(sec){
+      sec.classList.remove('hidden');
+      document.getElementById('usersFeatureMissing')?.classList.remove('hidden');
+      document.getElementById('usersTable')?.classList.add('hidden');
+    }
+    return;
+  }
+  await reloadUsers();
+}
 async function reloadUsers(){
   const r = await fetch('/api/users', {headers: authHeaders()});
   const t = await r.text(); let b=[]; try{ b=JSON.parse(t) }catch{}
@@ -218,7 +229,7 @@ async function reloadUsers(){
   if(!r.ok){ document.getElementById('usersStatus').textContent='Failed: '+(b.detail||t); return }
   b.forEach(u=>{
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.email}</td><td>${u.name||''}</td><td>${u.role||''}</td><td>${u.created_at||''}</td>
+    tr.innerHTML = `<td>${u.email}</td><td>${escapeHtml(u.name||'')}</td><td>${u.role||''}</td><td>${u.created_at||''}</td>
       <td><button class="gray" data-id="${u.id}">Edit</button> <button class="danger" data-del="${u.id}">Delete</button></td>`;
     tbody.appendChild(tr);
   });
@@ -236,8 +247,43 @@ async function reloadUsers(){
   });
   document.getElementById('usersStatus').textContent = b.length+' users';
 }
+
+// Modal open/close — never open automatically
+function openUserModal(user){
+  const modal = document.getElementById('userModal');
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden','false');
+  document.getElementById('userModalStatus').textContent='';
+  if(user){
+    document.getElementById('userModalTitle').textContent='Edit user';
+    document.getElementById('um_email').value=user.email; document.getElementById('um_email').disabled=true;
+    document.getElementById('um_name').value=user.name||'';
+    document.getElementById('um_role').value=user.role||'user';
+    document.getElementById('um_password').value='';
+    modal.dataset.userId = user.id;
+  }else{
+    document.getElementById('userModalTitle').textContent='New user';
+    ['um_email','um_name','um_password'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('um_email').disabled=false;
+    document.getElementById('um_role').value='user';
+    delete modal.dataset.userId;
+  }
+}
+function closeUserModal(){
+  const modal = document.getElementById('userModal');
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden','true');
+}
+document.getElementById('userModal').addEventListener('click', (e)=>{
+  if(e.target.id === 'userModal'){ closeUserModal(); }
+});
+document.addEventListener('keydown',(e)=>{
+  if(e.key === 'Escape'){ closeUserModal(); }
+});
+
 async function saveUser(){
-  const id = document.getElementById('userModal').dataset.userId;
+  const modal = document.getElementById('userModal');
+  const id = modal.dataset.userId;
   const payload = { email: val('um_email'), name: val('um_name'), role: document.getElementById('um_role').value, password: val('um_password')||undefined };
   const url = id ? '/api/users/'+id : '/api/users';
   const method = id ? 'PUT' : 'POST';
@@ -313,11 +359,13 @@ async function showDbSchema(){
 // utils
 function val(id){ return (document.getElementById(id)?.value||'').trim(); }
 function num(id){ const v=parseInt(val(id),10); return isFinite(v)?v:null; }
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m])); }
 
 (async function init(){
   const ok = await requireAuth(); if(!ok) return;
   await loadSettings();
-  await reloadUsers().catch(()=>{});
+  // Feature-detect users endpoints; hide Users tab if missing
+  await featureDetectUsers();
 })(); 
 </script>
 </body>
