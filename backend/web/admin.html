@@ -8,8 +8,8 @@
     :root{--b:#2563eb;--bg:#f6f7fb;--card:#fff;--border:#e5e7eb;}
     *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial}
     header{background:#fff;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-    main{max-width:1160px;margin:18px auto;padding:0 16px}
-    .tabs{display:flex;gap:10px;margin-bottom:12px}
+    main{max-width:1180px;margin:18px auto;padding:0 16px}
+    .tabs{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
     .tab{background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px 12px;cursor:pointer}
     .tab.active{background:var(--b);color:#fff;border-color:var(--b)}
     .card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px;margin-bottom:16px}
@@ -20,8 +20,12 @@
     .green{background:#16a34a}
     .danger{background:#dc2626}
     .muted{color:#6b7280}
-    textarea{width:100%;min-height:160px}
+    textarea{width:100%;min-height:140px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;font-size:14px}
     .hidden{display:none}
+    .kv{display:grid;grid-template-columns: 240px 1fr; gap:8px 12px}
+    .w200{min-width:200px}.w260{min-width:260px}.w320{min-width:320px}
   </style>
 </head>
 <body>
@@ -34,19 +38,70 @@
 <main>
   <div class="tabs">
     <div class="tab active" data-tab="settings" onclick="switchTab(event)">Settings</div>
+    <div class="tab" data-tab="users" onclick="switchTab(event)">Users</div>
+    <div class="tab" data-tab="ingest" onclick="switchTab(event)">Ingest</div>
     <div class="tab" data-tab="diagnostics" onclick="switchTab(event)">Diagnostics</div>
   </div>
 
   <section id="settings" class="card">
-    <h2>Jira Settings</h2>
-    <div class="row" style="margin-top:8px">
-      <input id="jira_base_url" placeholder="Base URL (https://your.atlassian.net)" style="min-width:320px"/>
-      <input id="jira_email" placeholder="Jira Email" style="min-width:260px"/>
-      <input id="jira_api_token" type="password" placeholder="Jira API Token" style="min-width:280px"/>
+    <h2>Core Settings</h2>
+    <div class="kv">
+      <label>Jira Base URL</label><input id="jira_base_url" class="w320" placeholder="https://your.atlassian.net" />
+      <label>Jira Email</label><input id="jira_email" class="w260" placeholder="you@example.com" />
+      <label>Jira API Token</label><input id="jira_api_token" class="w320" type="password" placeholder="Paste token (use Save token button below)" />
+      <label>Window (days)</label><input id="default_window_days" class="w200" type="number" min="1" step="1" placeholder="180" />
+      <label>Business hours start</label><input id="business_hours_start" class="w200" placeholder="09:00" />
+      <label>Business hours end</label><input id="business_hours_end" class="w200" placeholder="17:00" />
+      <label>Business days (CSV)</label><input id="business_days" class="w320" placeholder="Mon,Tue,Wed,Thu,Fri" />
+      <label>Timezone</label><input id="timezone" class="w200" placeholder="America/New_York" />
+    </div>
+    <div class="row" style="margin-top:10px">
       <button onclick="saveSettings()">Save</button>
       <button class="green" onclick="saveTokenDiag()">Save token (diagnostics)</button>
+      <span id="settingsStatus" class="muted"></span>
     </div>
-    <div class="muted" id="settingsStatus" style="margin-top:10px"></div>
+
+    <h3 style="margin-top:18px">Reporting defaults</h3>
+    <div class="kv">
+      <label>Aggregation basis</label>
+      <select id="aggregation_mode" class="w200">
+        <option value="both">Status name + category</option>
+        <option value="name">Status name only</option>
+        <option value="category">Status category only</option>
+      </select>
+      <label>Custom categories (JSON)</label>
+      <textarea id="custom_categories" placeholder='{"In Progress":["In Progress","Doing"], "Review":["Code Review","QA"]}'></textarea>
+    </div>
+    <div class="muted">Note: aggregation/custom categories are saved client-side for now unless your backend accepts these keys.</div>
+  </section>
+
+  <section id="users" class="card hidden">
+    <h2>Users</h2>
+    <div class="row" style="margin-bottom:10px">
+      <button onclick="reloadUsers()">Reload</button>
+      <button class="green" onclick="openUserModal()">Add user</button>
+      <span id="usersStatus" class="muted"></span>
+    </div>
+    <table>
+      <thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody id="usersTbody"></tbody>
+    </table>
+  </section>
+
+  <section id="ingest" class="card hidden">
+    <h2>Ingest</h2>
+    <div class="kv">
+      <label>Projects (comma/space separated; keys or names)</label><input id="ing_projects" class="w320" placeholder="MEDA, OTHERPROJ" />
+      <label>Labels (comma/space separated)</label><input id="ing_labels" class="w320" placeholder="prod, urgent" />
+      <label>Extra JQL</label><input id="ing_jql" class="w320" placeholder="assignee = currentUser()" />
+      <label>Window (days)</label><input id="ing_days" type="number" class="w200" placeholder="180" />
+      <label>Max issues</label><input id="ing_max" type="number" class="w200" placeholder="25000" />
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button onclick="runIngest()">Run ingest</button>
+      <span id="ingestStatus" class="muted"></span>
+    </div>
+    <textarea id="ingestOut" placeholder="Ingest output…" readonly></textarea>
   </section>
 
   <section id="diagnostics" class="card hidden">
@@ -63,17 +118,30 @@
   </section>
 </main>
 
+<!-- User modal -->
+<div id="userModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.25);display:grid;place-items:center;">
+  <div class="card" style="width:520px">
+    <h3 id="userModalTitle">New user</h3>
+    <div class="kv">
+      <label>Email</label><input id="um_email" class="w320"/>
+      <label>Name</label><input id="um_name" class="w320"/>
+      <label>Role</label>
+      <select id="um_role" class="w200"><option>admin</option><option>user</option></select>
+      <label>Password</label><input id="um_password" type="password" class="w320" placeholder="Set password"/>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="green" onclick="saveUser()">Save</button>
+      <button class="gray" onclick="closeUserModal()">Cancel</button>
+      <span id="userModalStatus" class="muted"></span>
+    </div>
+  </div>
+</div>
+
 <script>
-function authHeaders(){
-  const t = sessionStorage.getItem('token');
-  return t ? {'X-Session': t} : {};
-}
+function authHeaders(){ const t=sessionStorage.getItem('token'); return t?{'X-Session':t}:{}};
 async function requireAuth(){
-  // Try a protected resource to confirm session; if 401, send to login
   const r = await fetch('/api/admin/settings', {headers: authHeaders()});
-  if(r.status === 401){
-    window.location.href='/login.html'; return false;
-  }
+  if(r.status === 401){ window.location.href='/login.html'; return false;}
   return true;
 }
 function switchTab(e){
@@ -83,60 +151,124 @@ function switchTab(e){
   e.target.classList.add('active');
   document.getElementById(tab).classList.remove('hidden');
 }
-function logout(){
-  sessionStorage.removeItem('token');
-  window.location.href='/login.html';
-}
+
+function logout(){ sessionStorage.removeItem('token'); window.location.href='/login.html'; }
+
+// Settings
 async function loadSettings(){
-  const ok = await requireAuth(); if(!ok) return;
   const r = await fetch('/api/admin/settings', {headers: authHeaders()});
   const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
   if(r.ok && b){
-    if(b.jira_base_url) document.getElementById('jira_base_url').value = b.jira_base_url;
-    if(b.jira_email) document.getElementById('jira_email').value = b.jira_email;
-    document.getElementById('settingsStatus').textContent = 'Loaded settings.';
+    const map = ['jira_base_url','jira_email','default_window_days','business_hours_start','business_hours_end','business_days','timezone'];
+    map.forEach(k=>{ if(b[k]!==undefined && document.getElementById(k)) document.getElementById(k).value = b[k]; });
+    document.getElementById('settingsStatus').textContent='Loaded settings.';
   }else{
-    document.getElementById('settingsStatus').textContent = 'Failed to load settings: '+(b.detail||t);
+    document.getElementById('settingsStatus').textContent='Failed to load settings: '+(b.detail||t);
   }
 }
 async function saveSettings(){
   const payload = {
-    jira_base_url: document.getElementById('jira_base_url').value || null,
-    jira_email: document.getElementById('jira_email').value || null,
-    jira_api_token: document.getElementById('jira_api_token').value || null,
+    jira_base_url: val('jira_base_url'),
+    jira_email: val('jira_email'),
+    jira_api_token: val('jira_api_token') || null,
+    default_window_days: num('default_window_days'),
+    business_hours_start: val('business_hours_start'),
+    business_hours_end: val('business_hours_end'),
+    business_days: val('business_days'),
+    timezone: val('timezone')
   };
-  const r = await fetch('/api/admin/settings', {
-    method:'PUT', headers:{'Content-Type':'application/json', ...authHeaders()},
-    body: JSON.stringify(payload)
-  });
+  const r = await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
   const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  if(r.ok){
-    document.getElementById('jira_api_token').value='';
-    document.getElementById('settingsStatus').textContent='Saved settings.';
-  }else{
-    document.getElementById('settingsStatus').textContent='Failed to save: '+(b.detail||t);
-  }
+  if(r.ok){ if(payload.jira_api_token) document.getElementById('jira_api_token').value=''; document.getElementById('settingsStatus').textContent='Saved settings.';}
+  else{ document.getElementById('settingsStatus').textContent='Failed to save: '+(b.detail||t); }
 }
 async function saveTokenDiag(){
-  const base = document.getElementById('jira_base_url').value.trim();
-  const em = document.getElementById('jira_email').value.trim();
-  const tk = document.getElementById('jira_api_token').value.trim();
+  const base = val('jira_base_url'); const em = val('jira_email'); const tk = val('jira_api_token');
   if(!tk){ alert('Enter a token first'); return }
-  const r = await fetch('/api/jira/diagnostics/save-token', {
-    method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()},
-    body: JSON.stringify({ token: tk, base_url: base || null, email: em || null })
-  });
+  const r = await fetch('/api/jira/diagnostics/save-token', {method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify({ token: tk, base_url: base||null, email: em||null })});
   const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
+  alert(r.ok ? 'Token saved.' : ('Failed: '+(b.detail||t)));
   if(r.ok){ document.getElementById('jira_api_token').value=''; }
-  document.querySelector('[data-tab="diagnostics"]').click();
+}
+
+// Users
+function openUserModal(user){
+  document.getElementById('userModal').classList.remove('hidden');
+  document.getElementById('userModalStatus').textContent='';
+  if(user){
+    document.getElementById('userModalTitle').textContent='Edit user';
+    document.getElementById('um_email').value=user.email; document.getElementById('um_email').disabled=true;
+    document.getElementById('um_name').value=user.name||'';
+    document.getElementById('um_role').value=user.role||'user';
+    document.getElementById('um_password').value='';
+    document.getElementById('userModal').dataset.userId = user.id;
+  }else{
+    document.getElementById('userModalTitle').textContent='New user';
+    ['um_email','um_name','um_password'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('um_email').disabled=false;
+    document.getElementById('um_role').value='user';
+    delete document.getElementById('userModal').dataset.userId;
+  }
+}
+function closeUserModal(){ document.getElementById('userModal').classList.add('hidden'); }
+async function reloadUsers(){
+  const r = await fetch('/api/users', {headers: authHeaders()});
+  const t = await r.text(); let b=[]; try{ b=JSON.parse(t) }catch{}
+  const tbody = document.getElementById('usersTbody'); tbody.innerHTML='';
+  if(!r.ok){ document.getElementById('usersStatus').textContent='Failed: '+(b.detail||t); return }
+  b.forEach(u=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${u.email}</td><td>${u.name||''}</td><td>${u.role||''}</td><td>${u.created_at||''}</td>
+      <td><button class="gray" data-id="${u.id}">Edit</button> <button class="danger" data-del="${u.id}">Delete</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('button[data-id]').forEach(btn=>btn.onclick=async (e)=>{
+    const id = e.target.getAttribute('data-id');
+    const r = await fetch('/api/users/'+id, {headers: authHeaders()});
+    const t = await r.text(); let u={}; try{ u=JSON.parse(t) }catch{}
+    if(r.ok) openUserModal(u); else alert('Load failed: '+(u.detail||t));
+  });
+  tbody.querySelectorAll('button[data-del]').forEach(btn=>btn.onclick=async (e)=>{
+    const id = e.target.getAttribute('data-del');
+    if(!confirm('Delete this user?')) return;
+    const r = await fetch('/api/users/'+id, {method:'DELETE', headers: authHeaders()});
+    if(r.ok) reloadUsers(); else { const t=await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}; alert('Delete failed: '+(b.detail||t)); }
+  });
+  document.getElementById('usersStatus').textContent = b.length+' users';
+}
+async function saveUser(){
+  const id = document.getElementById('userModal').dataset.userId;
+  const payload = { email: val('um_email'), name: val('um_name'), role: document.getElementById('um_role').value, password: val('um_password')||undefined };
+  const url = id ? '/api/users/'+id : '/api/users';
+  const method = id ? 'PUT' : 'POST';
+  const r = await fetch(url, {method, headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
+  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
+  if(r.ok){ closeUserModal(); reloadUsers(); } else { document.getElementById('userModalStatus').textContent='Failed: '+(b.detail||t); }
+}
+
+// Ingest
+function splitCSV(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
+async function runIngest(){
+  const payload = {
+    jira_base_url: val('jira_base_url')||null,
+    jira_email: val('jira_email')||null,
+    jira_api_token: null, // do not send token unless typed; server resolves stored token
+    projects: splitCSV(val('ing_projects')),
+    labels: splitCSV(val('ing_labels')),
+    jql: val('ing_jql')||'',
+    updated_window_days: num('ing_days')||num('default_window_days')||180,
+    max_issues: num('ing_max')||25000
+  };
+  document.getElementById('ingestStatus').textContent='Running…';
+  const r = await fetch('/api/jira/ingest', {method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
+  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
+  document.getElementById('ingestOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR '+r.status+':\n'+(b.detail||t));
+  document.getElementById('ingestStatus').textContent = r.ok ? 'Done.' : 'Failed.';
 }
 
 // Diagnostics
 function addOptionalParams(url){
-  const base = document.getElementById('jira_base_url').value.trim();
-  const em = document.getElementById('jira_email').value.trim();
-  const tk = document.getElementById('jira_api_token').value.trim();
+  const base = val('jira_base_url'); const em = val('jira_email'); const tk = val('jira_api_token');
   if(base) url.searchParams.set('base_url', base);
   if(em) url.searchParams.set('email', em);
   if(tk) url.searchParams.set('token', tk);
@@ -178,10 +310,14 @@ async function showDbSchema(){
   document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
 }
 
+// utils
+function val(id){ return (document.getElementById(id)?.value||'').trim(); }
+function num(id){ const v=parseInt(val(id),10); return isFinite(v)?v:null; }
+
 (async function init(){
-  // If no session, try once; if 401 redirect to login.
-  await requireAuth();
+  const ok = await requireAuth(); if(!ok) return;
   await loadSettings();
+  await reloadUsers().catch(()=>{});
 })(); 
 </script>
 </body>
