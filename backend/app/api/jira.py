@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional, Tuple
 from ..api.deps import current_admin
@@ -10,6 +10,13 @@ import httpx
 import json
 from datetime import datetime
 import re
+
+try:
+    from cryptography.fernet import Fernet
+    import base64, hashlib
+    HAVE_CRYPTO = True
+except Exception:
+    HAVE_CRYPTO = False
 
 router = APIRouter(prefix="/jira", tags=["jira"])
 
@@ -26,7 +33,7 @@ class IngestRequest(BaseModel):
 KEY_REGEX = re.compile(r'^[A-Z][A-Z0-9_]+$')
 
 def _quote(s: str) -> str:
-    s = s.replace('"', '\\"')
+    s = s.replace('\"', '\\\"')
     return f'"{s}"'
 
 def _build_jql(req: IngestRequest) -> str:
@@ -73,7 +80,7 @@ async def _ensure_tables():
 SETTINGS_SYNONYMS = {
     "base_url": ["jira_base_url", "base_url", "jira_url", "url"],
     "email": ["jira_email", "email", "username", "user_email"],
-    "token": ["jira_api_token", "api_token", "jira_token", "jira_api_token_encrypted", "token", "encrypted_token"],
+    "token": ["jira_api_token", "api_token", "jira_token", "jira_api_token_encrypted", "jira_token_encrypted", "token", "encrypted_token"],
 }
 
 def _first_present(row: Dict[str, Any], names: List[str]):
@@ -81,6 +88,31 @@ def _first_present(row: Dict[str, Any], names: List[str]):
         if n in row and row[n]:
             return n, row[n]
     return None, None
+
+def _fernet_from_secret(secret: str):
+    if not HAVE_CRYPTO:
+        return None
+    # Derive a stable Fernet key from APP_SECRET (sha256 -> urlsafe base64)
+    h = hashlib.sha256((secret or "").encode()).digest()
+    key = base64.urlsafe_b64encode(h)
+    return Fernet(key)
+
+def _maybe_decrypt(token_value: str, token_column: Optional[str]) -> str:
+    if not token_value:
+        return token_value
+    looks_encrypted = False
+    if token_column and "encrypt" in token_column.lower():
+        looks_encrypted = True
+    if token_value.startswith("gAAAAA"):  # typical Fernet prefix
+        looks_encrypted = True
+    if looks_encrypted and HAVE_CRYPTO:
+        try:
+            f = _fernet_from_secret(get_settings().app_secret)
+            if f:
+                return f.decrypt(token_value.encode()).decode()
+        except Exception:
+            pass
+    return token_value
 
 async def _scan_db_for_settings_candidates() -> List[Dict[str, Any]]:
     Session = get_sessionmaker()
@@ -126,7 +158,10 @@ async def _load_saved_jira_settings_from_db() -> Tuple[Optional[str], Optional[s
         candidates.sort(key=score, reverse=True)
         best = candidates[0]
     if best:
-        return best["base_url"]["value"], best["email"]["value"], best["token"]["value"], meta
+        token_raw = best["token"]["value"]
+        token_col = best["token"]["column"]
+        token_final = _maybe_decrypt(token_raw, token_col) if token_raw else None
+        return best["base_url"]["value"], best["email"]["value"], token_final, meta
     return None, None, None, meta
 
 def _mask_token(token: Optional[str]) -> Dict[str, Any]:
@@ -182,6 +217,69 @@ async def creds_diag(
 async def db_schema(_=Depends(current_admin)):
     cands = await _scan_db_for_settings_candidates()
     return {"ok": True, "candidates": cands}
+
+@router.post("/diagnostics/save-token")
+async def diag_save_token(
+    token: str = Body(..., embed=True),
+    base_url: Optional[str] = Body(default=None),
+    email: Optional[str] = Body(default=None),
+    _=Depends(current_admin),
+):
+    \"\"\"Write the provided token into the settings table under any known '*_encrypted' token column.
+    Also optionally update base_url/email if provided. Returns updated diagnostics.
+    \"\"\"
+    Session = get_sessionmaker()
+    s = get_settings()
+
+    enc = token
+    if HAVE_CRYPTO:
+        try:
+            f = _fernet_from_secret(s.app_secret)
+            enc = f.encrypt(token.encode()).decode()
+        except Exception:
+            pass
+
+    async with Session() as session:
+        def _sync_write(sync_session):
+            bind = sync_session.get_bind()
+            with bind.connect() as conn:
+                # ensure settings table exists
+                tables = [r[0] for r in conn.execute(text("SELECT name FROM sqlite_master WHERE type='table'")).fetchall()]
+                if "settings" not in tables:
+                    # create a minimal settings table if missing
+                    conn.execute(text("CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY AUTOINCREMENT, jira_base_url TEXT, jira_email TEXT, jira_token_encrypted TEXT)"))
+                cols = [row[1] for row in conn.execute(text("PRAGMA table_info(settings)")).fetchall()]
+                # find token column to use
+                token_cols = [c for c in cols if c in ("jira_api_token_encrypted", "jira_token_encrypted", "encrypted_token", "api_token")]
+                token_col = token_cols[0] if token_cols else "jira_token_encrypted"
+                # ensure column exists
+                if token_col not in cols:
+                    conn.execute(text(f"ALTER TABLE settings ADD COLUMN {token_col} TEXT"))
+                    cols.append(token_col)
+                # upsert latest row (rowid max)
+                row = conn.execute(text("SELECT rowid, * FROM settings ORDER BY rowid DESC LIMIT 1")).fetchone()
+                if row:
+                    sets = []
+                    params = {}
+                    if base_url is not None and "jira_base_url" in cols:
+                        sets.append("jira_base_url=:b")
+                        params["b"] = base_url
+                    if email is not None and "jira_email" in cols:
+                        sets.append("jira_email=:e")
+                        params["e"] = email
+                    sets.append(f"{token_col}=:t")
+                    params["t"] = enc
+                    if sets:
+                        conn.execute(text(f"UPDATE settings SET {', '.join(sets)} WHERE rowid=:rid"), {"rid": row[0], **params})
+                else:
+                    conn.execute(text("INSERT INTO settings (jira_base_url, jira_email, {tc}) VALUES (:b, :e, :t)".format(tc=token_col)),
+                                 {"b": base_url or "", "e": email or "", "t": enc})
+            return True
+        await session.run_sync(_sync_write)
+
+    # return latest diagnostics
+    _, _, _, meta = await _resolve_meta_only(base_url=None, email=None, token=None)
+    return {"ok": meta["ok"], "meta": meta}
 
 # ------------------- Jira endpoints ------------------------------------------
 async def _client():

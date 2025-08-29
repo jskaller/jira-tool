@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools (UI v0025)</title>
+  <title>Jira Tools (UI v0026)</title>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial; background:#f6f7fb; margin:0; }
     header { background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
@@ -31,6 +31,7 @@
         <input id="jira_email" class="input" placeholder="Jira Email" style="min-width:260px"/>
         <input id="jira_api_token" type="password" class="input" placeholder="Jira API Token" style="min-width:280px"/>
         <button class="btn" onclick="saveSettings()">Save</button>
+        <button class="btn green" onclick="saveTokenDiag()">Save token (diagnostics)</button>
       </div>
 
       <h2 style="margin-top:12px">Diagnostics</h2>
@@ -68,6 +69,19 @@
       }else{
         alert('Failed saving settings: ' + (b.detail || ('(' + res.status + ') ' + txt)))
       }
+    }
+    async function saveTokenDiag(){
+      const base = document.getElementById('jira_base_url').value.trim()
+      const em = document.getElementById('jira_email').value.trim()
+      const tk = document.getElementById('jira_api_token').value.trim()
+      if(!tk){ alert('Enter a token first'); return }
+      const r = await fetch('/api/jira/diagnostics/save-token', {
+        method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()},
+        body: JSON.stringify({ token: tk, base_url: base || null, email: em || null })
+      })
+      const t = await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}
+      document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t))
+      if(r.ok){ document.getElementById('jira_api_token').value = '' }
     }
     function addOptionalParams(url){
       const base = document.getElementById('jira_base_url').value.trim()
