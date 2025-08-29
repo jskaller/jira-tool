@@ -24,14 +24,18 @@ if settings.frontend_origins:
 async def health():
     return {"ok": True}
 
-# API routers
+# API routers (support both /api/* and legacy /* paths to avoid UI mismatch)
 app.include_router(reports.router, prefix="/api")
 app.include_router(admin.router, prefix="/api")
-app.include_router(auth.router, prefix="/api")  # ✅ now under /api/auth
+app.include_router(auth.router, prefix="/api")
 
-# Serve static UI at root (no /ui redirect)
+# Legacy (no prefix) to keep older static pages working
+app.include_router(reports.router)
+app.include_router(admin.router)
+app.include_router(auth.router)
+
+# Serve static UI at root
 app.mount("/", StaticFiles(directory="backend/web", html=True), name="web")
-app.mount("/ui", StaticFiles(directory="backend/web", html=True), name="ui")
 
 @app.on_event("startup")
 async def _startup():

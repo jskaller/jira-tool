@@ -1,360 +1,89 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jira Tools — Admin</title>
-  <style>
-    :root{--b:#2563eb;--bg:#f6f7fb;--card:#fff;--border:#e5e7eb;}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial}
-    header{background:#fff;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-    main{max-width:1180px;margin:18px auto;padding:0 16px}
-    .tabs{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-    .tab{background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px 12px;cursor:pointer}
-    .tab.active{background:var(--b);color:#fff;border-color:var(--b)}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px;margin-bottom:16px}
-    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    input,select,textarea{border:1px solid var(--border);border-radius:10px;padding:8px 10px}
-    button{background:var(--b);color:#fff;border:none;border-radius:10px;padding:8px 12px;cursor:pointer}
-    .gray{background:#e5e7eb;color:#111827}
-    .green{background:#16a34a}
-    .danger{background:#dc2626}
-    .muted{color:#6b7280}
-    textarea{width:100%;min-height:140px}
-    table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;font-size:14px}
-    .hidden{display:none !important}
-    .kv{display:grid;grid-template-columns: 240px 1fr; gap:8px 12px}
-    .w200{min-width:200px}.w260{min-width:260px}.w320{min-width:320px}
-    #userModal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:grid;place-items:center}
-    #userModal.hidden{display:none !important}
-  </style>
+  <title>Admin · Jira Reporting</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script>
+    async function jget(url){ const r=await fetch(url); return r.json(); }
+    async function jput(url, body){ const r=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})}); return r.json(); }
+    async function jpost(url, body){ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})}); return r.json(); }
+
+    async function refresh() {
+      const cfg = await jget('/api/admin/config');
+      document.getElementById('current').textContent = JSON.stringify(cfg, null, 2);
+      document.getElementById('base').value = cfg.jira_base_url || '';
+      document.getElementById('email').value = cfg.jira_email || '';
+    }
+    async function save() {
+      const body = {
+        jira_base_url: document.getElementById('base').value || null,
+        jira_email: document.getElementById('email').value || null,
+        jira_api_token: document.getElementById('token').value || null
+      };
+      try {
+        const j = await jput('/api/admin/config', body);
+        document.getElementById('status').textContent = 'Saved. has_token=' + (j.has_token ?? 'unknown');
+        document.getElementById('token').value='';
+        await refresh();
+      } catch (e) {
+        document.getElementById('status').textContent = 'Failed to save: ' + e;
+      }
+    }
+    async function test() {
+      try {
+        const r = await fetch('/api/admin/test-connection', {method:'POST'});
+        document.getElementById('status').textContent = r.ok ? 'Connection OK' : 'Connection failed';
+      } catch (e) {
+        document.getElementById('status').textContent = 'Connection test error: ' + e;
+      }
+    }
+    window.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('save').addEventListener('click', save);
+      document.getElementById('test').addEventListener('click', test);
+      refresh();
+    });
+  </script>
 </head>
 <body>
-<header>
-  <strong>Jira Tools — Admin</strong>
-  <div><button class="gray" onclick="logout()">Sign out</button></div>
-</header>
-<main>
-  <div class="tabs">
-    <div class="tab active" data-tab="settings" onclick="switchTab(event)">Settings</div>
-    <div class="tab" data-tab="reports" onclick="switchTab(event)">Reports</div>
-    <div class="tab" data-tab="users" id="tab-users" onclick="switchTab(event)">Users</div>
-    <div class="tab" data-tab="ingest" onclick="switchTab(event)">Ingest</div>
-    <div class="tab" data-tab="diagnostics" onclick="switchTab(event)">Diagnostics</div>
-  </div>
-
-  <section id="settings" class="card">
-    <h2>Core Settings</h2>
-    <div class="kv">
-      <label>Jira Base URL</label><input id="jira_base_url" class="w320" placeholder="https://your.atlassian.net" />
-      <label>Jira Email</label><input id="jira_email" class="w260" placeholder="you@example.com" />
-      <label>Jira API Token</label><input id="jira_api_token" class="w320" type="password" placeholder="Paste token (stored on Save)" />
-      <label>Window (days)</label><input id="default_window_days" class="w200" type="number" min="1" step="1" placeholder="180" />
-      <label>Business hours start</label><input id="business_hours_start" class="w200" placeholder="09:00" />
-      <label>Business hours end</label><input id="business_hours_end" class="w200" placeholder="17:00" />
-      <label>Business days (CSV)</label><input id="business_days" class="w320" placeholder="Mon,Tue,Wed,Thu,Fri" />
-      <label>Timezone</label><input id="timezone" class="w200" placeholder="America/New_York" />
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button onclick="saveSettings()">Save</button>
-      <span id="settingsStatus" class="muted"></span>
-    </div>
-    <div class="muted" id="tokenHint"></div>
-  </section>
-
-  <section id="reports" class="card hidden">
-    <h2>Run Report</h2>
-    <div class="kv">
-      <label>Name</label><input id="rep_name" class="w320" placeholder="My report" />
-      <label>Projects</label><input id="rep_projects" class="w320" placeholder="MEDA, OTHERPROJ" />
-      <label>Updated window (days)</label><input id="rep_days" type="number" class="w200" placeholder="180" />
-      <label>Max issues</label><input id="rep_max" type="number" class="w200" placeholder="25000" />
-      <label>Business mode</label>
-      <select id="rep_bmode" class="w200">
-        <option value="both">Both</option>
-        <option value="business">Business hours only</option>
-        <option value="wall">24/7 wall-clock only</option>
-      </select>
-      <label>Aggregate by</label>
-      <select id="rep_ab" class="w200">
-        <option value="name">Status name</option>
-        <option value="both">Name + Category (category later)</option>
-      </select>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button onclick="runReport()">Run</button>
-      <span id="repStatus" class="muted"></span>
+  <header>
+    <h1>Admin</h1>
+    <nav>
+      <a class="active" href="/admin.html">Admin</a>
+      <a href="/reports.html">Reports</a>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <h3>Configuration</h3>
+      <div class="row">
+        <div style="flex:1 1 280px">
+          <label>Base URL</label>
+          <input id="base" placeholder="https://your-domain.atlassian.net">
+        </div>
+        <div style="flex:1 1 240px">
+          <label>Email</label>
+          <input id="email" placeholder="name@company.com">
+        </div>
+      </div>
+      <div class="row">
+        <div style="flex:1 1 340px">
+          <label>API Token</label>
+          <input id="token" placeholder="Paste API token">
+        </div>
+        <div style="align-self:flex-end">
+          <button id="save">Save</button>
+          <button id="test">Test connection</button>
+        </div>
+      </div>
+      <p id="status" class="hint"></p>
     </div>
 
-    <h3 style="margin-top:18px">Past reports</h3>
-    <table>
-      <thead><tr><th>ID</th><th>Name</th><th>Created</th><th>Window</th><th>Mode</th><th>Aggregate</th><th>CSV</th><th></th></tr></thead>
-      <tbody id="repTbody"></tbody>
-    </table>
-  </section>
-
-  <section id="users" class="card hidden">
-    <h2>Users</h2>
-    <div class="row" style="margin-bottom:10px">
-      <button onclick="reloadUsers()">Reload</button>
-      <button class="green" onclick="openUserModal()">Add user</button>
-      <span id="usersStatus" class="muted"></span>
+    <div class="card">
+      <h3>Current</h3>
+      <pre id="current" style="white-space:pre-wrap"></pre>
     </div>
-    <div id="usersFeatureMissing" class="muted hidden">User management endpoints are not available on this server (skipping Users tab).</div>
-    <table id="usersTable">
-      <thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
-      <tbody id="usersTbody"></tbody>
-    </table>
-  </section>
-
-  <section id="ingest" class="card hidden">
-    <h2>Ingest</h2>
-    <div class="kv">
-      <label>Projects (comma/space separated; keys or names)</label><input id="ing_projects" class="w320" placeholder="MEDA, OTHERPROJ" />
-      <label>Labels (comma/space separated)</label><input id="ing_labels" class="w320" placeholder="prod, urgent" />
-      <label>Extra JQL</label><input id="ing_jql" class="w320" placeholder="assignee = currentUser()" />
-      <label>Window (days)</label><input id="ing_days" type="number" class="w200" placeholder="180" />
-      <label>Max issues</label><input id="ing_max" type="number" class="w200" placeholder="25000" />
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button onclick="runIngest()">Run ingest</button>
-      <span id="ingestStatus" class="muted"></span>
-    </div>
-    <textarea id="ingestOut" placeholder="Ingest output…" readonly></textarea>
-  </section>
-
-  <section id="diagnostics" class="card hidden">
-    <h2>Diagnostics</h2>
-    <div class="row">
-      <button onclick="whoAmI(true)">Who am I (use fields if filled)</button>
-      <button class="gray" onclick="discoverProjects(true)">Discover Projects</button>
-    </div>
-    <textarea id="diagOut" placeholder="Diagnostics output…" readonly></textarea>
-  </section>
-</main>
-
-<div id="userModal" class="hidden" aria-hidden="true">
-  <div class="card" style="width:520px" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
-    <h3 id="userModalTitle">New user</h3>
-    <div class="kv">
-      <label>Email</label><input id="um_email" class="w320"/>
-      <label>Name</label><input id="um_name" class="w320"/>
-      <label>Role</label>
-      <select id="um_role" class="w200"><option>admin</option><option>user</option></select>
-      <label>Password</label><input id="um_password" type="password" class="w320" placeholder="Set password"/>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button class="green" onclick="saveUser()">Save</button>
-      <button class="gray" onclick="closeUserModal()">Cancel</button>
-      <span id="userModalStatus" class="muted"></span>
-    </div>
-  </div>
-</div>
-
-<script>
-function authHeaders(){ const t=sessionStorage.getItem('token'); return t?{'X-Session':t}:{}};
-async function requireAuth(){
-  const r = await fetch('/api/admin/settings', {headers: authHeaders()});
-  if(r.status === 401){ window.location.href='/login.html'; return false;}
-  return true;
-}
-function switchTab(e){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
-  const tab = e.target.getAttribute('data-tab');
-  e.target.classList.add('active');
-  document.getElementById(tab).classList.remove('hidden');
-  if(tab==='users'){ maybeLoadUsers(); }
-  if(tab==='reports'){ listReports(); }
-}
-function logout(){ sessionStorage.removeItem('token'); window.location.href='/login.html'; }
-
-// Settings
-async function loadSettings(){
-  const r = await fetch('/api/admin/settings', {headers: authHeaders()});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  if(r.ok && b){
-    const map = ['jira_base_url','jira_email','default_window_days','business_hours_start','business_hours_end','business_days','timezone'];
-    map.forEach(k=>{ if(b[k]!==undefined && document.getElementById(k)) document.getElementById(k).value = b[k]; });
-    document.getElementById('settingsStatus').textContent='Loaded settings.';
-    document.getElementById('rep_days').value = b.default_window_days || 180;
-    document.getElementById('tokenHint').textContent = b.token_present ? '✅ Token stored.' : '⚠️ No token stored yet.';
-  }else{
-    document.getElementById('settingsStatus').textContent='Failed to load settings: '+(b.detail||t);
-  }
-}
-async function saveSettings(){
-  const payload = {
-    jira_base_url: val('jira_base_url'),
-    jira_email: val('jira_email'),
-    jira_api_token: val('jira_api_token') || undefined,
-    default_window_days: num('default_window_days'),
-    business_hours_start: val('business_hours_start'),
-    business_hours_end: val('business_hours_end'),
-    business_days: val('business_days'),
-    timezone: val('timezone')
-  };
-  const r = await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  if(r.ok){
-    document.getElementById('settingsStatus').textContent='Saved settings.';
-    if(payload.jira_api_token) document.getElementById('jira_api_token').value='';
-    await loadSettings();
-  } else {
-    document.getElementById('settingsStatus').textContent='Failed to save: '+(b.detail||t);
-  }
-}
-
-// Reports
-function splitCSV(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
-async function runReport(){
-  const payload = {
-    name: val('rep_name')||null,
-    updated_window_days: num('rep_days')||180,
-    max_issues: num('rep_max')||25000,
-    projects: splitCSV(val('rep_projects')),
-    aggregate_by: document.getElementById('rep_ab').value,
-    business_mode: document.getElementById('rep_bmode').value,
-    business_hours_start: val('business_hours_start')||null,
-    business_hours_end: val('business_hours_end')||null,
-    business_days: val('business_days')||null,
-    timezone: val('timezone')||null
-  };
-  document.getElementById('repStatus').textContent='Running…';
-  const r = await fetch('/api/reports/run', {method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  if(r.ok){ document.getElementById('repStatus').textContent='Done (ID '+b.report_id+').'; listReports(); }
-  else{ document.getElementById('repStatus').textContent='Failed: '+(b.detail||t); }
-}
-async function listReports(){
-  const r = await fetch('/api/reports', {headers: authHeaders()});
-  const t = await r.text(); let b=[]; try{ b=JSON.parse(t) }catch{}
-  const tbody = document.getElementById('repTbody'); tbody.innerHTML='';
-  if(!r.ok){ tbody.innerHTML = `<tr><td colspan="8">Error: ${(b.detail||t)}</td></tr>`; return; }
-  b.forEach(x=>{
-    const tr = document.createElement('tr');
-    const csvLink = x.csv_path ? `<a href="/api/reports/${x.id}/csv">Download CSV</a>` : '';
-    tr.innerHTML = `<td>${x.id}</td><td>${escapeHtml(x.name||'')}</td><td>${escapeHtml(x.created_at||'')}</td><td>${x.window_days}</td><td>${x.business_mode}</td><td>${x.aggregate_by}</td><td>${csvLink}</td><td><button class="danger" data-del="${x.id}">Delete</button></td>`;
-    tbody.appendChild(tr);
-  });
-  tbody.querySelectorAll('button[data-del]').forEach(btn=>btn.onclick=async (e)=>{
-    const id = e.target.getAttribute('data-del');
-    if(!confirm('Delete this report?')) return;
-    const r = await fetch('/api/reports/'+id, {method:'DELETE', headers: authHeaders()});
-    if(r.ok) listReports(); else { const t=await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}; alert('Delete failed: '+(b.detail||t)); }
-  });
-}
-
-// Users feature detect (as before)
-let usersFeature = {checked:false, available:false};
-async function featureDetectUsers(){
-  if(usersFeature.checked) return usersFeature.available;
-  usersFeature.checked = true;
-  try{
-    const r = await fetch('/api/users', {headers: authHeaders()});
-    usersFeature.available = r.ok && r.status !== 404;
-  }catch(e){ usersFeature.available = false; }
-  const tab = document.getElementById('tab-users');
-  const sec = document.getElementById('users');
-  if(!usersFeature.available){
-    if(tab) tab.classList.add('hidden');
-    if(sec) sec.classList.add('hidden');
-  }
-  return usersFeature.available;
-}
-async function maybeLoadUsers(){ const ok = await featureDetectUsers(); if(ok) await reloadUsers(); }
-async function reloadUsers(){
-  const r = await fetch('/api/users', {headers: authHeaders()});
-  const t = await r.text(); let b=[]; try{ b=JSON.parse(t) }catch{}
-  const tbody = document.getElementById('usersTbody'); tbody.innerHTML='';
-  if(!r.ok){ document.getElementById('usersStatus').textContent='Failed: '+(b.detail||t); return }
-  b.forEach(u=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.email}</td><td>${escapeHtml(u.name||'')}</td><td>${u.role||''}</td><td>${u.created_at||''}</td>
-      <td><button class="gray" data-id="${u.id}">Edit</button> <button class="danger" data-del="${u.id}">Delete</button></td>`;
-    tbody.appendChild(tr);
-  });
-  tbody.querySelectorAll('button[data-id]').forEach(btn=>btn.onclick=async (e)=>{
-    const id = e.target.getAttribute('data-id');
-    const r = await fetch('/api/users/'+id, {headers: authHeaders()});
-    const t = await r.text(); let u={}; try{ u=JSON.parse(t) }catch{}
-    if(r.ok) openUserModal(u); else alert('Load failed: '+(u.detail||t));
-  });
-  tbody.querySelectorAll('button[data-del]').forEach(btn=>btn.onclick=async (e)=>{
-    const id = e.target.getAttribute('data-del');
-    if(!confirm('Delete this user?')) return;
-    const r = await fetch('/api/users/'+id, {method:'DELETE', headers: authHeaders()});
-    if(r.ok) reloadUsers(); else { const t=await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}; alert('Delete failed: '+(b.detail||t)); }
-  });
-  document.getElementById('usersStatus').textContent = b.length+' users';
-}
-
-// Modal handlers
-function openUserModal(user){
-  const modal = document.getElementById('userModal');
-  modal.classList.remove('hidden');
-  modal.setAttribute('aria-hidden','false');
-  document.getElementById('userModalStatus').textContent='';
-  if(user){
-    document.getElementById('userModalTitle').textContent='Edit user';
-    document.getElementById('um_email').value=user.email; document.getElementById('um_email').disabled=true;
-    document.getElementById('um_name').value=user.name||'';
-    document.getElementById('um_role').value=user.role||'user';
-    document.getElementById('um_password').value='';
-    modal.dataset.userId = user.id;
-  }else{
-    document.getElementById('userModalTitle').textContent='New user';
-    ['um_email','um_name','um_password'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('um_email').disabled=false;
-    document.getElementById('um_role').value='user';
-    delete modal.dataset.userId;
-  }
-}
-function closeUserModal(){ const modal = document.getElementById('userModal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
-document.getElementById('userModal').addEventListener('click', (e)=>{ if(e.target.id === 'userModal'){ closeUserModal(); }});
-document.addEventListener('keydown',(e)=>{ if(e.key === 'Escape'){ closeUserModal(); }});
-
-// Ingest
-function splitCSV2(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
-async function runIngest(){
-  const payload = {
-    jira_base_url: val('jira_base_url')||null,
-    jira_email: val('jira_email')||null,
-    jira_api_token: null,
-    projects: splitCSV2(val('ing_projects')),
-    labels: splitCSV2(val('ing_labels')),
-    jql: val('ing_jql')||'',
-    updated_window_days: num('ing_days')||num('default_window_days')||180,
-    max_issues: num('ing_max')||25000
-  };
-  document.getElementById('ingestStatus').textContent='Running…';
-  const r = await fetch('/api/jira/ingest', {method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('ingestOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR '+r.status+':\n'+(b.detail||t));
-  document.getElementById('ingestStatus').textContent = r.ok ? 'Done.' : 'Failed.';
-}
-
-// Diagnostics
-async function whoAmI(useFields){
-  const url=new URL('/api/jira/whoami',window.location.origin);
-  const r=await fetch(url,{headers:authHeaders()});
-  const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{};
-  document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t));
-}
-async function discoverProjects(useFields){
-  const url=new URL('/api/jira/projects',window.location.origin);
-  const r=await fetch(url,{headers:authHeaders()});
-  const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{};
-  document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t));
-}
-
-// utils
-function val(id){ return (document.getElementById(id)?.value||'').trim(); }
-function num(id){ const v=parseInt(val(id),10); return isFinite(v)?v:null; }
-function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m])); }
-
-(async function init(){ const ok = await requireAuth(); if(!ok) return; await loadSettings(); await featureDetectUsers(); })();
-</script>
+  </main>
+  <footer>© Jira Reporting</footer>
 </body>
 </html>
