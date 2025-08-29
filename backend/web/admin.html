@@ -26,7 +26,6 @@
     .hidden{display:none !important}
     .kv{display:grid;grid-template-columns: 240px 1fr; gap:8px 12px}
     .w200{min-width:200px}.w260{min-width:260px}.w320{min-width:320px}
-    /* Modal */
     #userModal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:grid;place-items:center}
     #userModal.hidden{display:none !important}
   </style>
@@ -34,13 +33,12 @@
 <body>
 <header>
   <strong>Jira Tools — Admin</strong>
-  <div>
-    <button class="gray" onclick="logout()">Sign out</button>
-  </div>
+  <div><button class="gray" onclick="logout()">Sign out</button></div>
 </header>
 <main>
   <div class="tabs">
     <div class="tab active" data-tab="settings" onclick="switchTab(event)">Settings</div>
+    <div class="tab" data-tab="reports" onclick="switchTab(event)">Reports</div>
     <div class="tab" data-tab="users" id="tab-users" onclick="switchTab(event)">Users</div>
     <div class="tab" data-tab="ingest" onclick="switchTab(event)">Ingest</div>
     <div class="tab" data-tab="diagnostics" onclick="switchTab(event)">Diagnostics</div>
@@ -63,6 +61,36 @@
       <button class="green" onclick="saveTokenDiag()">Save token (diagnostics)</button>
       <span id="settingsStatus" class="muted"></span>
     </div>
+  </section>
+
+  <section id="reports" class="card hidden">
+    <h2>Run Report</h2>
+    <div class="kv">
+      <label>Name</label><input id="rep_name" class="w320" placeholder="My report" />
+      <label>Projects</label><input id="rep_projects" class="w320" placeholder="MEDA, OTHERPROJ" />
+      <label>Updated window (days)</label><input id="rep_days" type="number" class="w200" placeholder="180" />
+      <label>Business mode</label>
+      <select id="rep_bmode" class="w200">
+        <option value="both">Both</option>
+        <option value="business">Business hours only</option>
+        <option value="wall">24/7 wall-clock only</option>
+      </select>
+      <label>Aggregate by</label>
+      <select id="rep_ab" class="w200">
+        <option value="name">Status name</option>
+        <option value="both">Name + Category (category later)</option>
+      </select>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button onclick="runReport()">Run</button>
+      <span id="repStatus" class="muted"></span>
+    </div>
+
+    <h3 style="margin-top:18px">Past reports</h3>
+    <table>
+      <thead><tr><th>ID</th><th>Name</th><th>Created</th><th>Window</th><th>Mode</th><th>Aggregate</th><th>CSV</th><th></th></tr></thead>
+      <tbody id="repTbody"></tbody>
+    </table>
   </section>
 
   <section id="users" class="card hidden">
@@ -143,6 +171,7 @@ function switchTab(e){
   const sec = document.getElementById(tab);
   sec.classList.remove('hidden');
   if(tab==='users'){ maybeLoadUsers(); }
+  if(tab==='reports'){ listReports(); }
 }
 function logout(){ sessionStorage.removeItem('token'); window.location.href='/login.html'; }
 
@@ -154,6 +183,8 @@ async function loadSettings(){
     const map = ['jira_base_url','jira_email','default_window_days','business_hours_start','business_hours_end','business_days','timezone'];
     map.forEach(k=>{ if(b[k]!==undefined && document.getElementById(k)) document.getElementById(k).value = b[k]; });
     document.getElementById('settingsStatus').textContent='Loaded settings.';
+    // Fill defaults on Reports form
+    document.getElementById('rep_days').value = b.default_window_days || 180;
   }else{
     document.getElementById('settingsStatus').textContent='Failed to load settings: '+(b.detail||t);
   }
@@ -183,21 +214,55 @@ async function saveTokenDiag(){
   if(r.ok){ document.getElementById('jira_api_token').value=''; }
 }
 
-// Users — feature detect and lazy load
+// Reports
+function splitCSV(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
+async function runReport(){
+  const payload = {
+    name: val('rep_name')||null,
+    updated_window_days: num('rep_days')||180,
+    projects: splitCSV(val('rep_projects')),
+    aggregate_by: document.getElementById('rep_ab').value,
+    business_mode: document.getElementById('rep_bmode').value,
+    // pass current business config so back-end doesn't need another fetch
+    business_hours_start: val('business_hours_start')||null,
+    business_hours_end: val('business_hours_end')||null,
+    business_days: val('business_days')||null,
+    timezone: val('timezone')||null
+  };
+  document.getElementById('repStatus').textContent='Running…';
+  const r = await fetch('/api/reports/run', {method:'POST', headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
+  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
+  if(r.ok){ document.getElementById('repStatus').textContent='Done (ID '+b.report_id+').'; listReports(); }
+  else{ document.getElementById('repStatus').textContent='Failed: '+(b.detail||t); }
+}
+async function listReports(){
+  const r = await fetch('/api/reports', {headers: authHeaders()});
+  const t = await r.text(); let b=[]; try{ b=JSON.parse(t) }catch{}
+  const tbody = document.getElementById('repTbody'); tbody.innerHTML='';
+  if(!r.ok){ tbody.innerHTML = `<tr><td colspan="8">Error: ${(b.detail||t)}</td></tr>`; return; }
+  b.forEach(x=>{
+    const tr = document.createElement('tr');
+    const csvLink = x.csv_path ? `<a href="/api/reports/${x.id}/csv">Download CSV</a>` : '';
+    tr.innerHTML = `<td>${x.id}</td><td>${escapeHtml(x.name||'')}</td><td>${escapeHtml(x.created_at||'')}</td><td>${x.window_days}</td><td>${x.business_mode}</td><td>${x.aggregate_by}</td><td>${csvLink}</td><td><button class="danger" data-del="${x.id}">Delete</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('button[data-del]').forEach(btn=>btn.onclick=async (e)=>{
+    const id = e.target.getAttribute('data-del');
+    if(!confirm('Delete this report?')) return;
+    const r = await fetch('/api/reports/'+id, {method:'DELETE', headers: authHeaders()});
+    if(r.ok) listReports(); else { const t=await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}; alert('Delete failed: '+(b.detail||t)); }
+  });
+}
+
+// Users feature detect (as in 0031)
 let usersFeature = {checked:false, available:false};
 async function featureDetectUsers(){
   if(usersFeature.checked) return usersFeature.available;
   usersFeature.checked = true;
   try{
     const r = await fetch('/api/users', {headers: authHeaders()});
-    if(r.status === 404){
-      usersFeature.available = Falsey(); // force false
-    }else{
-      usersFeature.available = r.ok;
-    }
-  }catch(e){
-    usersFeature.available = false;
-  }
+    usersFeature.available = r.ok && r.status !== 404;
+  }catch(e){ usersFeature.available = false; }
   const tab = document.getElementById('tab-users');
   const sec = document.getElementById('users');
   if(!usersFeature.available){
@@ -206,22 +271,7 @@ async function featureDetectUsers(){
   }
   return usersFeature.available;
 }
-function Falsey(){ return false; } // helper to keep minified style
-
-async function maybeLoadUsers(){
-  const ok = await featureDetectUsers();
-  const sec = document.getElementById('users');
-  if(!ok){
-    // Show a tiny note that the feature is missing, but keep the rest hidden
-    if(sec){
-      sec.classList.remove('hidden');
-      document.getElementById('usersFeatureMissing')?.classList.remove('hidden');
-      document.getElementById('usersTable')?.classList.add('hidden');
-    }
-    return;
-  }
-  await reloadUsers();
-}
+async function maybeLoadUsers(){ const ok = await featureDetectUsers(); if(ok) await reloadUsers(); }
 async function reloadUsers(){
   const r = await fetch('/api/users', {headers: authHeaders()});
   const t = await r.text(); let b=[]; try{ b=JSON.parse(t) }catch{}
@@ -248,7 +298,7 @@ async function reloadUsers(){
   document.getElementById('usersStatus').textContent = b.length+' users';
 }
 
-// Modal open/close — never open automatically
+// Modal handlers
 function openUserModal(user){
   const modal = document.getElementById('userModal');
   modal.classList.remove('hidden');
@@ -269,38 +319,19 @@ function openUserModal(user){
     delete modal.dataset.userId;
   }
 }
-function closeUserModal(){
-  const modal = document.getElementById('userModal');
-  modal.classList.add('hidden');
-  modal.setAttribute('aria-hidden','true');
-}
-document.getElementById('userModal').addEventListener('click', (e)=>{
-  if(e.target.id === 'userModal'){ closeUserModal(); }
-});
-document.addEventListener('keydown',(e)=>{
-  if(e.key === 'Escape'){ closeUserModal(); }
-});
+function closeUserModal(){ const modal = document.getElementById('userModal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
+document.getElementById('userModal').addEventListener('click', (e)=>{ if(e.target.id === 'userModal'){ closeUserModal(); }});
+document.addEventListener('keydown',(e)=>{ if(e.key === 'Escape'){ closeUserModal(); }});
 
-async function saveUser(){
-  const modal = document.getElementById('userModal');
-  const id = modal.dataset.userId;
-  const payload = { email: val('um_email'), name: val('um_name'), role: document.getElementById('um_role').value, password: val('um_password')||undefined };
-  const url = id ? '/api/users/'+id : '/api/users';
-  const method = id ? 'PUT' : 'POST';
-  const r = await fetch(url, {method, headers:{'Content-Type':'application/json', ...authHeaders()}, body: JSON.stringify(payload)});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  if(r.ok){ closeUserModal(); reloadUsers(); } else { document.getElementById('userModalStatus').textContent='Failed: '+(b.detail||t); }
-}
-
-// Ingest
-function splitCSV(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
+// Ingest (existing)
+function splitCSV2(s){ return (s||'').split(/[, ]+/).map(x=>x.trim()).filter(Boolean); }
 async function runIngest(){
   const payload = {
     jira_base_url: val('jira_base_url')||null,
     jira_email: val('jira_email')||null,
-    jira_api_token: null, // do not send token unless typed; server resolves stored token
-    projects: splitCSV(val('ing_projects')),
-    labels: splitCSV(val('ing_labels')),
+    jira_api_token: null,
+    projects: splitCSV2(val('ing_projects')),
+    labels: splitCSV2(val('ing_labels')),
     jql: val('ing_jql')||'',
     updated_window_days: num('ing_days')||num('default_window_days')||180,
     max_issues: num('ing_max')||25000
@@ -312,61 +343,25 @@ async function runIngest(){
   document.getElementById('ingestStatus').textContent = r.ok ? 'Done.' : 'Failed.';
 }
 
-// Diagnostics
+// Diagnostics (unchanged)
 function addOptionalParams(url){
   const base = val('jira_base_url'); const em = val('jira_email'); const tk = val('jira_api_token');
   if(base) url.searchParams.set('base_url', base);
   if(em) url.searchParams.set('email', em);
   if(tk) url.searchParams.set('token', tk);
 }
-async function whoAmI(useFields){
-  const url = new URL('/api/jira/whoami', window.location.origin);
-  if(useFields) addOptionalParams(url);
-  const r = await fetch(url, {headers: authHeaders()});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
-}
-async function discoverProjects(useFields){
-  const url = new URL('/api/jira/projects', window.location.origin);
-  if(useFields) addOptionalParams(url);
-  const r = await fetch(url, {headers: authHeaders()});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
-}
-async function lookupProject(useFields){
-  const idOrKey = document.getElementById('lookup_key').value.trim();
-  if(!idOrKey){ alert('Enter a key or numeric ID'); return }
-  const url = new URL('/api/jira/project', window.location.origin);
-  url.searchParams.set('id_or_key', idOrKey);
-  if(useFields) addOptionalParams(url);
-  const r = await fetch(url, {headers: authHeaders()});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
-}
-async function showCreds(){
-  const url = new URL('/api/jira/diagnostics/creds', window.location.origin);
-  addOptionalParams(url);
-  const r = await fetch(url, {headers: authHeaders()});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
-}
-async function showDbSchema(){
-  const r = await fetch('/api/jira/diagnostics/db-schema', {headers: authHeaders()});
-  const t = await r.text(); let b={}; try{ b=JSON.parse(t) }catch{}
-  document.getElementById('diagOut').value = r.ok ? JSON.stringify(b, null, 2) : ('ERROR ' + r.status + ':\n' + (b.detail || t));
-}
+async function whoAmI(useFields){ const url=new URL('/api/jira/whoami',window.location.origin); if(useFields) addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
+async function discoverProjects(useFields){ const url=new URL('/api/jira/projects',window.location.origin); if(useFields) addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
+async function lookupProject(useFields){ const idOrKey=val('lookup_key'); if(!idOrKey){ alert('Enter a key or numeric ID'); return } const url=new URL('/api/jira/project',window.location.origin); url.searchParams.set('id_or_key',idOrKey); if(useFields) addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
+async function showCreds(){ const url=new URL('/api/jira/diagnostics/creds',window.location.origin); addOptionalParams(url); const r=await fetch(url,{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
+async function showDbSchema(){ const r=await fetch('/api/jira/diagnostics/db-schema',{headers:authHeaders()}); const t=await r.text(); let b={}; try{ b=JSON.parse(t)}catch{}; document.getElementById('diagOut').value = r.ok?JSON.stringify(b,null,2):('ERROR '+r.status+':\n'+(b.detail||t)); }
 
 // utils
 function val(id){ return (document.getElementById(id)?.value||'').trim(); }
 function num(id){ const v=parseInt(val(id),10); return isFinite(v)?v:null; }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m])); }
 
-(async function init(){
-  const ok = await requireAuth(); if(!ok) return;
-  await loadSettings();
-  // Feature-detect users endpoints; hide Users tab if missing
-  await featureDetectUsers();
-})(); 
+(async function init(){ const ok = await requireAuth(); if(!ok) return; await loadSettings(); await featureDetectUsers(); })();
 </script>
 </body>
 </html>

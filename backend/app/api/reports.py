@@ -1,124 +1,240 @@
-from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException
-from sqlalchemy import select, delete
-from ..schemas import ReportCreate, ReportOut, ReportDetail, IssueRow
+
+from __future__ import annotations
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import FileResponse
+from pydantic import BaseModel, Field
+from typing import List, Dict, Any, Optional, Tuple, Iterable
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+import csv
+import json
+
+from .deps import current_admin
 from ..db.database import get_sessionmaker
-from ..db.models import Report, Issue, Transition, MetricIssue, MetricRollup
-from .deps import current_user
-from ..services.csv_export import stream_csv
-from datetime import datetime, timezone
+from ..db.jira_models import JiraIssue, JiraTransition, BaseJira
+from ..db.report_models import BaseReport, Report, ReportRow, ReportStatusStat
+from ..services.business_time import business_seconds_between
+from sqlalchemy import select, delete
+from sqlalchemy.orm import joinedload
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 
-def _sample_data(now: datetime):
-    # Fake issues and metrics for demo purposes
-    issues = [
-        dict(issue_key="AAA-1", project_key="AAA", type="Story", summary="User can log in", epic_key="AAA-EP1", parent_key=None, labels=["auth"], current_status="Done", assignee="alice"),
-        dict(issue_key="AAA-2", project_key="AAA", type="Bug", summary="Fix login error", epic_key="AAA-EP1", parent_key=None, labels=["auth","bug"], current_status="In Review", assignee="bob"),
-        dict(issue_key="AAA-3", project_key="AAA", type="Sub-task", summary="Write tests", epic_key="AAA-EP1", parent_key="AAA-1", labels=["qa"], current_status="In Progress", assignee="carol"),
-    ]
-    transitions = [
-        # issue AAA-1
-        ("AAA-1", 1, "To Do", "In Progress", now.replace(hour=9)),
-        ("AAA-1", 2, "In Progress", "In Review", now.replace(hour=13)),
-        ("AAA-1", 3, "In Review", "Done", now.replace(hour=16)),
-        # issue AAA-2
-        ("AAA-2", 1, "To Do", "In Progress", now.replace(hour=10)),
-        ("AAA-2", 2, "In Progress", "In Review", now.replace(hour=15)),
-        # issue AAA-3
-        ("AAA-3", 1, "To Do", "In Progress", now.replace(hour=11)),
-    ]
-    # Simple per-issue per-bucket seconds (mock)
-    buckets = {
-        "AAA-1": {"To Do": 3600, "In Progress": 14400, "In Review": 10800, "Done": 0},
-        "AAA-2": {"To Do": 7200, "In Progress": 7200, "In Review": 0},
-        "AAA-3": {"To Do": 1800, "In Progress": 10800},
-    }
-    return issues, transitions, buckets
+class RunReportRequest(BaseModel):
+    name: Optional[str] = None
+    updated_window_days: int = 180
+    projects: List[str] = Field(default_factory=list)
+    labels: List[str] = Field(default_factory=list)  # reserved
+    aggregate_by: str = "name"   # name|both (category later)
+    business_mode: str = "both"  # business|wall|both
+    jql_like: Optional[str] = None  # reserved, local filter
+    # Admin-calculated fields (read from settings)
+    business_hours_start: Optional[str] = None
+    business_hours_end: Optional[str] = None
+    business_days: Optional[str] = None
+    timezone: Optional[str] = None
 
-@router.post("", response_model=ReportOut)
-async def create_report(payload: ReportCreate, bt: BackgroundTasks, user=Depends(current_user)):
+def _ensure_dirs() -> Path:
+    p = Path("storage/reports")
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+async def _ensure_report_tables():
     Session = get_sessionmaker()
     async with Session() as session:
-        r = Report(owner_id=user.id, filters_json={"projects": payload.projects, "jql": payload.jql},
-                   time_mode=payload.time_mode, window_days=payload.window_days, state="complete", title=payload.title)
-        session.add(r)
-        await session.flush()
-        # Insert sample data
-        now = datetime.now(timezone.utc)
-        issues, transitions, buckets = _sample_data(now)
-        for ii in issues:
-            session.add(Issue(report_id=r.id, **ii))
-        seq_id = 1
-        for (key, seq, fr, to, at) in transitions:
-            session.add(Transition(report_id=r.id, issue_key=key, seq=seq, from_status=fr, to_status=to, transitioned_at=at))
-        for ikey, m in buckets.items():
-            for bucket, secs in m.items():
-                session.add(MetricIssue(report_id=r.id, issue_key=ikey, bucket=bucket, time_seconds=int(secs), entries_count=1))
-        await session.commit()
-        return ReportOut(id=r.id, title=r.title, created_at=r.created_at, state=r.state, time_mode=r.time_mode, window_days=r.window_days)
+        def _create(sync_session):
+            bind = sync_session.get_bind()
+            BaseReport.metadata.create_all(bind=bind)
+        await session.run_sync(_create)
 
-@router.get("", response_model=list[ReportOut])
-async def list_reports(user=Depends(current_user)):
+def _in_project(pkeys: List[str], project_key: str) -> bool:
+    if not pkeys:
+        return True
+    pkeys_norm = [x.strip().upper() for x in pkeys if x.strip()]
+    return (project_key or "").upper() in pkeys_norm
+
+def _build_timeline(issue: JiraIssue, transitions: List[JiraTransition]) -> List[Dict[str, Any]]:
+    """
+    Returns list of {start, end, status} datetimes for this issue based on transitions.
+    """
+    if transitions:
+        transitions = sorted(transitions, key=lambda t: t.when)
+        timeline = []
+        first = transitions[0]
+        if issue.created and first.when and first.from_status:
+            timeline.append({"start": issue.created, "end": first.when, "status": first.from_status})
+        # between transitions
+        for i in range(len(transitions)-1):
+            cur = transitions[i]
+            nxt = transitions[i+1]
+            if cur.when and nxt.when:
+                timeline.append({"start": cur.when, "end": nxt.when, "status": cur.to_status or ""})
+        # tail
+        last = transitions[-1]
+        tail_end = issue.updated or datetime.now(timezone.utc)
+        if last.when and tail_end and last.to_status:
+            timeline.append({"start": last.when, "end": tail_end, "status": last.to_status})
+        # remove bad segments
+        return [seg for seg in timeline if seg["end"] and seg["start"] and seg["end"] > seg["start"] and seg["status"]]
+    else:
+        # no transitions; single bucket with current status
+        if not (issue.created and issue.updated and issue.status):
+            return []
+        return [{"start": issue.created, "end": issue.updated, "status": issue.status}]
+
+def _summarize(timeline: List[Dict[str, Any]], tz: str, bh_start: str, bh_end: str, bdays: str) -> Dict[str, Dict[str, Any]]:
+    agg: Dict[str, Dict[str, Any]] = {}
+    for seg in timeline:
+        st = seg["status"]
+        wall = int((seg["end"] - seg["start"]).total_seconds())
+        biz = business_seconds_between(seg["start"], seg["end"], tz_name=tz, business_start=bh_start, business_end=bh_end, business_days_csv=bdays)
+        bucket = agg.setdefault(st, {"entered_count": 0, "wall_seconds": 0, "business_seconds": 0})
+        bucket["entered_count"] += 1
+        bucket["wall_seconds"] += wall
+        bucket["business_seconds"] += biz
+    return agg
+
+def _hours(sec: int) -> float:
+    return round(sec / 3600.0, 3)
+
+@router.get("")
+async def list_reports(_=Depends(current_admin)):
+    await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
-        res = await session.execute(select(Report).order_by(Report.created_at.desc()))
+        res = await session.execute(select(Report).order_by(Report.id.desc()))
         rows = res.scalars().all()
-        return [ReportOut(id=r.id, title=r.title, created_at=r.created_at, state=r.state, time_mode=r.time_mode, window_days=r.window_days) for r in rows]
+        return [{
+            "id": r.id,
+            "created_at": r.created_at.isoformat() if r.created_at else None,
+            "name": r.name,
+            "window_days": r.window_days,
+            "business_mode": r.business_mode,
+            "aggregate_by": r.aggregate_by,
+            "csv_path": r.csv_path,
+        } for r in rows]
 
-@router.get("/{rid}", response_model=ReportDetail)
-async def get_report(rid: int, user=Depends(current_user)):
+@router.delete("/{report_id}")
+async def delete_report(report_id: int, _=Depends(current_admin)):
+    await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
-        r = (await session.execute(select(Report).where(Report.id == rid))).scalar_one_or_none()
-        if not r:
-            raise HTTPException(status_code=404, detail="Report not found")
-        iss = (await session.execute(select(Issue).where(Issue.report_id == rid))).scalars().all()
-        mis = (await session.execute(select(MetricIssue).where(MetricIssue.report_id == rid))).scalars().all()
-        buckets = {}
-        for m in mis:
-            buckets.setdefault(m.issue_key, {})[m.bucket] = m.time_seconds
-        issues = [IssueRow(issue_key=i.issue_key, project_key=i.project_key, type=i.type, summary=i.summary,
-                           epic_key=i.epic_key, parent_key=i.parent_key, labels=i.labels_json, current_status=i.current_status, assignee=i.assignee)
-                  for i in iss]
-        return ReportDetail(report=ReportOut(id=r.id, title=r.title, created_at=r.created_at, state=r.state, time_mode=r.time_mode, window_days=r.window_days),
-                            issues=issues, buckets=buckets)
-
-@router.get("/{rid}/csv")
-async def csv_export(rid: int, type: str = "issues", user=Depends(current_user)):
-    Session = get_sessionmaker()
-    async with Session() as session:
-        rows: list[dict] = []
-        if type == "issues":
-            iss = (await session.execute(select(Issue).where(Issue.report_id == rid))).scalars().all()
-            mis = (await session.execute(select(MetricIssue).where(MetricIssue.report_id == rid))).scalars().all()
-            agg = {}
-            for m in mis:
-                agg.setdefault(m.issue_key, {})[m.bucket] = m.time_seconds
-            for i in iss:
-                base = dict(report_id=rid, issue_key=i.issue_key, issue_id=i.id, issue_type=i.type, issue_summary=i.summary,
-                            project_key=i.project_key, project_name=i.project_key, epic_key=i.epic_key, parent_key=i.parent_key,
-                            labels=';'.join(i.labels_json), current_status=i.current_status, assignee=i.assignee, time_mode="mock")
-                for bucket, secs in agg.get(i.issue_key, {}).items():
-                    base[f"time_in_{bucket}_seconds"] = secs
-                rows.append(base)
-            return stream_csv(rows, f"report_{rid}_issues.csv")
-        elif type == "transitions":
-            trs = (await session.execute(select(Transition).where(Transition.report_id == rid))).scalars().all()
-            for t in trs:
-                rows.append(dict(report_id=rid, issue_key=t.issue_key, from_status=t.from_status, to_status=t.to_status,
-                                 transitioned_at=t.transitioned_at.isoformat(), actor=t.actor or ""))
-            return stream_csv(rows, f"report_{rid}_transitions.csv")
-        else:
-            return stream_csv([], f"report_{rid}_empty.csv")
-
-@router.delete("/{rid}")
-async def delete_report(rid: int, user=Depends(current_user)):
-    Session = get_sessionmaker()
-    async with Session() as session:
-        await session.execute(delete(Transition).where(Transition.report_id == rid))
-        await session.execute(delete(MetricIssue).where(MetricIssue.report_id == rid))
-        await session.execute(delete(MetricRollup).where(MetricRollup.report_id == rid))
-        await session.execute(delete(Issue).where(Issue.report_id == rid))
-        await session.execute(delete(Report).where(Report.id == rid))
+        await session.execute(delete(ReportStatusStat).where(ReportStatusStat.report_id == report_id))
+        await session.execute(delete(ReportRow).where(ReportRow.report_id == report_id))
+        await session.execute(delete(Report).where(Report.id == report_id))
         await session.commit()
     return {"ok": True}
+
+@router.get("/{report_id}/csv")
+async def download_csv(report_id: int, _=Depends(current_admin)):
+    await _ensure_report_tables()
+    Session = get_sessionmaker()
+    async with Session() as session:
+        res = await session.execute(select(Report).where(Report.id==report_id))
+        r = res.scalar_one_or_none()
+        if not r or not r.csv_path:
+            raise HTTPException(status_code=404, detail="Report or CSV not found")
+        p = Path(r.csv_path)
+        if not p.exists():
+            raise HTTPException(status_code=404, detail="CSV file missing on disk")
+        # FastAPI will serve from working dir
+        return FileResponse(path=str(p), filename=p.name, media_type="text/csv")
+
+@router.post("/run")
+async def run_report(req: RunReportRequest, _=Depends(current_admin)):
+    await _ensure_report_tables()
+    Session = get_sessionmaker()
+
+    # load Jira issues + transitions from local DB
+    async with Session() as session:
+        cutoff = datetime.now(timezone.utc) - timedelta(days=req.updated_window_days or 180)
+        res = await session.execute(
+            select(JiraIssue).options(joinedload(JiraIssue.transitions)).where(JiraIssue.updated >= cutoff)
+        )
+        issues: list[JiraIssue] = res.scalars().unique().all()
+
+        # filter by project keys if provided
+        issues = [i for i in issues if _in_project(req.projects, i.project_key or "")]
+
+        # prepare report
+        r = Report(
+            name=req.name or f"Report {datetime.utcnow().isoformat(timespec='seconds')}",
+            params_json=json.dumps(req.model_dump()),
+            window_days=req.updated_window_days or 180,
+            business_mode=req.business_mode or "both",
+            aggregate_by=req.aggregate_by or "name",
+            csv_path="",
+        )
+        session.add(r)
+        await session.flush()  # get r.id
+
+        # business config
+        tz = req.timezone or "America/New_York"
+        bh_start = (req.business_hours_start or "09:00")
+        bh_end = (req.business_hours_end or "17:00")
+        bdays = (req.business_days or "Mon,Tue,Wed,Thu,Fri")
+
+        # iterate issues
+        for issue in issues:
+            row = ReportRow(
+                report_id=r.id,
+                issue_id=issue.issue_id,
+                issue_key=issue.key,
+                project_key=issue.project_key or "",
+                issue_type=issue.issue_type or "",
+                summary=issue.summary or "",
+                status=issue.status or "",
+                assignee=issue.assignee or "",
+                parent_key=issue.parent_key or "",
+                epic_key=issue.epic_key or "",
+                created=issue.created,
+                updated=issue.updated,
+            )
+            session.add(row)
+
+            timeline = _build_timeline(issue, issue.transitions or [])
+            if not timeline:
+                continue
+            stats = _summarize(timeline, tz=tz, bh_start=bh_start, bh_end=bh_end, bdays=bdays)
+            for status_name, vals in stats.items():
+                st = ReportStatusStat(
+                    report_id=r.id,
+                    issue_key=issue.key,
+                    bucket="name",
+                    status=status_name,
+                    entered_count=vals["entered_count"],
+                    wall_seconds=vals["wall_seconds"],
+                    business_seconds=vals["business_seconds"],
+                )
+                session.add(st)
+
+        await session.commit()
+
+        # Build CSV in storage/reports
+        out_dir = _ensure_dirs()
+        csv_path = out_dir / f"report_{r.id}.csv"
+        # CSV schema v1:
+        # issue_key, project_key, issue_type, assignee, parent_key, epic_key, bucket, status, entered_count, wall_hours, business_hours
+        # One row per (issue,status)
+        res_stats = await session.execute(select(ReportStatusStat).where(ReportStatusStat.report_id == r.id))
+        stats = res_stats.scalars().all()
+
+        with open(csv_path, "w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["issue_key","project_key","issue_type","assignee","parent_key","epic_key","bucket","status","entered_count","wall_hours","business_hours"])
+            # for resolving metadata per issue:
+            meta = {i.issue_key: i for i in issues}
+            for st in stats:
+                ii = meta.get(st.issue_key)
+                if not ii:
+                    continue
+                w.writerow([
+                    ii.key, ii.project_key or "", ii.issue_type or "", ii.assignee or "", ii.parent_key or "", ii.epic_key or "",
+                    st.bucket, st.status, st.entered_count, round(st.wall_seconds/3600.0,3), round(st.business_seconds/3600.0,3)
+                ])
+
+        # save path
+        r.csv_path = str(csv_path)
+        session.add(r)
+        await session.commit()
+
+        return {"ok": True, "report_id": r.id, "csv_path": r.csv_path, "issues_count": len(issues)}
