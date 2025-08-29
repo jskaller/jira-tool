@@ -59,13 +59,13 @@ async def _ensure_report_tables():
         for col, ddl in needed.items():
             if col not in cols:
                 await session.execute(text(f"ALTER TABLE reports ADD COLUMN {col} {ddl}"))
+        # Ensure owner_id exists (older DBs may not have it). If we add it, backfill to first user id.
+        if 'owner_id' not in cols:
+            await session.execute(text("ALTER TABLE reports ADD COLUMN owner_id INTEGER"))
+            uid_row = (await session.execute(text("SELECT id FROM users ORDER BY id ASC LIMIT 1"))).first()
+            if uid_row:
+                await session.execute(text("UPDATE reports SET owner_id = :uid WHERE owner_id IS NULL"), {"uid": uid_row[0]})
         await session.commit()
-
-def _in_project(pkeys: List[str], project_key: str) -> bool:
-    if not pkeys:
-        return True
-    pkeys_norm = [x.strip().upper() for x in pkeys if x.strip()]
-    return (project_key or "").upper() in pkeys_norm
 
 def _build_timeline(issue: JiraIssue, transitions: List[JiraTransition]) -> List[Dict[str, Any]]:
     transitions = [t for t in transitions if getattr(t, "when", None) is not None]
@@ -117,10 +117,11 @@ def _summarize(tl: List[Dict[str, Any]], tz: str, bs: str, be: str, bdays: str) 
     return agg
 
 @router.get("")
-async def list_reports(_=Depends(current_admin)):
+async def list_reports(user=Depends(current_admin)):
     await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
+        # Show all for now (could be filtered by owner_id == user.id)
         res = await session.execute(select(Report).order_by(Report.id.desc()))
         rows = res.scalars().all()
         return [{
@@ -134,7 +135,7 @@ async def list_reports(_=Depends(current_admin)):
         } for r in rows]
 
 @router.delete("/{report_id}")
-async def delete_report(report_id: int, _=Depends(current_admin)):
+async def delete_report(report_id: int, user=Depends(current_admin)):
     await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
@@ -145,7 +146,7 @@ async def delete_report(report_id: int, _=Depends(current_admin)):
     return {"ok": True}
 
 @router.get("/{report_id}/csv")
-async def download_csv(report_id: int, _=Depends(current_admin)):
+async def download_csv(report_id: int, user=Depends(current_admin)):
     await _ensure_report_tables()
     Session = get_sessionmaker()
     async with Session() as session:
@@ -159,7 +160,7 @@ async def download_csv(report_id: int, _=Depends(current_admin)):
         return FileResponse(path=str(p), filename=p.name, media_type="text/csv")
 
 @router.post("/run")
-async def run_report(req: RunReportRequest, _=Depends(current_admin)):
+async def run_report(req: RunReportRequest, user=Depends(current_admin)):
     await _ensure_report_tables()
     Session = get_sessionmaker()
 
@@ -199,8 +200,9 @@ async def run_report(req: RunReportRequest, _=Depends(current_admin)):
                 k = getattr(tr, join_attr)
                 transitions_by.setdefault(k, []).append(tr)
 
-        # Create report shell
+        # Create report shell (owner_id is required by schema)
         r = Report(
+            owner_id=getattr(user, "id", None) or getattr(user, "user_id", None) or 1,
             name=req.name or f"Report {datetime.utcnow().isoformat(timespec='seconds')}",
             params_json=json.dumps(req.model_dump()),
             window_days=req.updated_window_days or 180,
